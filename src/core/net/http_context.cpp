@@ -21,44 +21,10 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_APP_H_
-#define _YLG_SERVER_APP_H_
+#include "core/net/http_context.h"
 
-#include "core/application/core.h"
-#include "server/api/http/server.h"
-#include "server/configuration.h"
-#include "server/controller/controller.h"
+namespace ylg {
+namespace net {
 
-#include <future>
-
-class App final
-{
-public:
-    App();
-    ~App();
-
-public:
-    std::error_code Run(int argc, char *argv[]);
-    void            Close();
-
-private:
-    std::error_code GuardLoop();
-    void            DumpConfiguration();
-    std::error_code InitFlags();
-    std::error_code InitLogs();
-    std::error_code InitController();
-    std::error_code InitAPIs();
-    std::error_code LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code Execute(ylg::app::ContextPtr ctx);
-
-private:
-    std::future<void>           _controllerRun;
-    ConfigurationPtr            _localConfig;
-    HTTPAPIServerPtr            _httpAPI    = nullptr;
-    std::shared_ptr<Controller> _controller = nullptr;
-    ylg::app::CorePtr           _core       = nullptr;
-    std::atomic_bool            _needStop   = false;
-};
-
-#endif
-
+}
+} // namespace ylg

@@ -121,7 +121,7 @@ void TCPHandler::Run()
 {
     int exitedCode = 0;
     do {
-        exitedCode = event_base_dispatch(_base);
+        exitedCode = event_base_loop(_base, EVLOOP_NO_EXIT_ON_EMPTY);
     } while (exitedCode != -1);
 
     LOG_WARN("tcp handler run exited. exited code:{}", exitedCode);
