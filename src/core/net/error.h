@@ -42,6 +42,8 @@ enum class ErrorCode
     ReceivedTooLarge     = 6,
     WritedException      = 7,
     ConnectionIsNotReady = 8,
+    InvalidHTTPMethod    = 9,
+    RepeatedHTTPURI      = 10,
     MaxValue,
 
 };

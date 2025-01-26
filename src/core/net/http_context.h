@@ -21,44 +21,49 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_APP_H_
-#define _YLG_SERVER_APP_H_
+#ifndef _YLG_NET_HTTP_CONTEXT_H_
+#define _YLG_NET_HTTP_CONTEXT_H_
 
-#include "core/application/core.h"
-#include "server/api/http/server.h"
-#include "server/configuration.h"
-#include "server/controller/controller.h"
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
 
-#include <future>
+namespace ylg {
+namespace net {
 
-class App final
+using HTTPURI = std::string;
+
+enum class HTTPMethod
 {
-public:
-    App();
-    ~App();
-
-public:
-    std::error_code Run(int argc, char *argv[]);
-    void            Close();
-
-private:
-    std::error_code GuardLoop();
-    void            DumpConfiguration();
-    std::error_code InitFlags();
-    std::error_code InitLogs();
-    std::error_code InitController();
-    std::error_code InitAPIs();
-    std::error_code LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code Execute(ylg::app::ContextPtr ctx);
-
-private:
-    std::future<void>           _controllerRun;
-    ConfigurationPtr            _localConfig;
-    HTTPAPIServerPtr            _httpAPI    = nullptr;
-    std::shared_ptr<Controller> _controller = nullptr;
-    ylg::app::CorePtr           _core       = nullptr;
-    std::atomic_bool            _needStop   = false;
+    GET,
+    POST,
+    PUT,
+    DELETE
 };
+
+struct Parameters
+{
+    std::map<std::string, std::string> _headerParameters;
+    std::map<std::string, std::string> _queryParamters;
+    std::map<std::string, std::string> _pathParameters;
+};
+
+using HTTPMethodHandler = std::function<void(const Parameters& inParameters,
+                                             Parameters&       outParameters,
+                                             int& status, std::string& response)>;
+
+struct RegisteredHandler
+{
+    std::string       _uri;
+    HTTPMethod        _method;
+    HTTPMethodHandler _handler;
+};
+
+using RegisteredHandlerPtr = std::shared_ptr<RegisteredHandler>;
+
+} // namespace net
+} // namespace ylg
 
 #endif
 

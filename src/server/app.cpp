@@ -22,10 +22,12 @@
  */
 
 #include "server/app.h"
+#include "server/api/http/server.h"
 #include "server/error.h"
 
 #include "core/assist/time.h"
 #include "core/log/log.h"
+#include <system_error>
 
 App::App()
 {
@@ -106,6 +108,13 @@ std::error_code App::InitController()
     return MakeSuccess();
 }
 
+std::error_code App::InitAPIs()
+{
+    _httpAPI = std::make_shared<HTTPAPIServer>();
+    _httpAPI->Run("0.0.0.0", 26689);
+    return MakeSuccess();
+}
+
 std::error_code App::LoadConfig(ylg::app::ContextPtr ctx)
 {
     _localConfig->_ctx = ctx;
@@ -156,7 +165,7 @@ std::error_code App::Execute(ylg::app::ContextPtr ctx)
     ec = InitLogs();
     if (!IsSuccess(ec))
     {
-        LOG_ERROR("failed to init log. err-msg({}:{})", ec.value(), ec.message());
+        LOG_ERROR("failed to init log. errmsg({}:{})", ec.value(), ec.message());
         return ec;
     }
 
@@ -165,9 +174,17 @@ std::error_code App::Execute(ylg::app::ContextPtr ctx)
     ec = InitController();
     if (!IsSuccess(ec))
     {
-        LOG_ERROR("failed to init controller. err-msg({}:{})", ec.value(), ec.message());
+        LOG_ERROR("failed to init controller. errmsg({}:{})", ec.value(), ec.message());
         return ec;
     }
 
+    ec = InitAPIs();
+    if (!IsSuccess(ec))
+    {
+        LOG_ERROR("failed to init APIs. errmsg({}:{})", ec.value(), ec.message());
+        return ec;
+    }
+
+    LOG_INFO("RunX Server Started");
     return GuardLoop();
 }

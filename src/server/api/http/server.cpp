@@ -21,44 +21,28 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_APP_H_
-#define _YLG_SERVER_APP_H_
-
-#include "core/application/core.h"
 #include "server/api/http/server.h"
-#include "server/configuration.h"
-#include "server/controller/controller.h"
+#include "core/net/http_server.h"
 
-#include <future>
+HTTPAPIServer::HTTPAPIServer() {}
+HTTPAPIServer::~HTTPAPIServer() {}
 
-class App final
+void HTTPAPIServer::Run(const std::string& listenIP, uint16_t listenPort)
 {
-public:
-    App();
-    ~App();
+    _listenIP   = listenIP;
+    _listenPort = listenPort;
+    _httpServer = std::make_shared<ylg::net::HTTPServer>();
+    _asyncRun   = std::async(std::launch::async, &ylg::net::HTTPServer::Run,
+                             _httpServer, _listenIP, _listenPort);
+}
 
-public:
-    std::error_code Run(int argc, char *argv[]);
-    void            Close();
+void HTTPAPIServer::Close()
+{
+    if (!_httpServer)
+    {
+        return;
+    }
 
-private:
-    std::error_code GuardLoop();
-    void            DumpConfiguration();
-    std::error_code InitFlags();
-    std::error_code InitLogs();
-    std::error_code InitController();
-    std::error_code InitAPIs();
-    std::error_code LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code Execute(ylg::app::ContextPtr ctx);
-
-private:
-    std::future<void>           _controllerRun;
-    ConfigurationPtr            _localConfig;
-    HTTPAPIServerPtr            _httpAPI    = nullptr;
-    std::shared_ptr<Controller> _controller = nullptr;
-    ylg::app::CorePtr           _core       = nullptr;
-    std::atomic_bool            _needStop   = false;
-};
-
-#endif
-
+    _httpServer->Close();
+    _asyncRun.wait();
+}
