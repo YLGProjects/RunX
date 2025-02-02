@@ -24,8 +24,14 @@
 #ifndef _YLG_CORE_CORE_H_
 #define _YLG_CORE_CORE_H_
 
-int YLGCoreInit();
+#include "core/error/error.h"
 
-int YLGCoreUninit();
+namespace ylg {
+
+std::error_code Init();
+void            Uninit();
+
+} // namespace ylg
 
 #endif
+

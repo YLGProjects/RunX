@@ -22,6 +22,9 @@
  */
 
 #include "server/api/http/server.h"
+#include "core/log/log.h"
+#include "core/net/error.h"
+#include "core/net/http_context.h"
 #include "core/net/http_server.h"
 
 HTTPAPIServer::HTTPAPIServer() {}
@@ -32,8 +35,22 @@ void HTTPAPIServer::Run(const std::string& listenIP, uint16_t listenPort)
     _listenIP   = listenIP;
     _listenPort = listenPort;
     _httpServer = std::make_shared<ylg::net::HTTPServer>();
-    _asyncRun   = std::async(std::launch::async, &ylg::net::HTTPServer::Run,
-                             _httpServer, _listenIP, _listenPort);
+
+    auto errcode = _httpServer->RegisterHandler(ylg::net::HTTPMethod::POST, "/api/test",
+                                                std::bind(&HTTPAPIServer::Test, this,
+                                                          std::placeholders::_1,
+                                                          std::placeholders::_2,
+                                                          std::placeholders::_3,
+                                                          std::placeholders::_4));
+
+    if (!ylg::net::IsSuccess(errcode))
+    {
+        LOG_ERROR("failed to register api handler. api:{}", "/api/test");
+        return;
+    }
+
+    _asyncRun = std::async(std::launch::async, &ylg::net::HTTPServer::Run,
+                           _httpServer, _listenIP, _listenPort);
 }
 
 void HTTPAPIServer::Close()
@@ -45,4 +62,12 @@ void HTTPAPIServer::Close()
 
     _httpServer->Close();
     _asyncRun.wait();
+}
+
+void HTTPAPIServer::Test(const ylg::net::Parameters& inParameters,
+                         ylg::net::Parameters&       outParameters,
+                         int& status, std::string& response)
+{
+    status   = 200;
+    response = "[TEST API]hello world";
 }

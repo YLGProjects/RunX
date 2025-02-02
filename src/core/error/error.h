@@ -21,30 +21,19 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_CORE_NET_ERROR_H_
-#define _YLG_CORE_NET_ERROR_H_
+#ifndef _YLG_ERROR_ERROR_H_
+#define _YLG_ERROR_ERROR_H_
 
 #include <system_error>
 
 namespace ylg {
-namespace net {
+namespace error {
 
 enum class ErrorCode
 {
-    Unknown              = -2,
-    Error                = -1,
-    Success              = 0,
-    NetException         = 1,
-    LibException         = 2,
-    MemException         = 3,
-    TryAgain             = 4,
-    ConnectionAborted    = 5,
-    ReceivedTooLarge     = 6,
-    WritedException      = 7,
-    ConnectionIsNotReady = 8,
-    InvalidHTTPMethod    = 9,
-    RepeatedHTTPURI      = 10,
-    HTTPRespondFailed    = 11,
+    Unknown = -2,
+    Error   = -1,
+    Success = 0,
     MaxValue,
 
 };
@@ -93,7 +82,8 @@ bool IsSuccess(const std::error_code& ec);
  */
 std::string ToString(int ec);
 
-} // namespace net
+} // namespace error
 } // namespace ylg
 
 #endif
+

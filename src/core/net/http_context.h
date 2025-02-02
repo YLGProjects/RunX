@@ -32,7 +32,8 @@
 namespace ylg {
 namespace net {
 
-using HTTPURI = std::string;
+using HTTPURI   = std::string;
+using Parameter = std::map<std::string, std::string>;
 
 enum class HTTPMethod
 {
@@ -44,9 +45,9 @@ enum class HTTPMethod
 
 struct Parameters
 {
-    std::map<std::string, std::string> _headerParameters;
-    std::map<std::string, std::string> _queryParamters;
-    std::map<std::string, std::string> _pathParameters;
+    Parameter _headerParameters;
+    Parameter _queryParamters;
+    Parameter _pathParameters;
 };
 
 using HTTPMethodHandler = std::function<void(const Parameters& inParameters,

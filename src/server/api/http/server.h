@@ -24,6 +24,7 @@
 #ifndef _YLG_SERVER_API_HTTP_SERVER_H_
 #define _YLG_SERVER_API_HTTP_SERVER_H_
 
+#include "core/net/http_context.h"
 #include "core/net/http_server.h"
 
 #include <future>
@@ -38,6 +39,10 @@ public:
 public:
     void Run(const std::string& listenIP, uint16_t listenPort);
     void Close();
+
+public:
+    void Test(const ylg::net::Parameters& inParameters, ylg::net::Parameters& outParameters,
+              int& status, std::string& response);
 
 private:
     std::string             _listenIP;
