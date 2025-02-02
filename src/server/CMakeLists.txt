@@ -11,6 +11,7 @@ list(FILTER SOURCES EXCLUDE REGEX "test")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 list(APPEND LIBS core)
+list(APPEND LIBS curl)
 list(APPEND LIBS yaml-cpp)
 list(APPEND LIBS event)
 list(APPEND LIBS pthread)

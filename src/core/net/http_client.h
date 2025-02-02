@@ -24,8 +24,10 @@
 #ifndef _YLG_CORE_NET_HTTP_CLIENT_H_
 #define _YLG_CORE_NET_HTTP_CLIENT_H_
 
-#include <map>
-#include <string>
+#include "core/net/http_context.h"
+
+#include <curl/curl.h>
+#include <system_error>
 
 namespace ylg {
 namespace net {
@@ -33,14 +35,32 @@ namespace net {
 class HTTPClient final
 {
 public:
-    HTTPClient();
+    HTTPClient(const std::string& address);
     ~HTTPClient();
 
 public:
-    std::map<std::string, std::string> heads;
+    HTTPClient* ResetHeader();
+    HTTPClient* SetHeader(const std::string& key, const std::string& value);
+    HTTPClient* SetTimeout(int seconds);
+
+    std::error_code Put(const HTTPURI& uri, const std::string& request, int& status, std::string& response);
+    std::error_code Delete(const HTTPURI& uri, const std::string& request, int& status, std::string& response);
+    std::error_code Get(const HTTPURI& uri, int& status, std::string& response);
+    std::error_code Post(const HTTPURI& uri, const std::string& request, int& status, std::string& response);
+
+private:
+    static std::size_t WriteData(void* data, std::size_t size, std::size_t nmemb, void* user);
+    std::error_code    Execute(int& status, std::string& response);
+
+private:
+    int         _timeoutSeconds = 10;
+    CURL*       _curl           = nullptr;
+    std::string _address;
+    Parameter   _header;
 };
 
 } // namespace net
 } // namespace ylg
 
 #endif
+

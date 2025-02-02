@@ -25,7 +25,10 @@
 #include "agent/error.h"
 
 #include "core/assist/time.h"
+#include "core/core.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
+
 #include <cstdint>
 
 App::App()
@@ -41,10 +44,15 @@ App::~App()
 
 std::error_code App::Run(int argc, char *argv[])
 {
+    auto ec = ylg::Init();
+    if (!ylg::error::IsSuccess(ec))
+    {
+        return ec;
+    }
+
     _needStop = false;
 
-    auto ec = InitFlags();
-
+    ec = InitFlags();
     if (!IsSuccess(ec))
     {
         return ec;
@@ -57,6 +65,8 @@ void App::Close()
 {
     _needStop = true;
     _client->Close();
+    _core->Close();
+    ylg::Uninit();
 }
 
 std::error_code App::GuardLoop()

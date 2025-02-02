@@ -22,12 +22,13 @@
  */
 
 #include "server/app.h"
+#include "core/error/error.h"
 #include "server/api/http/server.h"
 #include "server/error.h"
 
 #include "core/assist/time.h"
+#include "core/core.h"
 #include "core/log/log.h"
-#include <system_error>
 
 App::App()
 {
@@ -42,9 +43,15 @@ App::~App()
 
 std::error_code App::Run(int argc, char *argv[])
 {
+    auto ec = ylg::Init();
+    if (!ylg::error::IsSuccess(ec))
+    {
+        return ec;
+    }
+
     _needStop = false;
 
-    auto ec = InitFlags();
+    ec = InitFlags();
 
     if (!IsSuccess(ec))
     {
@@ -57,6 +64,8 @@ std::error_code App::Run(int argc, char *argv[])
 void App::Close()
 {
     _needStop = true;
+    _core->Close();
+    ylg::Uninit();
 }
 
 std::error_code App::GuardLoop()
