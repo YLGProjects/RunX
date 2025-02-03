@@ -21,17 +21,10 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_CORE_CORE_H_
-#define _YLG_CORE_CORE_H_
-
-#include <system_error>
+#include "internal/protocol.h"
 
 namespace ylg {
+namespace internal {
 
-std::error_code Init();
-void            Uninit();
-
+}
 } // namespace ylg
-
-#endif
-

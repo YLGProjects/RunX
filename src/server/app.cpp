@@ -22,12 +22,12 @@
  */
 
 #include "server/app.h"
-#include "core/error/error.h"
 #include "server/api/http/server.h"
 #include "server/error.h"
 
 #include "core/assist/time.h"
 #include "core/core.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
 
 App::App()

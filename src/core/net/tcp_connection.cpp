@@ -102,7 +102,7 @@ std::error_code TCPConnection::Read(Message& msg)
     uint32_t totalSize = Message::MESSAGE_HEADER_SIZE + header._dataSize;
     if (totalSize > Message::MAX_MESSAGE_SIZE)
     {
-        LOG_DEBUG("total size {} more than max message size {}.", totalSize, Message::MAX_MESSAGE_SIZE);
+        LOG_DEBUG("total size {} more than max message size {}.", totalSize, (uint64_t)Message::MAX_MESSAGE_SIZE);
         return MakeError(ErrorCode::ReceivedTooLarge);
     }
 

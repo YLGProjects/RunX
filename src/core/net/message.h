@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_CORE_NET_TCP_MESSAGE_H_
-#define _YLG_CORE_NET_TCP_MESSAGE_H_
+#ifndef _YLG_CORE_NET_MESSAGE_H_
+#define _YLG_CORE_NET_MESSAGE_H_
 
 #include <cstdint>
 
