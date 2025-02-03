@@ -45,6 +45,7 @@ Message::~Message()
     if (_data)
     {
         free(_data);
+        _data = nullptr;
     }
 
     _dataSize = 0;
