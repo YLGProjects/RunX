@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-#include "server/error.h"
+#include "server/transfer/error.h"
 
 ErrorCodeCategory& ErrorCodeCategory::Instance()
 {

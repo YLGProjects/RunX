@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_INTERNAL_PROTOCOL_H_
-#define _YLG_INTERNAL_PROTOCOL_H_
+#ifndef _YLG_INTERNAL_CONTROLLER_PROTOCOL_H_
+#define _YLG_INTERNAL_CONTROLLER_PROTOCOL_H_
 
 #include <cstdint>
 #include <string>
@@ -164,6 +164,7 @@ struct UnregisterPluginResponse
 
 struct ReportPluginState
 {
+
     std::error_code ToJSON(std::string& data);
     std::error_code LoadJSON(const std::string& data);
 };

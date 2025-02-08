@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_ERROR_H_
-#define _YLG_SERVER_ERROR_H_
+#ifndef _YLG_SERVER_CONTROLLER_ERROR_H_
+#define _YLG_SERVER_CONTROLLER_ERROR_H_
 
 #include <system_error>
 

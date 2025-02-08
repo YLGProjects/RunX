@@ -45,4 +45,5 @@ link_directories(/usr/lib
 
 add_subdirectory(src/core)
 add_subdirectory(src/agent)
-add_subdirectory(src/server)
+add_subdirectory(src/server/controller)
+add_subdirectory(src/server/transfer)

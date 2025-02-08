@@ -21,13 +21,14 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_APP_H_
-#define _YLG_SERVER_APP_H_
+#ifndef _YLG_SERVER_CONTROLLER_APP_H_
+#define _YLG_SERVER_CONTROLLER_APP_H_
+
+#include "server/controller/api/http/server.h"
+#include "server/controller/configuration.h"
+#include "server/controller/controller.h"
 
 #include "core/application/core.h"
-#include "server/api/http/server.h"
-#include "server/configuration.h"
-#include "server/controller/controller.h"
 
 #include <future>
 

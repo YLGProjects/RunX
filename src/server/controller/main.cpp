@@ -21,37 +21,10 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_API_HTTP_SERVER_H_
-#define _YLG_SERVER_API_HTTP_SERVER_H_
+#include "server/controller/app.h"
 
-#include "core/net/http_context.h"
-#include "core/net/http_server.h"
-
-#include <future>
-#include <memory>
-
-class HTTPAPIServer final
+int main(int argc, char *argv[])
 {
-public:
-    HTTPAPIServer();
-    ~HTTPAPIServer();
-
-public:
-    void Run(const std::string& listenIP, uint16_t listenPort);
-    void Close();
-
-public:
-    void Test(const ylg::net::Parameters& inParameters, ylg::net::Parameters& outParameters,
-              int& status, std::string& response);
-
-private:
-    std::string             _listenIP;
-    uint16_t                _listenPort = 0;
-    std::future<void>       _asyncRun;
-    ylg::net::HTTPServerPtr _httpServer = nullptr;
-};
-
-using HTTPAPIServerPtr = std::shared_ptr<HTTPAPIServer>;
-
-#endif
-
+    auto ec = App().Run(argc, argv);
+    return ec.value();
+}

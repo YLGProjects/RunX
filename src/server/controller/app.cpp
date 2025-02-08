@@ -21,9 +21,9 @@
  * SOFTWARE.
  */
 
-#include "server/app.h"
-#include "server/api/http/server.h"
-#include "server/error.h"
+#include "server/controller/app.h"
+#include "server/controller/api/http/server.h"
+#include "server/controller/error.h"
 
 #include "core/assist/time.h"
 #include "core/core.h"
@@ -152,10 +152,10 @@ std::error_code App::LoadConfig(ylg::app::ContextPtr ctx)
     _localConfig->_endpointPort = ctx->GetFileConfig<uint16_t>("controller.endpoint.port", 26688);
 
     // parse log
-    _localConfig->_logLevel      = ctx->GetFileConfig<std::string>("log.level", YLG_SERVER_LOG_LEVEL_DFT);
-    _localConfig->_logPath       = ctx->GetFileConfig<std::string>("log.path", YLG_SERVER_LOG_PATH_DFT);
-    _localConfig->_maxFileCount  = ctx->GetFileConfig<uint32_t>("log.file-count", YLG_SERVER_LOG_FILE_MAX_COUNT_DFT);
-    _localConfig->_maxFileSizeMB = ctx->GetFileConfig<uint32_t>("log.file-sizeMB", YLG_SERVER_LOG_FILE_MAX_FILE_SIZE_MB_DFT);
+    _localConfig->_logLevel      = ctx->GetFileConfig<std::string>("log.level", YLG_SERVER_CONTROLLER_LOG_LEVEL_DFT);
+    _localConfig->_logPath       = ctx->GetFileConfig<std::string>("log.path", YLG_SERVER_CONTROLLER_LOG_PATH_DFT);
+    _localConfig->_maxFileCount  = ctx->GetFileConfig<uint32_t>("log.file-count", YLG_SERVER_CONTROLLER_LOG_FILE_MAX_COUNT_DFT);
+    _localConfig->_maxFileSizeMB = ctx->GetFileConfig<uint32_t>("log.file-sizeMB", YLG_SERVER_CONTROLLER_LOG_FILE_MAX_FILE_SIZE_MB_DFT);
 
     return ec;
 }
@@ -194,6 +194,6 @@ std::error_code App::Execute(ylg::app::ContextPtr ctx)
         return ec;
     }
 
-    LOG_INFO("RunX Server Started");
+    LOG_INFO("RunX Controller Server Started");
     return GuardLoop();
 }
