@@ -1,5 +1,5 @@
 
-project(server)
+project(controller)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_BIN_DIR})
 

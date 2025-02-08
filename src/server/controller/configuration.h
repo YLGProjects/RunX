@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_CONFIG_H_
-#define _YLG_SERVER_CONFIG_H_
+#ifndef _YLG_SERVER_CONTROLLER_CONFIG_H_
+#define _YLG_SERVER_CONTROLLER_CONFIG_H_
 
 #include "core/application/context.h"
 
@@ -31,10 +31,10 @@
 
 // clang-format off
 
-#define YLG_SERVER_LOG_LEVEL_DFT                 "debug"
-#define YLG_SERVER_LOG_PATH_DFT                  "/var/log/ylg/"
-#define YLG_SERVER_LOG_FILE_MAX_COUNT_DFT        10
-#define YLG_SERVER_LOG_FILE_MAX_FILE_SIZE_MB_DFT 100
+#define YLG_SERVER_CONTROLLER_LOG_LEVEL_DFT                 "debug"
+#define YLG_SERVER_CONTROLLER_LOG_PATH_DFT                  "/var/log/ylg/"
+#define YLG_SERVER_CONTROLLER_LOG_FILE_MAX_COUNT_DFT        10
+#define YLG_SERVER_CONTROLLER_LOG_FILE_MAX_FILE_SIZE_MB_DFT 100
 
 // clang-format on
 
@@ -44,10 +44,10 @@ struct Configuration
     std::string          _version;
     std::string          _endpointIP;
     uint16_t             _endpointPort  = 0;
-    std::string          _logPath       = YLG_SERVER_LOG_PATH_DFT;
-    std::string          _logLevel      = YLG_SERVER_LOG_LEVEL_DFT;
-    uint32_t             _maxFileCount  = YLG_SERVER_LOG_FILE_MAX_COUNT_DFT;
-    uint32_t             _maxFileSizeMB = YLG_SERVER_LOG_FILE_MAX_FILE_SIZE_MB_DFT;
+    std::string          _logPath       = YLG_SERVER_CONTROLLER_LOG_PATH_DFT;
+    std::string          _logLevel      = YLG_SERVER_CONTROLLER_LOG_LEVEL_DFT;
+    uint32_t             _maxFileCount  = YLG_SERVER_CONTROLLER_LOG_FILE_MAX_COUNT_DFT;
+    uint32_t             _maxFileSizeMB = YLG_SERVER_CONTROLLER_LOG_FILE_MAX_FILE_SIZE_MB_DFT;
     ylg::app::ContextPtr _ctx;
 };
 

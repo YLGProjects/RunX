@@ -21,30 +21,32 @@
  * SOFTWARE.
  */
 
-#include "server/controller/controller.h"
+#include "server/transfer/transfer.h"
 
 #include "core/log/log.h"
 #include "core/net/error.h"
 #include "core/net/message.h"
 #include "core/net/tcp_server.h"
 
-Controller::Controller() {}
-
-Controller::~Controller()
+Transfer::Transfer()
 {
 }
 
-void Controller::OnConnection(ylg::net::TCPConnection* connection)
+Transfer::~Transfer()
+{
+}
+
+void Transfer::OnConnection(ylg::net::TCPConnection* connection)
 {
     LOG_DEBUG("new connection.{}", connection->ID());
 }
 
-void Controller::OnDisconnection(ylg::net::TCPConnection* connection)
+void Transfer::OnDisconnection(ylg::net::TCPConnection* connection)
 {
     LOG_DEBUG("connection disconnection.{}", connection->ID());
 }
 
-void Controller::HandleData(const ylg::net::Message& msg)
+void Transfer::HandleData(const ylg::net::Message& msg)
 {
     LOG_DEBUG("new message{} size:{}", msg.GetPayload(), msg.GetPayloadSize());
 
@@ -65,7 +67,7 @@ void Controller::HandleData(const ylg::net::Message& msg)
     */
 }
 
-void Controller::Run(const std::string& listenIP, uint16_t listenPort)
+void Transfer::Run(const std::string& listenIP, uint16_t listenPort)
 {
     _listenIP   = listenIP;
     _listenPort = listenPort;
@@ -83,7 +85,7 @@ void Controller::Run(const std::string& listenIP, uint16_t listenPort)
     _asyncRun = std::async(std::launch::async, runFunctor);
 }
 
-void Controller::Close()
+void Transfer::Close()
 {
     auto errcode = _server->Close();
     if (!ylg::net::IsSuccess(errcode))
