@@ -1,4 +1,9 @@
 # RunX
-  This project is currently in the development stage. RunX is dedicated to addressing the communication issues among multiple nodes in heterogeneous networks.
+RunX is a personal development project, aiming to be used for technical learning and solution verification. 
 
-  In the future, we will provide plugin extension capabilities to support the requirements of various business scenarios.
+## Project Objectives
+- Provide cross-cloud multi-region network penetration capabilities;
+- Implement platformization capabilities through plugins, and expand service capabilities for different business scenarios by developing various plugins. 
+
+## Functional Features
+- This project is currently in the development stage.
