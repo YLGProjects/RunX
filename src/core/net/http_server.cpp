@@ -23,8 +23,8 @@
 
 #include "core/net/http_server.h"
 #include "core/assist/string.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
-#include "core/net/error.h"
 #include "core/net/http_context.h"
 
 #include <event2/buffer.h>
@@ -48,7 +48,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         auto iter = _getURIHandlers.find(uri);
         if (iter != _getURIHandlers.end())
         {
-            return MakeError(ErrorCode::RepeatedHTTPURI);
+            return error::ErrorCode::RepeatedHTTPURI;
         }
 
         auto registeredHandler      = std::make_shared<RegisteredHandler>();
@@ -57,7 +57,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         registeredHandler->_handler = handler;
 
         _getURIHandlers[uri] = registeredHandler;
-        return MakeSuccess();
+        return error::ErrorCode::Success;
     }
 
     if (method == HTTPMethod::POST)
@@ -65,7 +65,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         auto iter = _postURIHandlers.find(uri);
         if (iter != _postURIHandlers.end())
         {
-            return MakeError(ErrorCode::RepeatedHTTPURI);
+            return error::ErrorCode::RepeatedHTTPURI;
         }
 
         auto registeredHandler      = std::make_shared<RegisteredHandler>();
@@ -74,7 +74,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         registeredHandler->_handler = handler;
 
         _postURIHandlers[uri] = registeredHandler;
-        return MakeSuccess();
+        return error::ErrorCode::Success;
     }
 
     if (method == HTTPMethod::DELETE)
@@ -82,7 +82,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         auto iter = _deleteURIHandlers.find(uri);
         if (iter != _deleteURIHandlers.end())
         {
-            return MakeError(ErrorCode::RepeatedHTTPURI);
+            return error::ErrorCode::RepeatedHTTPURI;
         }
 
         auto registeredHandler      = std::make_shared<RegisteredHandler>();
@@ -91,7 +91,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         registeredHandler->_handler = handler;
 
         _deleteURIHandlers[uri] = registeredHandler;
-        return MakeSuccess();
+        return error::ErrorCode::Success;
     }
 
     if (method == HTTPMethod::PUT)
@@ -99,7 +99,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         auto iter = _putURIHandlers.find(uri);
         if (iter != _putURIHandlers.end())
         {
-            return MakeError(ErrorCode::RepeatedHTTPURI);
+            return error::ErrorCode::RepeatedHTTPURI;
         }
 
         auto registeredHandler      = std::make_shared<RegisteredHandler>();
@@ -108,10 +108,10 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         registeredHandler->_handler = handler;
 
         _putURIHandlers[uri] = registeredHandler;
-        return MakeSuccess();
+        return error::ErrorCode::Success;
     }
 
-    return MakeError(ErrorCode::InvalidHTTPMethod);
+    return error::ErrorCode::InvalidHTTPMethod;
 }
 
 void HTTPServer::Run(const std::string& listenIP, uint16_t listenPort)
@@ -144,7 +144,7 @@ void HTTPServer::Run(const std::string& listenIP, uint16_t listenPort)
 
         auto errmsg = assist::FormatString("can not run http server at the address. %s:%d",
                                            _listenIP.c_str(), _listenPort);
-        throw std::system_error(MakeError(ErrorCode::NetException), errmsg);
+        throw std::system_error(error::ErrorCode::NetException, errmsg);
     }
 
     evhttp_set_gencb(_httpServer, &HTTPServer::RequestHandler, this);
@@ -317,3 +317,4 @@ void HTTPServer::PutRequestHandler(evhttp_request* req)
 
 } // namespace net
 } // namespace ylg
+

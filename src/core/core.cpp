@@ -1,5 +1,5 @@
 #include "core/core.h"
-#include "agent/error.h"
+#include "error/error.h"
 
 #include <curl/curl.h>
 
@@ -8,7 +8,7 @@ namespace ylg {
 std::error_code Init()
 {
     curl_global_init(CURL_GLOBAL_ALL);
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 void Uninit()

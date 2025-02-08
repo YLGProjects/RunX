@@ -22,8 +22,8 @@
  */
 
 #include "agent/client/client.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
-#include "core/net/error.h"
 #include "core/net/message.h"
 #include "core/net/tcp_client.h"
 #include "core/net/tcp_connection.h"
@@ -52,7 +52,7 @@ void Client::OnConnection(ylg::net::TCPConnection* connection)
     msg.Reset(header, data.data(), data.size());
 
     auto errcode = connection->Send(msg);
-    if (!ylg::net::IsSuccess(errcode))
+    if (!ylg::error::IsSuccess(errcode))
     {
         LOG_ERROR("can not send send to remote server. errcode:{}", errcode.value());
     }
@@ -76,7 +76,7 @@ void Client::Connect(const std::string& remoteIP, uint16_t remotePort)
     _client = std::make_shared<ylg::net::TCPClient>();
     _client->SetCallback(shared_from_this());
     auto errcode = _client->Connect(_remoteIP, _remotePort);
-    if (!ylg::net::IsSuccess(errcode))
+    if (!ylg::error::IsSuccess(errcode))
     {
         LOG_FATAL("can not connect the remote server. address:{}:{}", _remoteIP, _remotePort);
     }

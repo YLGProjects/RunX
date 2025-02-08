@@ -21,30 +21,19 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_CORE_NET_ERROR_H_
-#define _YLG_CORE_NET_ERROR_H_
+#ifndef _YLG_INTERNAL_ERROR_H_
+#define _YLG_INTERNAL_ERROR_H_
 
-#include <system_error>
+#include "core/error/error.h"
 
 namespace ylg {
-namespace net {
+namespace internal {
 
 enum class ErrorCode
 {
-    Unknown              = -2,
-    Error                = -1,
-    Success              = 0,
-    NetException         = 1,
-    LibException         = 2,
-    MemException         = 3,
-    TryAgain             = 4,
-    ConnectionAborted    = 5,
-    ReceivedTooLarge     = 6,
-    WritedException      = 7,
-    ConnectionIsNotReady = 8,
-    InvalidHTTPMethod    = 9,
-    RepeatedHTTPURI      = 10,
-    HTTPRespondFailed    = 11,
+    Unknown = -2,
+    Error   = -1,
+    Success = 0,
     MaxValue,
 
 };
@@ -59,41 +48,20 @@ public:
     std::string message(int code) const override;
 };
 
-/**
- * @brief ConvertToCode convert code to enum value
- *
- * @param code int value
- * @return Code enum value
- */
-ErrorCode ConvertToCode(int code);
+std::error_code make_error_code(ErrorCode e);
+bool            IsSuccess(const std::error_code& ec);
+std::string     ToString(int ec);
 
-/**
- * @brief MakeError make ylg error code
- *
- * @param ec error code value
- * @return std::error_code custom error msg
- */
-std::error_code MakeError(ErrorCode ec);
-std::error_code MakeSuccess();
-
-/**
- * @brief check ec is Code::Success
- *
- * @param ec the target ec
- * @return true is success
- * @return false is failed
- */
-bool IsSuccess(const std::error_code& ec);
-
-/**
- * @brief transfer error code to string
- *
- * @param ec error code
- * @return const char* error message
- */
-std::string ToString(int ec);
-
-} // namespace net
+} // namespace internal
 } // namespace ylg
 
+namespace std {
+template <>
+struct is_error_code_enum<ylg::internal::ErrorCode> : std::true_type
+{
+};
+
+} // namespace std
+
 #endif
+

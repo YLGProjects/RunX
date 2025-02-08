@@ -24,7 +24,7 @@
 #include "core/log/file_sink.h"
 #include "core/assist/file.h"
 #include "core/assist/time.h"
-#include "core/log/error.h"
+#include "core/error/error.h"
 #include "core/log/file.h"
 
 #include <spdlog/common.h>
@@ -83,7 +83,7 @@ void FileSink::sink_it_(const spdlog::details::log_msg& message)
             Rotate();
 
             // reset the current file size after rotate
-            newSize     = formatted.size();
+            newSize      = formatted.size();
             _currentSize = 0;
         }
     }
@@ -135,7 +135,7 @@ void FileSink::Rotate()
 
     auto ec = assist::ListFile(_basePath, scanFiles);
 
-    if (!IsSuccess(ec))
+    if (!error::IsSuccess(ec))
     {
         fprintf(stderr, "%s", ec.message().c_str());
         return;
@@ -180,3 +180,4 @@ bool FileSink::RenameFile(const spdlog::filename_t& srcName, const spdlog::filen
 
 } // namespace log
 } // namespace ylg
+

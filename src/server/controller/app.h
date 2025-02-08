@@ -28,6 +28,8 @@
 #include "server/controller/configuration.h"
 #include "server/controller/controller.h"
 
+#include "internal/error.h"
+
 #include "core/application/core.h"
 
 #include <future>
@@ -39,18 +41,18 @@ public:
     ~App();
 
 public:
-    std::error_code Run(int argc, char *argv[]);
-    void            Close();
+    ylg::internal::ErrorCode Run(int argc, char *argv[]);
+    void                     Close();
 
 private:
-    std::error_code GuardLoop();
-    void            DumpConfiguration();
-    std::error_code InitFlags();
-    std::error_code InitLogs();
-    std::error_code InitController();
-    std::error_code InitAPIs();
-    std::error_code LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code Execute(ylg::app::ContextPtr ctx);
+    ylg::internal::ErrorCode GuardLoop();
+    void                     DumpConfiguration();
+    ylg::internal::ErrorCode InitFlags();
+    ylg::internal::ErrorCode InitLogs();
+    ylg::internal::ErrorCode InitController();
+    ylg::internal::ErrorCode InitAPIs();
+    ylg::internal::ErrorCode LoadConfig(ylg::app::ContextPtr ctx);
+    std::error_code          Execute(ylg::app::ContextPtr ctx);
 
 private:
     std::future<void>           _controllerRun;

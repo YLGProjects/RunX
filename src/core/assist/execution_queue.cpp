@@ -13,8 +13,8 @@
  */
 
 #include "core/assist/execution_queue.h"
-#include "core/assist/error.h"
 #include "core/assist/time.h"
+#include "core/error/error.h"
 
 #include <cstddef>
 
@@ -30,7 +30,7 @@ ExecutionQueue::ExecutionQueue(const std::string& inName, std::size_t inMaxCount
     _tasks = moodycamel::BlockingConcurrentQueue<TaskFunctor>();
     for (std::size_t idx = 0; idx < _maxConsumerCount; ++idx)
     {
-       _consumers.push_back(std::async(std::launch::async, &ExecutionQueue::Consumer, this));
+        _consumers.push_back(std::async(std::launch::async, &ExecutionQueue::Consumer, this));
     }
 }
 
@@ -61,15 +61,15 @@ std::error_code ExecutionQueue::Enqueue(const TaskFunctor& task, std::size_t max
 {
     if (_tasks.size_approx() > _maxTaskCount)
     {
-        return MakeError(ErrorCode::Overflow);
+        return error::ErrorCode::Overflow;
     }
 
     if (!_tasks.enqueue(task))
     {
-        return MakeError(ErrorCode::Error);
+        return error::ErrorCode::Error;
     }
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 void ExecutionQueue::BlockEnqueue(const TaskFunctor& task)
@@ -97,3 +97,4 @@ void ExecutionQueue::Consumer()
 
 } // namespace assist
 } // namespace ylg
+

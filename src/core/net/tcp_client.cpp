@@ -22,8 +22,8 @@
  */
 
 #include "core/net/tcp_client.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
-#include "core/net/error.h"
 #include "core/net/message.h"
 #include "core/net/tcp_connection.h"
 #include "core/net/tcp_handler.h"
@@ -52,12 +52,12 @@ void TCPClient::ReadCallback(bufferevent* bev, void* ctx)
 
     Message msg;
     auto    errcode = connection->Read(msg);
-    if ((int)ErrorCode::TryAgain == errcode.value())
+    if ((int)error::ErrorCode::TryAgain == errcode.value())
     {
         return;
     }
 
-    if (!IsSuccess(errcode))
+    if (!error::IsSuccess(errcode))
     {
         LOG_ERROR("failed to read data from connection:{}", connection->GetRemoteAddress());
     }
@@ -107,7 +107,7 @@ std::error_code TCPClient::Connect(const std::string& ip, uint16_t port, uint32_
     if (!_base)
     {
         LOG_ERROR("failed to create evnet base:{}:{}", ip, port);
-        return MakeError(ErrorCode::LibException);
+        return error::ErrorCode::LibException;
     }
 
     _remoteIP   = ip;
@@ -124,7 +124,7 @@ std::error_code TCPClient::Connect(const std::string& ip, uint16_t port, uint32_
     if (getaddrinfo(_remoteIP.c_str(), remotePort.c_str(), &hints, &servinfo) != 0)
     {
         event_base_free(_base);
-        return MakeError(ErrorCode::ConnectionAborted);
+        return error::ErrorCode::ConnectionAborted;
     }
 
     evutil_addrinfo* p = nullptr;
@@ -146,7 +146,7 @@ std::error_code TCPClient::Connect(const std::string& ip, uint16_t port, uint32_
 
     freeaddrinfo(servinfo);
     _asyncRun = std::async(std::launch::async, &TCPClient::Run, this);
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 void TCPClient::Close()
@@ -165,7 +165,7 @@ std::error_code TCPClient::Send(const Message& msg)
 {
     if (_connections.Count() == 0)
     {
-        return MakeError(ErrorCode::ConnectionIsNotReady);
+        return error::ErrorCode::ConnectionIsNotReady;
     }
 
     auto idx = _connIndex++ % _connections.Count();

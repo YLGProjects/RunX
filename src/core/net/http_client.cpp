@@ -23,7 +23,7 @@
 
 #include "core/net/http_client.h"
 #include "core/assist/string.h"
-#include "core/net/error.h"
+#include "core/error/error.h"
 
 #include <curl/curl.h>
 #include <curl/easy.h>
@@ -152,19 +152,19 @@ std::error_code HTTPClient::Execute(int& status, std::string& response)
     if (CURLE_OK != code)
     {
         curl_slist_free_all(curlList);
-        return MakeError(ErrorCode::HTTPRespondFailed);
+        return error::ErrorCode::HTTPRespondFailed;
     }
 
     code = curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &status);
     if (CURLE_OK != code)
     {
         curl_slist_free_all(curlList);
-        return MakeError(ErrorCode::HTTPRespondFailed);
+        return error::ErrorCode::HTTPRespondFailed;
     }
 
     curl_slist_free_all(curlList);
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 } // namespace net

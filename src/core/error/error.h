@@ -34,6 +34,29 @@ enum class ErrorCode
     Unknown = -2,
     Error   = -1,
     Success = 0,
+
+    // net error code
+    NetException,
+    LibException,
+    MemException,
+    TryAgain,
+    ConnectionAborted,
+    ReceivedTooLarge,
+    WritedException,
+    ConnectionIsNotReady,
+    InvalidHTTPMethod,
+    RepeatedHTTPURI,
+    HTTPRespondFailed,
+
+    // application error code
+    ParseConfigFailure = 1,
+
+    // assist error code
+    Overflow,
+    FileException,
+    InvalidParameter,
+    InvalidUser,
+
     MaxValue,
 
 };
@@ -48,42 +71,20 @@ public:
     std::string message(int code) const override;
 };
 
-/**
- * @brief ConvertToCode convert code to enum value
- *
- * @param code int value
- * @return Code enum value
- */
-ErrorCode ConvertToCode(int code);
-
-/**
- * @brief MakeError make ylg error code
- *
- * @param ec error code value
- * @return std::error_code custom error msg
- */
-std::error_code MakeError(ErrorCode ec);
-std::error_code MakeSuccess();
-
-/**
- * @brief check ec is Code::Success
- *
- * @param ec the target ec
- * @return true is success
- * @return false is failed
- */
-bool IsSuccess(const std::error_code& ec);
-
-/**
- * @brief transfer error code to string
- *
- * @param ec error code
- * @return const char* error message
- */
-std::string ToString(int ec);
+std::error_code make_error_code(ErrorCode e);
+bool            IsSuccess(const std::error_code& ec);
+std::string     ToString(int ec);
 
 } // namespace error
 } // namespace ylg
+
+namespace std {
+template <>
+struct is_error_code_enum<ylg::error::ErrorCode> : std::true_type
+{
+};
+
+} // namespace std
 
 #endif
 

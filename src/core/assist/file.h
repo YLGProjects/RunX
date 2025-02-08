@@ -24,6 +24,8 @@
 #ifndef _YLG_CORE_ASSIST_FILE_H_
 #define _YLG_CORE_ASSIST_FILE_H_
 
+#include "core/error/error.h"
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -174,3 +176,4 @@ std::error_code UnlockFile(int fileFD);
 } // namespace ylg
 
 #endif
+
