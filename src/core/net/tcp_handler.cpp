@@ -1,6 +1,6 @@
 #include "core/net/tcp_handler.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
-#include "core/net/error.h"
 #include "core/net/message.h"
 #include "core/net/tcp_connection.h"
 
@@ -28,13 +28,13 @@ void TCPHandler::ReadCallback(bufferevent* bev, void* ctx)
     Message msg;
     auto    errcode = connection->Read(msg);
 
-    if ((int)ErrorCode::TryAgain == errcode.value())
+    if ((int)error::ErrorCode::TryAgain == errcode.value())
     {
         LOG_WARN("more date need to be read from the connection:{}", connection->ID());
         return;
     }
 
-    if (!IsSuccess(errcode))
+    if (!error::IsSuccess(errcode))
     {
         LOG_ERROR("failed to read data from connection:{}, errcode:{}", connection->GetRemoteAddress(), errcode.value());
     }
@@ -94,19 +94,19 @@ std::error_code TCPHandler::Start()
     if (!_base)
     {
         LOG_ERROR("failed to create event base");
-        return MakeError(ErrorCode::LibException);
+        return error::ErrorCode::LibException;
     }
 
     _asyncRun = std::async(std::launch::async, &TCPHandler::Run, this);
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code TCPHandler::Stop()
 {
     if (!_base)
     {
-        return MakeSuccess();
+        return error::ErrorCode::Success;
     }
 
     event_base_loopbreak(_base);
@@ -114,7 +114,7 @@ std::error_code TCPHandler::Stop()
 
     _base = nullptr;
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 void TCPHandler::Run()

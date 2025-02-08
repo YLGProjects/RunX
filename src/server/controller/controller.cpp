@@ -23,8 +23,8 @@
 
 #include "server/controller/controller.h"
 
+#include "core/error/error.h"
 #include "core/log/log.h"
-#include "core/net/error.h"
 #include "core/net/message.h"
 #include "core/net/tcp_server.h"
 
@@ -74,7 +74,7 @@ void Controller::Run(const std::string& listenIP, uint16_t listenPort)
         _server = std::make_shared<ylg::net::TCPServer>(_listenIP, _listenPort);
         _server->SetCallback(shared_from_this());
         auto errcode = _server->Run();
-        if (!ylg::net::IsSuccess(errcode))
+        if (!ylg::error::IsSuccess(errcode))
         {
             LOG_FATAL("the tcp server can not be started. errcode:{}", errcode.value());
         }
@@ -86,7 +86,7 @@ void Controller::Run(const std::string& listenIP, uint16_t listenPort)
 void Controller::Close()
 {
     auto errcode = _server->Close();
-    if (!ylg::net::IsSuccess(errcode))
+    if (!ylg::error::IsSuccess(errcode))
     {
         LOG_WARN("failed to stop tcp server. errcode:{}", errcode.value());
     }

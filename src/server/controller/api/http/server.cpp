@@ -23,8 +23,8 @@
 
 #include "server/controller/api/http/server.h"
 
+#include "core/error/error.h"
 #include "core/log/log.h"
-#include "core/net/error.h"
 #include "core/net/http_context.h"
 #include "core/net/http_server.h"
 
@@ -44,7 +44,7 @@ void HTTPAPIServer::Run(const std::string& listenIP, uint16_t listenPort)
                                                           std::placeholders::_3,
                                                           std::placeholders::_4));
 
-    if (!ylg::net::IsSuccess(errcode))
+    if (!ylg::error::IsSuccess(errcode))
     {
         LOG_ERROR("failed to register api handler. api:{}", "/api/test");
         return;
@@ -72,3 +72,4 @@ void HTTPAPIServer::Test(const ylg::net::Parameters& inParameters,
     status   = 200;
     response = "[TEST API]hello world";
 }
+

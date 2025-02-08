@@ -26,5 +26,5 @@
 int main(int argc, char *argv[])
 {
     auto ec = App().Run(argc, argv);
-    return ec.value();
+    return (int)ec;
 }

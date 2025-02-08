@@ -22,9 +22,15 @@
  */
 
 #include "internal/controller_protocol.h"
+#include "core/error/error.h"
 
 namespace ylg {
 namespace internal {
 
+std::error_code AuthRequest::ToJSON(std::string& data)
+{
+    return error::ErrorCode::Success;
 }
+
+} // namespace internal
 } // namespace ylg

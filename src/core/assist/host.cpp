@@ -13,8 +13,8 @@
  */
 
 #include "core/assist/host.h"
-#include "core/assist/error.h"
 #include "core/assist/memory.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
 
 #include <cstring>
@@ -78,18 +78,19 @@ std::error_code Hostname(std::string& hostName)
 
     if (gethostname(buffer, sizeof(buffer) - 1) < 0)
     {
-        LOG_ERROR("can not get host name. errmsg({})", ToString(errno));
-        return MakeError(ErrorCode::Error);
+        LOG_ERROR("can not get host name. errmsg({})", error::ToString(errno));
+        return error::ErrorCode::Error;
     }
 
     if (strlen(buffer) > 0 && strlen(buffer) < sizeof(buffer))
     {
         hostName = buffer;
-        return MakeSuccess();
+        return error::ErrorCode::Success;
     }
 
-    return MakeError(ErrorCode::Error);
+    return error::ErrorCode::Error;
 }
 
 } // namespace assist
 } // namespace ylg
+

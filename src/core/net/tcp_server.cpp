@@ -1,6 +1,6 @@
 #include "core/net/tcp_server.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
-#include "core/net/error.h"
 #include "core/net/tcp_handler.h"
 
 #include <event2/util.h>
@@ -48,7 +48,7 @@ std::error_code TCPServer::Run()
         auto handler = std::make_shared<TCPHandler>();
         handler->SetCallback(_functor);
         auto errcode = handler->Start();
-        if (!IsSuccess(errcode))
+        if (!error::IsSuccess(errcode))
         {
             LOG_ERROR("failed to create tcp server handler. errcode:{}", errcode.value());
             return errcode;
@@ -61,7 +61,7 @@ std::error_code TCPServer::Run()
     if (!_base)
     {
         LOG_ERROR("failed to create event base");
-        return MakeError(ErrorCode::NetException);
+        return error::ErrorCode::NetException;
     }
 
     evutil_addrinfo hints;
@@ -78,7 +78,7 @@ std::error_code TCPServer::Run()
         LOG_ERROR("failed to get the service info. listen address:{}, listen port:{}", _listenAddress, port);
         event_base_free(_base);
         _base = nullptr;
-        return MakeError(ErrorCode::NetException);
+        return error::ErrorCode::NetException;
     }
 
     evutil_addrinfo* p = nullptr;
@@ -101,7 +101,7 @@ std::error_code TCPServer::Run()
         event_base_free(_base);
         _base = nullptr;
         freeaddrinfo(serviceInfo);
-        return MakeError(ErrorCode::NetException);
+        return error::ErrorCode::NetException;
     }
 
     int exitedCode = 0;
@@ -117,20 +117,20 @@ std::error_code TCPServer::Run()
     _base     = nullptr;
     _listener = nullptr;
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code TCPServer::Close()
 {
     if (!_base)
     {
-        return MakeSuccess();
+        return error::ErrorCode::Success;
     }
 
     for (auto& handler : _handlers)
     {
         auto errcode = handler->Stop();
-        if (!IsSuccess(errcode))
+        if (!error::IsSuccess(errcode))
         {
             LOG_WARN("failed to stop the tcp server handler. errcode:{}", errcode.value());
         }
@@ -138,8 +138,9 @@ std::error_code TCPServer::Close()
     _handlers.clear();
 
     event_base_loopbreak(_base);
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 } // namespace net
 } // namespace ylg
+

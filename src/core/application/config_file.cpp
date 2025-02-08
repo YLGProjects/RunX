@@ -22,8 +22,8 @@
  */
 
 #include "core/application/config_file.h"
-#include "core/application/error.h"
 #include "core/assist/macro.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
 
 #include <cstddef>
@@ -40,7 +40,7 @@ std::error_code ConfigFile::Load(const std::string& filePath)
 {
     BEGIN_TRY
 
-    _fileName    = filePath;
+    _fileName   = filePath;
     auto config = YAML::LoadFile(filePath);
 
     for (const auto& entry : config)
@@ -52,16 +52,16 @@ std::error_code ConfigFile::Load(const std::string& filePath)
     END_TRY_BEGIN_CATCH(YAML::ParserException, ex)
 
     LOG_ERROR("failed to parse the yaml file. file({}), errmsg({})", filePath, ex.what());
-    return MakeError(ErrorCode::ParseConfigFailure);
+    return error::ErrorCode::ParseConfigFailure;
 
     END_TRY_BEGIN_CATCH(YAML::BadFile, ex)
 
     LOG_ERROR("failed to parse the yaml file. file({}), errmsg({})", filePath, ex.what());
-    return MakeError(ErrorCode::ParseConfigFailure);
+    return error::ErrorCode::ParseConfigFailure;
 
     END_CATCH
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 void ConfigFile::PrintVars()
@@ -130,3 +130,4 @@ void ConfigFile::Traverse(const YAML::Node& node, const std::string& key)
 
 } // namespace app
 } // namespace ylg
+

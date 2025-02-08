@@ -22,32 +22,33 @@
  */
 
 #include "core/application/discovery.h"
-#include "core/application/error.h"
+#include "core/error/error.h"
 
 namespace ylg {
 namespace app {
 
 std::error_code Discovery::Watch(const std::string& key, CallbackFunctor callback)
 {
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code Discovery::GetList(const std::string& key, std::vector<std::string>& elements)
 {
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code Discovery::GetValue(const std::string& key, std::string& value)
 {
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code Discovery::Start(const std::string& endpoints, std::string* errMsg)
 {
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 void Stop();
 
 } // namespace app
 } // namespace ylg
+

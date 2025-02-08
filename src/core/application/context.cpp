@@ -22,8 +22,8 @@
  */
 
 #include "core/application/context.h"
-#include "core/application/error.h"
 #include "core/assist/string.h"
+#include "core/error/error.h"
 
 #include <cstdint>
 #include <string>
@@ -237,7 +237,7 @@ std::error_code Context::LoadConfig(const std::string& fileName)
 {
     auto ec = _fileCfg->Load(fileName);
 
-    if (!IsSuccess(ec))
+    if (!error::IsSuccess(ec))
     {
         return ec;
     }

@@ -23,9 +23,8 @@
 
 #include "core/assist/user.h"
 #include "core/assist/memory.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
-
-#include <system_error>
 
 #include <pwd.h>
 #include <unistd.h>
@@ -60,14 +59,14 @@ std::error_code GetUserUidGid(const std::string& userName, int& uid, int& gid)
     auto isOK = getpwnam_r(userName.c_str(), &pwd, buffer, sizeof(buffer), &res) && res != nullptr;
     if (!isOK)
     {
-        LOG_ERROR("can not get uid and gid. errmsg({})", ToString(errno));
-        return MakeError(ErrorCode::Error);
+        LOG_ERROR("can not get uid and gid. errmsg({})", error::ToString(errno));
+        return error::ErrorCode::Error;
     }
 
     uid = res->pw_uid;
     gid = res->pw_gid;
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code GetUserUidGid(const std::string& userName, int& uid, int& gid, std::string& homeDirectory, std::string& shell)
@@ -81,8 +80,8 @@ std::error_code GetUserUidGid(const std::string& userName, int& uid, int& gid, s
     auto isOK = getpwnam_r(userName.c_str(), &pwd, buffer, sizeof(buffer), &res) && res != nullptr;
     if (!isOK)
     {
-        LOG_ERROR("can not get uid and gid. errmsg({})", ToString(errno));
-        return MakeError(ErrorCode::Error);
+        LOG_ERROR("can not get uid and gid. errmsg({})", error::ToString(errno));
+        return error::ErrorCode::Error;
     }
 
     uid           = res->pw_uid;
@@ -90,25 +89,26 @@ std::error_code GetUserUidGid(const std::string& userName, int& uid, int& gid, s
     shell         = res->pw_shell;
     homeDirectory = res->pw_dir;
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code SetUserUidGid(int uid, int gid)
 {
     if (setregid(gid, gid))
     {
-        LOG_ERROR("can not set gid. errmsg({})", ToString(errno));
-        return MakeError(ErrorCode::Error);
+        LOG_ERROR("can not set gid. errmsg({})", error::ToString(errno));
+        return error::ErrorCode::Error;
     }
 
     if (setreuid(uid, uid))
     {
-        LOG_ERROR("can not get uid. errmsg({})", ToString(errno));
-        return MakeError(ErrorCode::Error);
+        LOG_ERROR("can not get uid. errmsg({})", error::ToString(errno));
+        return error::ErrorCode::Error;
     }
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 } // namespace assist
 } // namespace ylg
+

@@ -24,7 +24,7 @@
 #ifndef _YLG_CORE_ASSIST_USER_H_
 #define _YLG_CORE_ASSIST_USER_H_
 
-#include "core/assist/error.h"
+#include "core/error/error.h"
 
 #include <string>
 
@@ -75,3 +75,4 @@ std::error_code SetUserUidGid(int uid, int gid);
 } // namespace ylg
 
 #endif
+

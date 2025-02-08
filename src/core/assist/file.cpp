@@ -21,8 +21,8 @@
  * SOFTWARE.
  */
 
-#include "core/assist/error.h"
 #include "core/assist/memory.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
 
 #include <cstdint>
@@ -92,19 +92,19 @@ std::error_code ReadFullFile(const std::string& fileName, std::string& content)
 
     if (fileName.empty())
     {
-        return MakeError(ErrorCode::InvalidParameter);
+        return error::ErrorCode::InvalidParameter;
     }
 
     if (!FileExists(fileName))
     {
-        return MakeError(ErrorCode::FileException);
+        return error::ErrorCode::FileException;
     }
 
     std::ifstream file(fileName);
 
     if (!file.is_open())
     {
-        return MakeError(ErrorCode::FileException);
+        return error::ErrorCode::FileException;
     }
 
     std::string line;
@@ -115,14 +115,14 @@ std::error_code ReadFullFile(const std::string& fileName, std::string& content)
 
     file.close();
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code DeleteFile(const std::string& fileName)
 {
     if (fileName.empty())
     {
-        return MakeError(ErrorCode::InvalidParameter);
+        return error::ErrorCode::InvalidParameter;
     }
 
     bool isOK = false;
@@ -134,17 +134,17 @@ std::error_code DeleteFile(const std::string& fileName)
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not delete the file({}). errmsg({})", fileName, e.what());
-        return MakeError(ErrorCode::FileException);
+        return error::ErrorCode::FileException;
     }
 
-    return isOK ? MakeSuccess() : MakeError(ErrorCode::FileException);
+    return isOK ? error::ErrorCode::Success : error::ErrorCode::FileException;
 }
 
 std::error_code DeleteDirectory(const std::string& fileName)
 {
     if (fileName.empty())
     {
-        return MakeError(ErrorCode::InvalidParameter);
+        return error::ErrorCode::InvalidParameter;
     }
 
     std::uintmax_t removedNum = 0;
@@ -156,22 +156,22 @@ std::error_code DeleteDirectory(const std::string& fileName)
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not delete the file({}). errmsg({})", fileName, e.what());
-        return MakeError(ErrorCode::FileException);
+        return error::ErrorCode::FileException;
     }
 
-    return removedNum > 0 ? MakeSuccess() : MakeError(ErrorCode::FileException);
+    return removedNum > 0 ? error::ErrorCode::Success : error::ErrorCode::FileException;
 }
 
 std::error_code RenameFile(const std::string& oldName, const std::string& newName)
 {
     if (oldName.empty())
     {
-        return MakeError(ErrorCode::InvalidParameter);
+        return error::ErrorCode::InvalidParameter;
     }
 
     if (newName.empty())
     {
-        return MakeError(ErrorCode::InvalidParameter);
+        return error::ErrorCode::InvalidParameter;
     }
 
     try
@@ -181,40 +181,40 @@ std::error_code RenameFile(const std::string& oldName, const std::string& newNam
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not rename the file({}). new file({}), errmsg({})", oldName, newName, e.what());
-        return MakeError(ErrorCode::FileException);
+        return error::ErrorCode::FileException;
     }
 
-    return MakeError(ErrorCode::FileException);
+    return error::ErrorCode::FileException;
 }
 
 std::error_code SetFileUser(const std::string& fileName, const std::string& userName)
 {
     if (fileName.empty())
     {
-        return MakeError(ErrorCode::InvalidParameter);
+        return error::ErrorCode::InvalidParameter;
     }
 
     if (userName.empty())
     {
-        return MakeError(ErrorCode::InvalidUser);
+        return error::ErrorCode::InvalidUser;
     }
 
     int uid = 0;
     int gid = 0;
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code SetFilePermission(const std::string& fileName, int mode)
 {
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code ListFile(const std::string& dirName, std::vector<std::string>& files, bool recursive)
 {
     if (dirName.empty())
     {
-        return MakeError(ErrorCode::InvalidParameter);
+        return error::ErrorCode::InvalidParameter;
     }
 
     try
@@ -230,7 +230,7 @@ std::error_code ListFile(const std::string& dirName, std::vector<std::string>& f
             if (entry.is_directory() && recursive)
             {
                 auto ec = ListFile(entry.path(), files, recursive);
-                if (!IsSuccess(ec))
+                if (!error::IsSuccess(ec))
                 {
                     return ec;
                 }
@@ -240,17 +240,17 @@ std::error_code ListFile(const std::string& dirName, std::vector<std::string>& f
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not list file. dir({}), errmsg({}))", dirName, e.what());
-        return MakeError(ErrorCode::FileException);
+        return error::ErrorCode::FileException;
     }
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code MakeDirectory(const std::string& dirPath)
 {
     if (dirPath.empty())
     {
-        return MakeError(ErrorCode::InvalidParameter);
+        return error::ErrorCode::InvalidParameter;
     }
 
     try
@@ -260,10 +260,10 @@ std::error_code MakeDirectory(const std::string& dirPath)
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not make the directory. dir({}), errmsg({}))", dirPath, e.what());
-        return MakeError(ErrorCode::FileException);
+        return error::ErrorCode::FileException;
     }
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::string JoinPath(const std::vector<std::string>& paths)
@@ -306,11 +306,11 @@ std::error_code LockFile(int fileFD)
 
     if (fcntl(fileFD, F_SETLK, &fl) == -1)
     {
-        LOG_ERROR("can not lock file, errmsg({})", ToString(errno));
-        return MakeError(ErrorCode::Error);
+        LOG_ERROR("can not lock file, errmsg({})", error::ToString(errno));
+        return error::ErrorCode::Error;
     }
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code UnlockFile(int fileFD)
@@ -323,12 +323,13 @@ std::error_code UnlockFile(int fileFD)
 
     if (fcntl(fileFD, F_SETLK, &fl) == -1)
     {
-        LOG_ERROR("can not unlock file, errmsg({})", ToString(errno));
-        return MakeError(ErrorCode::Error);
+        LOG_ERROR("can not unlock file, errmsg({})", error::ToString(errno));
+        return error::ErrorCode::Error;
     }
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 } // namespace assist
 } // namespace ylg
+

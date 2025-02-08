@@ -23,8 +23,8 @@
 
 #include "core/net/tcp_connection.h"
 #include "core/assist/string.h"
+#include "core/error/error.h"
 #include "core/log/log.h"
-#include "core/net/error.h"
 #include "core/net/message.h"
 
 #include <event2/buffer.h>
@@ -86,7 +86,7 @@ std::error_code TCPConnection::Read(Message& msg)
     if (Message::MESSAGE_HEADER_SIZE > evbuffer_get_length(buffer))
     {
         LOG_DEBUG("evbuffer length less than header size");
-        return MakeError(ErrorCode::TryAgain);
+        return error::ErrorCode::TryAgain;
     }
 
     Header header;
@@ -94,7 +94,7 @@ std::error_code TCPConnection::Read(Message& msg)
     if (Message::MESSAGE_HEADER_SIZE > length)
     {
         LOG_DEBUG("evbuffer copied size less than header size");
-        return MakeError(ErrorCode::TryAgain);
+        return error::ErrorCode::TryAgain;
     }
 
     Ntoh(header);
@@ -103,20 +103,20 @@ std::error_code TCPConnection::Read(Message& msg)
     if (totalSize > Message::MAX_MESSAGE_SIZE)
     {
         LOG_DEBUG("total size {} more than max message size {}.", totalSize, (uint64_t)Message::MAX_MESSAGE_SIZE);
-        return MakeError(ErrorCode::ReceivedTooLarge);
+        return error::ErrorCode::ReceivedTooLarge;
     }
 
     char* msgBuffer = (char*)evbuffer_pullup(buffer, totalSize);
     if (!msgBuffer)
     {
         LOG_DEBUG("read buffer size{}", totalSize);
-        return MakeError(ErrorCode::TryAgain);
+        return error::ErrorCode::TryAgain;
     }
 
     msg.Reset(header, msgBuffer + Message::MESSAGE_HEADER_SIZE, header._dataSize);
     evbuffer_drain(buffer, totalSize);
 
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 std::error_code TCPConnection::Send(const Message& msg)
@@ -125,10 +125,11 @@ std::error_code TCPConnection::Send(const Message& msg)
     int errcode = bufferevent_write(_bev, msg.GetData(), msg.GetDataSize());
     if (errcode)
     {
-        return MakeError(ErrorCode::WritedException);
+        return error::ErrorCode::WritedException;
     }
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 } // namespace net
 } // namespace ylg
+

@@ -26,7 +26,7 @@
 #include "core/assist/macro.h"
 #include "core/assist/string.h"
 #include "core/assist/time.h"
-#include "core/log/error.h"
+#include "core/error/error.h"
 #include "core/log/file_sink.h"
 
 #include <spdlog/async_logger.h>
@@ -131,17 +131,17 @@ std::error_code Logger::Init(const std::string& name, const LogConfig& cfg)
     END_TRY_BEGIN_CATCH(spdlog::spdlog_ex, ex)
 
     LOG_STD("can not init spd log. errmsg({})", ex.what());
-    return MakeError(ErrorCode::Error);
+    return error::ErrorCode::Error;
 
     END_CATCH_AND_BEGIN_CATCH_ALL
 
     LOG_STD("can not init spd log. errmsg({})", "unknown exception");
-    return MakeError(ErrorCode::Error);
+    return error::ErrorCode::Error;
 
     END_CATCH_ALL
 
     _isOpen.store(true);
-    return MakeSuccess();
+    return error::ErrorCode::Success;
 }
 
 void Logger::Close()
@@ -207,13 +207,13 @@ bool Logger::RedirectSTD(const std::string& name, const LogConfig& cfg)
     if (assist::FileExists(logFile))
     {
         auto ec = assist::DeleteFile(logFile + ".bak");
-        if (!IsSuccess(ec))
+        if (!error::IsSuccess(ec))
         {
             // ignore error
         }
 
         ec = assist::RenameFile(logFile, logFile + ".bak");
-        if (!IsSuccess(ec))
+        if (!error::IsSuccess(ec))
         {
             // ignore error
         }

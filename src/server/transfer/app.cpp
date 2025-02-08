@@ -22,12 +22,13 @@
  */
 
 #include "server/transfer/app.h"
+#include "core/error/error.h"
 #include "server/transfer/api/http/server.h"
-#include "server/transfer/error.h"
+
+#include "internal/error.h"
 
 #include "core/assist/time.h"
 #include "core/core.h"
-#include "core/error/error.h"
 #include "core/log/log.h"
 #include "server/transfer/transfer.h"
 
@@ -42,24 +43,30 @@ App::~App()
     Close();
 }
 
-std::error_code App::Run(int argc, char *argv[])
+ylg::internal::ErrorCode App::Run(int argc, char *argv[])
 {
     auto ec = ylg::Init();
     if (!ylg::error::IsSuccess(ec))
     {
-        return ec;
+        return ylg::internal::ErrorCode::Error;
     }
 
     _needStop = false;
 
     ec = InitFlags();
 
-    if (!IsSuccess(ec))
+    if (!ylg::internal::IsSuccess(ec))
     {
-        return ec;
+        return ylg::internal::ErrorCode::Error;
     }
 
-    return _core->Run(argc, argv, std::bind(&App::Execute, this, std::placeholders::_1));
+    ec = _core->Run(argc, argv, std::bind(&App::Execute, this, std::placeholders::_1));
+    if (!ylg::error::IsSuccess(ec))
+    {
+        return ylg::internal::ErrorCode::Error;
+    }
+
+    return ylg::internal::ErrorCode::Success;
 }
 
 void App::Close()
@@ -69,15 +76,15 @@ void App::Close()
     ylg::Uninit();
 }
 
-std::error_code App::GuardLoop()
+ylg::internal::ErrorCode App::GuardLoop()
 {
     while (!_needStop)
     {
         ylg::assist::MilliSleep(1000);
     }
 
-    LOG_INFO("agent exited");
-    return MakeSuccess();
+    LOG_INFO("Transfer Exited");
+    return ylg::internal::ErrorCode::Success;
 }
 
 void App::DumpConfiguration()
@@ -85,7 +92,7 @@ void App::DumpConfiguration()
     LOG_INFO("{}", DumpConfig(*_localConfig));
 }
 
-std::error_code App::InitFlags()
+ylg::internal::ErrorCode App::InitFlags()
 {
     ylg::app::FlagString flagConfig;
 
@@ -96,10 +103,10 @@ std::error_code App::InitFlags()
 
     _core->AddCommand(flagConfig);
 
-    return MakeSuccess();
+    return ylg::internal::ErrorCode::Success;
 }
 
-std::error_code App::InitLogs()
+ylg::internal::ErrorCode App::InitLogs()
 {
     ylg::log::LogConfig cfg;
 
@@ -108,40 +115,46 @@ std::error_code App::InitLogs()
     cfg._path       = _localConfig->_logPath;
     cfg._level      = _localConfig->_logLevel;
 
-    return ylg::log::Logger::Instance().Init(_localConfig->_name, cfg);
+    auto ec = ylg::log::Logger::Instance().Init(_localConfig->_name, cfg);
+    if (!ylg::error::IsSuccess(ec))
+    {
+        return ylg::internal::ErrorCode::Error;
+    }
+
+    return ylg::internal::ErrorCode::Success;
 }
 
-std::error_code App::InitTransfer()
+ylg::internal::ErrorCode App::InitTransfer()
 {
     _transfer = std::make_shared<Transfer>();
     _transfer->Run(_localConfig->_endpointIP, _localConfig->_endpointPort);
-    return MakeSuccess();
+    return ylg::internal::ErrorCode::Success;
 }
 
-std::error_code App::InitAPIs()
+ylg::internal::ErrorCode App::InitAPIs()
 {
     _httpAPI = std::make_shared<HTTPAPIServer>();
     _httpAPI->Run("0.0.0.0", 26689);
-    return MakeSuccess();
+    return ylg::internal::ErrorCode::Success;
 }
 
-std::error_code App::LoadConfig(ylg::app::ContextPtr ctx)
+ylg::internal::ErrorCode App::LoadConfig(ylg::app::ContextPtr ctx)
 {
     _localConfig->_ctx = ctx;
 
     if (!ctx->FlagExist("config"))
     {
-        return MakeError(ErrorCode::Error);
+        return ylg::internal::ErrorCode::Error;
     }
 
     auto cfg = ctx->GetFlagValue<ylg::app::FlagString>("config");
     std::cout << "config:" << cfg._value << std::endl;
 
     auto ec = ctx->LoadConfig(cfg._value);
-    if (!IsSuccess(ec))
+    if (!ylg::internal::IsSuccess(ec))
     {
         LOG_STD("can not load config file(%s)", cfg._value.c_str());
-        return ec;
+        return ylg::internal::ErrorCode::Error;
     }
 
     // parse base
@@ -158,7 +171,7 @@ std::error_code App::LoadConfig(ylg::app::ContextPtr ctx)
     _localConfig->_maxFileCount  = ctx->GetFileConfig<uint32_t>("log.file-count", YLG_SERVER_TRANSFER_LOG_FILE_MAX_COUNT_DFT);
     _localConfig->_maxFileSizeMB = ctx->GetFileConfig<uint32_t>("log.file-sizeMB", YLG_SERVER_TRANSFER_LOG_FILE_MAX_FILE_SIZE_MB_DFT);
 
-    return ec;
+    return ylg::internal::ErrorCode::Success;
 }
 
 std::error_code App::Execute(ylg::app::ContextPtr ctx)
@@ -166,32 +179,28 @@ std::error_code App::Execute(ylg::app::ContextPtr ctx)
     _localConfig->_ctx = ctx;
 
     auto ec = LoadConfig(ctx);
-    if (!IsSuccess(ec))
+    if (!ylg::internal::IsSuccess(ec))
     {
-        LOG_ERROR("failed to load config. errmsg({}:{})", ec.value(), ec.message());
         return ec;
     }
 
     ec = InitLogs();
-    if (!IsSuccess(ec))
+    if (!ylg::internal::IsSuccess(ec))
     {
-        LOG_ERROR("failed to init log. errmsg({}:{})", ec.value(), ec.message());
         return ec;
     }
 
     DumpConfiguration();
 
     ec = InitTransfer();
-    if (!IsSuccess(ec))
+    if (!ylg::internal::IsSuccess(ec))
     {
-        LOG_ERROR("failed to init transfer. errmsg({}:{})", ec.value(), ec.message());
         return ec;
     }
 
     ec = InitAPIs();
-    if (!IsSuccess(ec))
+    if (!ylg::internal::IsSuccess(ec))
     {
-        LOG_ERROR("failed to init APIs. errmsg({}:{})", ec.value(), ec.message());
         return ec;
     }
 

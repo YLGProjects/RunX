@@ -23,6 +23,8 @@
 
 #include "core/error/error.h"
 
+#include <system_error>
+
 namespace ylg {
 namespace error {
 
@@ -48,24 +50,9 @@ std::string ErrorCodeCategory::message(int code) const
     return errMsg;
 }
 
-ErrorCode ConvertToCode(int code)
+std::error_code make_error_code(ErrorCode e)
 {
-    if (code < (int)ErrorCode::Error || code >= (int)ErrorCode::MaxValue)
-    {
-        return ErrorCode::Unknown;
-    }
-
-    return static_cast<ErrorCode>(code);
-}
-
-std::error_code MakeError(ErrorCode ec)
-{
-    return std::error_code(static_cast<int>(ec), ErrorCodeCategory::Instance());
-}
-
-std::error_code MakeSuccess()
-{
-    return std::error_code(static_cast<int>(ErrorCode::Success), ErrorCodeCategory::Instance());
+    return {static_cast<int>(e), ErrorCodeCategory::Instance()};
 }
 
 bool IsSuccess(const std::error_code& ec)
@@ -85,3 +72,4 @@ std::string ToString(int ec)
 
 } // namespace error
 } // namespace ylg
+

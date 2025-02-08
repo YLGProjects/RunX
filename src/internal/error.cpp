@@ -21,20 +21,20 @@
  * SOFTWARE.
  */
 
-#include "core/container/error.h"
+#include "internal/error.h"
 
 namespace ylg {
-namespace container {
+namespace internal {
 
 ErrorCodeCategory& ErrorCodeCategory::Instance()
 {
-    static ErrorCodeCategory _instance;
-    return _instance;
+    static ErrorCodeCategory instance;
+    return instance;
 }
 
 const char* ErrorCodeCategory::name() const noexcept
 {
-    return "ylg-app-error";
+    return "ylg-internal-error";
 }
 
 std::string ErrorCodeCategory::message(int code) const
@@ -48,24 +48,9 @@ std::string ErrorCodeCategory::message(int code) const
     return errMsg;
 }
 
-ErrorCode ConvertToCode(int code)
+std::error_code make_error_code(ErrorCode e)
 {
-    if (code < (int)ErrorCode::Error || code >= (int)ErrorCode::MaxValue)
-    {
-        return ErrorCode::Unknown;
-    }
-
-    return static_cast<ErrorCode>(code);
-}
-
-std::error_code MakeError(ErrorCode ec)
-{
-    return std::error_code(static_cast<int>(ec), ErrorCodeCategory::Instance());
-}
-
-std::error_code MakeSuccess()
-{
-    return std::error_code(static_cast<int>(ErrorCode::Success), ErrorCodeCategory::Instance());
+    return {static_cast<int>(e), ErrorCodeCategory::Instance()};
 }
 
 bool IsSuccess(const std::error_code& ec)
@@ -83,5 +68,8 @@ std::string ToString(int ec)
     return std::system_category().message(ec);
 }
 
-} // namespace container
+} // namespace internal
 } // namespace ylg
+
+namespace std {
+} // namespace std
