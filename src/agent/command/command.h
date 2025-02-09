@@ -21,41 +21,25 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_AGENT_APP_H_
-#define _YLG_AGENT_APP_H_
+#ifndef _YLG_AGENT_COMMAND_COMMAND_H_
+#define _YLG_AGENT_COMMAND_COMMAND_H_
 
-#include "agent/configuration.h"
-#include "agent/controller/controller.h"
+#include "core/net/message.h"
 
-#include "internal/error.h"
+#include <memory>
+#include <system_error>
 
-#include "core/application/core.h"
-
-class App final
+class Command
 {
 public:
-    App();
-    ~App();
+    Command()          = default;
+    virtual ~Command() = default;
 
 public:
-    ylg::internal::ErrorCode Run(int argc, char *argv[]);
-    void                     Close();
-
-private:
-    ylg::internal::ErrorCode GuardLoop();
-    void                     DumpConfiguration();
-    ylg::internal::ErrorCode InitFlags();
-    ylg::internal::ErrorCode InitLogs();
-    ylg::internal::ErrorCode InitController();
-    ylg::internal::ErrorCode LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code          Execute(ylg::app::ContextPtr ctx);
-
-private:
-    ControllerPtr     _controller = nullptr;
-    ConfigurationPtr  _localConfig;
-    ylg::app::CorePtr _core;
-    std::atomic_bool  _needStop = false;
+    virtual std::error_code Do(const ylg::net::Message& msg) = 0;
 };
+
+using CommandPtr = std::shared_ptr<Command>;
 
 #endif
 

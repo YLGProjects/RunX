@@ -28,7 +28,11 @@
 #include "core/net/http_context.h"
 #include "core/net/http_server.h"
 
-HTTPAPIServer::HTTPAPIServer() {}
+HTTPAPIServer::HTTPAPIServer(ControllerPtr controller)
+{
+    _controller = controller;
+}
+
 HTTPAPIServer::~HTTPAPIServer() {}
 
 void HTTPAPIServer::Run(const std::string& listenIP, uint16_t listenPort)

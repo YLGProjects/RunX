@@ -21,36 +21,24 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_AGENT_CLIENT_CLIENT_H_
-#define _YLG_AGENT_CLIENT_CLIENT_H_
+#ifndef _YLG_AGENT_COMMAND_AUTH_RESPOND_H_
+#define _YLG_AGENT_COMMAND_AUTH_RESPOND_H_
 
-#include "core/net/tcp_client.h"
+#include "agent/command/command.h"
 
-#include <cstdint>
+#include "core/net/message.h"
 
-class Client final : public ylg::net::TCPHandlerCallback, public std::enable_shared_from_this<Client>
+#include <system_error>
 
+class AuthRespondCMD final : public Command
 {
 public:
-    Client();
-    ~Client();
+    AuthRespondCMD()          = default;
+    virtual ~AuthRespondCMD() = default;
 
 public:
-    virtual void OnConnection(ylg::net::TCPConnection* connection);
-    virtual void OnDisconnection(ylg::net::TCPConnection* connection);
-    virtual void HandleData(const ylg::net::Message& msg);
-
-public:
-    void Connect(const std::string& remoteIP, uint16_t remotePort);
-    void Close();
-
-private:
-    std::string            _remoteIP;
-    uint16_t               _remotePort = 0;
-    ylg::net::TCPClientPtr _client     = nullptr;
+    std::error_code Do(const ylg::net::Message& msg) override;
 };
-
-using ClientPtr = std::shared_ptr<Client>;
 
 #endif
 

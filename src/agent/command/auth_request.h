@@ -21,40 +21,23 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_AGENT_APP_H_
-#define _YLG_AGENT_APP_H_
+#ifndef _YLG_AGENT_COMMAND_AUTH_REQUEST_H_
+#define _YLG_AGENT_COMMAND_AUTH_REQUEST_H_
 
-#include "agent/configuration.h"
-#include "agent/controller/controller.h"
+#include "agent/command/command.h"
 
-#include "internal/error.h"
+#include "core/net/message.h"
 
-#include "core/application/core.h"
+#include <system_error>
 
-class App final
+class AuthRequestCMD final : public Command
 {
 public:
-    App();
-    ~App();
+    AuthRequestCMD()          = default;
+    virtual ~AuthRequestCMD() = default;
 
 public:
-    ylg::internal::ErrorCode Run(int argc, char *argv[]);
-    void                     Close();
-
-private:
-    ylg::internal::ErrorCode GuardLoop();
-    void                     DumpConfiguration();
-    ylg::internal::ErrorCode InitFlags();
-    ylg::internal::ErrorCode InitLogs();
-    ylg::internal::ErrorCode InitController();
-    ylg::internal::ErrorCode LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code          Execute(ylg::app::ContextPtr ctx);
-
-private:
-    ControllerPtr     _controller = nullptr;
-    ConfigurationPtr  _localConfig;
-    ylg::app::CorePtr _core;
-    std::atomic_bool  _needStop = false;
+    std::error_code Do(const ylg::net::Message& msg) override;
 };
 
 #endif
