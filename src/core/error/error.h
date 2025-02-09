@@ -24,12 +24,14 @@
 #ifndef _YLG_ERROR_ERROR_H_
 #define _YLG_ERROR_ERROR_H_
 
+#include <climits>
+#include <cstdint>
 #include <system_error>
 
 namespace ylg {
 namespace error {
 
-enum class ErrorCode
+enum class ErrorCode : int32_t
 {
     Unknown = -2,
     Error   = -1,
@@ -57,8 +59,7 @@ enum class ErrorCode
     InvalidParameter,
     InvalidUser,
 
-    MaxValue,
-
+    MaxValue = INT_MAX / 2, // (INT_MAX/2,INT_MAX) Reserved user-defined
 };
 
 class ErrorCodeCategory final : public std::error_category

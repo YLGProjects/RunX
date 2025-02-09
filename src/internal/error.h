@@ -25,17 +25,17 @@
 #define _YLG_INTERNAL_ERROR_H_
 
 #include "core/error/error.h"
+#include <climits>
 
 namespace ylg {
 namespace internal {
 
-enum class ErrorCode
+enum class ErrorCode : int32_t
 {
-    Unknown = -2,
-    Error   = -1,
-    Success = 0,
-    MaxValue,
-
+    Unknown  = -2,
+    Error    = -1,
+    Success  = 0,
+    MaxValue = INT_MAX,
 };
 
 class ErrorCodeCategory final : public std::error_category
