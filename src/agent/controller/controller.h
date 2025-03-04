@@ -21,36 +21,33 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_CONTROLLER_H_
-#define _YLG_SERVER_CONTROLLER_H_
+#ifndef _YLG_AGENT_CONTROLLER_CONTROLLER_H_
+#define _YLG_AGENT_CONTROLLER_CONTROLLER_H_
 
-#include "server/controller/processor/processor.h"
-#include "server/controller/route/route.h"
+#include "agent/command/command.h"
 
 #include "internal/controller_protocol.h"
 
 #include "core/assist/execution_multi_queue.h"
+#include "core/net/tcp_client.h"
 #include "core/net/tcp_connection.h"
-#include "core/net/tcp_handler.h"
-#include "core/net/tcp_server.h"
 
 #include <cstdint>
-#include <future>
 #include <map>
-#include <memory>
 
 // clang-format off
 
-#define SERVER_CONTROLLER_TASK_QUEUE_SIZE_DFT  40960
-#define SERVER_CONTROLLER_TASK_QUEUE_COUNT_DFT 10
+#define AGENT_CONTROLLER_TASK_QUEUE_SIZE_DFT  40960
+#define AGENT_CONTROLLER_TASK_QUEUE_COUNT_DFT 10
 
 // clang-format on
 
 class Controller final : public ylg::net::TCPHandlerCallback, public std::enable_shared_from_this<Controller>
+
 {
 public:
     Controller();
-    ~Controller() = default;
+    ~Controller();
 
 public:
     virtual void OnConnection(ylg::net::TCPConnection* connection);
@@ -58,20 +55,18 @@ public:
     virtual void HandleData(ylg::net::TCPConnection* connection, const ylg::net::Message& msg);
 
 public:
-    void Run(const std::string& listenIP, uint16_t listenPort);
+    void Run(const std::string& remoteIP, uint16_t remotePort);
     void Close();
 
 private:
-    void RegisterProcessor();
+    void RegisterCommands();
 
 private:
-    std::future<void>                                     _asyncRun;
-    std::string                                           _listenIP;
-    uint16_t                                              _listenPort = 0;
-    ylg::assist::ExecutionMultiQueuePtr                   _tasks      = nullptr;
-    ylg::net::TCPServerPtr                                _server     = nullptr;
-    RoutePtr                                              _route      = nullptr;
-    std::map<ylg::internal::MessageType, MsgProcessorPtr> _processors;
+    std::string                                      _remoteIP;
+    uint16_t                                         _remotePort = 0;
+    ylg::assist::ExecutionMultiQueuePtr              _tasks      = nullptr;
+    std::map<ylg::internal::MessageType, CommandPtr> _commands;
+    ylg::net::TCPClientPtr                           _client = nullptr;
 };
 
 using ControllerPtr = std::shared_ptr<Controller>;

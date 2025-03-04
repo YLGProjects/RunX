@@ -25,16 +25,18 @@
 #define _YLG_INTERNAL_ERROR_H_
 
 #include "core/error/error.h"
+
 #include <climits>
+#include <cstdint>
 
 namespace ylg {
 namespace internal {
 
 enum class ErrorCode : int32_t
 {
-    Unknown  = -2,
-    Error    = -1,
-    Success  = 0,
+    Unknown  = (int32_t)ylg::error::ErrorCode::Unknown,
+    Error    = (int32_t)ylg::error::ErrorCode::Error,
+    Success  = (int32_t)ylg::error::ErrorCode::Success,
     MaxValue = INT_MAX,
 };
 

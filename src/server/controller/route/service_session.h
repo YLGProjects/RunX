@@ -21,41 +21,21 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_AGENT_APP_H_
-#define _YLG_AGENT_APP_H_
+#ifndef _YLG_SERVER_CONTROLLER_ROUTE_SERVICE_SESSION_H_
+#define _YLG_SERVER_CONTROLLER_ROUTE_SERVICE_SESSION_H_
 
-#include "agent/configuration.h"
-#include "agent/controller/controller.h"
+#include "core/net/tcp_connection.h"
+#include <cstdint>
 
-#include "internal/error.h"
-
-#include "core/application/core.h"
-
-class App final
+struct ServiceSession final
 {
-public:
-    App();
-    ~App();
-
-public:
-    ylg::internal::ErrorCode Run(int argc, char *argv[]);
-    void                     Close();
-
-private:
-    ylg::internal::ErrorCode GuardLoop();
-    void                     DumpConfiguration();
-    ylg::internal::ErrorCode InitFlags();
-    ylg::internal::ErrorCode InitLogs();
-    ylg::internal::ErrorCode InitController();
-    ylg::internal::ErrorCode LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code          Execute(ylg::app::ContextPtr ctx);
-
-private:
-    ControllerPtr     _controller = nullptr;
-    ConfigurationPtr  _localConfig;
-    ylg::app::CorePtr _core;
-    std::atomic_bool  _needStop = false;
+    uint64_t                   _syncedTimestamp  = 0;
+    uint64_t                   _createdTimestamp = 0;
+    std::string                _serviceID;
+    ylg::net::TCPConnectionPtr _connection = nullptr;
 };
+
+using ServiceSessionPtr = std::shared_ptr<ServiceSession>;
 
 #endif
 

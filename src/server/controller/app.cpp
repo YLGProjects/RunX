@@ -132,7 +132,7 @@ ylg::internal::ErrorCode App::InitController()
 
 ylg::internal::ErrorCode App::InitAPIs()
 {
-    _httpAPI = std::make_shared<HTTPAPIServer>();
+    _httpAPI = std::make_shared<HTTPAPIServer>(_controller);
     _httpAPI->Run("0.0.0.0", 26689);
     return ylg::internal::ErrorCode::Success;
 }

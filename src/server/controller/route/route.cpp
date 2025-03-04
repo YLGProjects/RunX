@@ -21,41 +21,44 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_AGENT_APP_H_
-#define _YLG_AGENT_APP_H_
-
-#include "agent/configuration.h"
-#include "agent/controller/controller.h"
+#include "server/controller/route/route.h"
+#include "core/net/tcp_connection.h"
+#include "server/controller/route/agent_session.h"
 
 #include "internal/error.h"
+#include <system_error>
 
-#include "core/application/core.h"
-
-class App final
+std::error_code Route::CreateLocalSession(ylg::net::TCPConnection* conn)
 {
-public:
-    App();
-    ~App();
+    return ylg::internal::ErrorCode::Success;
+}
 
-public:
-    ylg::internal::ErrorCode Run(int argc, char *argv[]);
-    void                     Close();
+std::error_code Route::CreateRemoteSession(AgentSessionPtr session)
+{
+    return ylg::internal::ErrorCode::Success;
+}
 
-private:
-    ylg::internal::ErrorCode GuardLoop();
-    void                     DumpConfiguration();
-    ylg::internal::ErrorCode InitFlags();
-    ylg::internal::ErrorCode InitLogs();
-    ylg::internal::ErrorCode InitController();
-    ylg::internal::ErrorCode LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code          Execute(ylg::app::ContextPtr ctx);
+AgentSessionPtr Route::FindAgentSession(const std::string& agentID)
+{
+    return nullptr;
+}
 
-private:
-    ControllerPtr     _controller = nullptr;
-    ConfigurationPtr  _localConfig;
-    ylg::app::CorePtr _core;
-    std::atomic_bool  _needStop = false;
-};
+std::error_code Route::RemoveLocalSession(ylg::net::TCPConnection* conn)
+{
+    return ylg::internal::ErrorCode::Success;
+}
 
-#endif
+std::error_code Route::RemoveAgentSession(const std::string& agentID)
+{
+    return ylg::internal::ErrorCode::Error;
+}
+
+std::error_code Route::Run()
+{
+    return ylg::internal::ErrorCode::Success;
+}
+
+void Route::Close()
+{
+}
 

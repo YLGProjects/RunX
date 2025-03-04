@@ -21,41 +21,28 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_AGENT_APP_H_
-#define _YLG_AGENT_APP_H_
+#ifndef _YLG_SERVER_CONTROLLER_ROUTE_AGENT_SESSION_H_
+#define _YLG_SERVER_CONTROLLER_ROUTE_AGENT_SESSION_H_
 
-#include "agent/configuration.h"
-#include "agent/controller/controller.h"
+#include "server/controller/route/service_session.h"
 
-#include "internal/error.h"
+#include "core/net/tcp_connection.h"
 
-#include "core/application/core.h"
+#include <cstdint>
 
-class App final
+struct AgentSession final
 {
-public:
-    App();
-    ~App();
-
-public:
-    ylg::internal::ErrorCode Run(int argc, char *argv[]);
-    void                     Close();
-
-private:
-    ylg::internal::ErrorCode GuardLoop();
-    void                     DumpConfiguration();
-    ylg::internal::ErrorCode InitFlags();
-    ylg::internal::ErrorCode InitLogs();
-    ylg::internal::ErrorCode InitController();
-    ylg::internal::ErrorCode LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code          Execute(ylg::app::ContextPtr ctx);
-
-private:
-    ControllerPtr     _controller = nullptr;
-    ConfigurationPtr  _localConfig;
-    ylg::app::CorePtr _core;
-    std::atomic_bool  _needStop = false;
+    std::string                _agentID;
+    std::string                _serviceID;
+    float                      _cpuUsage         = 0.0f;
+    float                      _memUsage         = 0.0f;
+    uint64_t                   _createdTimestamp = 0;
+    uint64_t                   _syncedTimestamp  = 0;
+    ServiceSessionPtr          _serviceSession   = nullptr;
+    ylg::net::TCPConnectionPtr _connection       = nullptr;
 };
+
+using AgentSessionPtr = std::shared_ptr<AgentSession>;
 
 #endif
 

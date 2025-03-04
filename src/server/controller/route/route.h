@@ -21,41 +21,40 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_AGENT_APP_H_
-#define _YLG_AGENT_APP_H_
+#ifndef _YLG_SERVER_CONTROLLER_ROUTE_ROUTE_H_
+#define _YLG_SERVER_CONTROLLER_ROUTE_ROUTE_H_
 
-#include "agent/configuration.h"
-#include "agent/controller/controller.h"
+#include "core/net/tcp_connection.h"
+#include "server/controller/route/agent_session.h"
 
-#include "internal/error.h"
+#include "core/container/safe_map.h"
 
-#include "core/application/core.h"
+#include <system_error>
 
-class App final
+class Route final
 {
 public:
-    App();
-    ~App();
+    Route()  = default;
+    ~Route() = default;
 
 public:
-    ylg::internal::ErrorCode Run(int argc, char *argv[]);
-    void                     Close();
+    std::error_code CreateLocalSession(ylg::net::TCPConnection* conn);
+    std::error_code CreateRemoteSession(AgentSessionPtr session);
+    AgentSessionPtr FindAgentSession(const std::string& agentID);
+    std::error_code RemoveLocalSession(ylg::net::TCPConnection* conn);
+    std::error_code RemoveAgentSession(const std::string& agentID);
+    std::error_code Run();
+    void            Close();
 
 private:
-    ylg::internal::ErrorCode GuardLoop();
-    void                     DumpConfiguration();
-    ylg::internal::ErrorCode InitFlags();
-    ylg::internal::ErrorCode InitLogs();
-    ylg::internal::ErrorCode InitController();
-    ylg::internal::ErrorCode LoadConfig(ylg::app::ContextPtr ctx);
-    std::error_code          Execute(ylg::app::ContextPtr ctx);
+    // Key: Connection ID, Value: Agent ID
+    ylg::container::SafeMap<std::string, std::string> _connAgentIDs;
 
-private:
-    ControllerPtr     _controller = nullptr;
-    ConfigurationPtr  _localConfig;
-    ylg::app::CorePtr _core;
-    std::atomic_bool  _needStop = false;
+    // Key:AgentID, Value: Agent Session
+    ylg::container::SafeMap<std::string, AgentSessionPtr> _agents;
 };
+
+using RoutePtr = std::shared_ptr<Route>;
 
 #endif
 

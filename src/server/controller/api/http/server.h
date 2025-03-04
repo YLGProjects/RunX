@@ -24,6 +24,8 @@
 #ifndef _YLG_SERVER_CONTROLLER_API_HTTP_SERVER_H_
 #define _YLG_SERVER_CONTROLLER_API_HTTP_SERVER_H_
 
+#include "server/controller/controller.h"
+
 #include "core/net/http_context.h"
 #include "core/net/http_server.h"
 
@@ -33,7 +35,7 @@
 class HTTPAPIServer final
 {
 public:
-    HTTPAPIServer();
+    HTTPAPIServer(ControllerPtr controller);
     ~HTTPAPIServer();
 
 public:
@@ -48,6 +50,7 @@ private:
     std::string             _listenIP;
     uint16_t                _listenPort = 0;
     std::future<void>       _asyncRun;
+    ControllerPtr           _controller = nullptr;
     ylg::net::HTTPServerPtr _httpServer = nullptr;
 };
 

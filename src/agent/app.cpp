@@ -23,6 +23,7 @@
 
 #include "agent/app.h"
 
+#include "agent/controller/controller.h"
 #include "internal/error.h"
 
 #include "core/assist/time.h"
@@ -71,7 +72,7 @@ ylg::internal::ErrorCode App::Run(int argc, char *argv[])
 void App::Close()
 {
     _needStop = true;
-    _client->Close();
+    _controller->Close();
     _core->Close();
     ylg::Uninit();
 }
@@ -126,8 +127,8 @@ ylg::internal::ErrorCode App::InitLogs()
 
 ylg::internal::ErrorCode App::InitController()
 {
-    _client = std::make_shared<Client>();
-    _client->Connect(_localConfig->_controllerRemoteIP, _localConfig->_controllerRemotePort);
+    _controller = std::make_shared<Controller>();
+    _controller->Run(_localConfig->_controllerRemoteIP, _localConfig->_controllerRemotePort);
     return ylg::internal::ErrorCode::Success;
 }
 
