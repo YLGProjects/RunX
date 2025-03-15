@@ -34,7 +34,6 @@
 #include "core/net/tcp_handler.h"
 #include "core/net/tcp_server.h"
 
-#include <cstdint>
 #include <future>
 #include <map>
 #include <memory>
@@ -58,8 +57,9 @@ public:
     virtual void HandleData(ylg::net::TCPConnection* connection, const ylg::net::Message& msg);
 
 public:
-    void Run(const std::string& listenIP, uint16_t listenPort);
-    void Close();
+    void            Run(const std::string& listenIP, uint16_t listenPort);
+    void            Close();
+    std::error_code PostToAgent(const std::vector<std::string>& agentIDs, const char* data, uint32_t size);
 
 private:
     void RegisterProcessor();

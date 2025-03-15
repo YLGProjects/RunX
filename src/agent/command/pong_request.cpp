@@ -21,28 +21,11 @@
  * SOFTWARE.
  */
 
-#ifndef _YLG_SERVER_CONTROLLER_ROUTE_AGENT_SESSION_H_
-#define _YLG_SERVER_CONTROLLER_ROUTE_AGENT_SESSION_H_
+#include "agent/command/pong_request.h"
 
-#include "server/controller/route/service_session.h"
+#include "internal/error.h"
 
-#include "core/net/tcp_connection.h"
-
-#include <cstdint>
-
-struct AgentSession final
+std::error_code PongRequestCMD::Do(const ylg::net::Message& msg)
 {
-    std::string              _agentID;
-    std::string              _serviceID;
-    float                    _cpuUsage         = 0.0f;
-    float                    _memUsage         = 0.0f;
-    uint64_t                 _createdTimestamp = 0;
-    uint64_t                 _syncedTimestamp  = 0;
-    ServiceSessionPtr        _serviceSession   = nullptr;
-    ylg::net::TCPConnection* _connection       = nullptr;
-};
-
-using AgentSessionPtr = std::shared_ptr<AgentSession>;
-
-#endif
-
+    return ylg::internal::ErrorCode::Success;
+}
