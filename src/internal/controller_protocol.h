@@ -35,20 +35,22 @@ namespace internal {
 
 enum class MessageType : uint32_t
 {
-    AuthRequest              = 0x0001,
-    AuthResponse             = 0x0002,
-    RegisterAgentRequest     = 0x0003,
-    RegisterAgentResponse    = 0x0004,
-    UnregisterAgentRequest   = 0x0005,
-    UnregisterAgentResponse  = 0x0006,
-    ReportAgentState         = 0x0007,
-    RegisterPluginRequest    = 0x0008,
-    RegisterPluginResponse   = 0x0009,
-    UnregisterPluginRequest  = 0x000A,
-    UnregisterPluginResponse = 0x000B,
-    ReportPluginState        = 0x000C,
-    OperatePluginRequest     = 0x000E,
-    OperatePluginResponse    = 0x000F,
+    Ping                     = 0x0001,
+    Pong                     = 0x0002,
+    AuthRequest              = 0x0003,
+    AuthResponse             = 0x0004,
+    RegisterAgentRequest     = 0x0005,
+    RegisterAgentResponse    = 0x0006,
+    UnregisterAgentRequest   = 0x0007,
+    UnregisterAgentResponse  = 0x0008,
+    ReportAgentState         = 0x0009,
+    RegisterPluginRequest    = 0x000A,
+    RegisterPluginResponse   = 0x000B,
+    UnregisterPluginRequest  = 0x000C,
+    UnregisterPluginResponse = 0x000D,
+    ReportPluginState        = 0x000E,
+    OperatePluginRequest     = 0x000F,
+    OperatePluginResponse    = 0x0010,
 };
 
 enum class AgentState : uint32_t

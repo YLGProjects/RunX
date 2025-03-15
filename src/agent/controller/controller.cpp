@@ -25,6 +25,7 @@
 #include "agent/command/auth_request.h"
 #include "agent/command/auth_respond.h"
 #include "agent/command/operate_plugin_request.h"
+#include "agent/command/ping_request.h"
 #include "agent/command/register_agent_respond.h"
 
 #include "internal/controller_protocol.h"
@@ -116,6 +117,7 @@ void Controller::Close()
 
 void Controller::RegisterCommands()
 {
+    _commands[ylg::internal::MessageType::Ping]                  = std::make_shared<PingRequestCMD>();
     _commands[ylg::internal::MessageType::RegisterAgentResponse] = std::make_shared<RegisterAgentRespondCMD>();
     _commands[ylg::internal::MessageType::AuthRequest]           = std::make_shared<AuthRequestCMD>();
     _commands[ylg::internal::MessageType::AuthResponse]          = std::make_shared<AuthRespondCMD>();

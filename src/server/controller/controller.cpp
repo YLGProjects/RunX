@@ -23,7 +23,6 @@
 
 #include "server/controller/controller.h"
 
-#include "core/assist/execution_multi_queue.h"
 #include "internal/controller_protocol.h"
 #include "internal/error.h"
 
@@ -131,6 +130,27 @@ void Controller::Close()
     }
 
     _asyncRun.wait();
+}
+
+std::error_code Controller::PostToAgent(const std::vector<std::string>& agentIDs, const char* data, uint32_t size)
+{
+    auto agentSession = _route->FindAgentSession("");
+
+    ylg::net::Header header;
+    header._dataSize = size;
+    header._msgType  = (uint32_t)ylg::internal::MessageType::Ping;
+
+    ylg::net::Hton(header);
+
+    ylg::net::Message msg(header, data, size);
+
+    auto errcode = agentSession->_connection->Send(msg);
+    if (!ylg::internal::IsSuccess(errcode))
+    {
+        return errcode;
+    }
+
+    return ylg::internal::ErrorCode::Success;
 }
 
 void Controller::RegisterProcessor()
