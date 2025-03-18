@@ -25,6 +25,7 @@
 #define _YLG_CORE_NET_MESSAGE_H_
 
 #include <cstdint>
+#include <memory>
 
 namespace ylg {
 namespace net {
@@ -75,6 +76,8 @@ private:
 
 void Hton(Header& header);
 void Ntoh(Header& header);
+
+using MessagePtr = std::shared_ptr<Message>;
 
 } // namespace net
 } // namespace ylg

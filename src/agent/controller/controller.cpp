@@ -50,33 +50,31 @@ Controller::~Controller()
 {
 }
 
-void Controller::OnConnection(ylg::net::TCPConnection* connection)
+void Controller::OnConnection(ylg::net::TCPConnectionPtr conn)
 {
-    LOG_DEBUG("connected to the remote server. connection:{}", connection->ID());
+    LOG_DEBUG("connected to the remote server. connection:{}", conn->ID());
 }
 
-void Controller::OnDisconnection(ylg::net::TCPConnection* connection)
+void Controller::OnDisconnection(ylg::net::TCPConnectionPtr conn)
 {
-    LOG_DEBUG("disconnected with the remote server. connection:{}", connection->ID());
+    LOG_DEBUG("disconnected with the remote server. connection:{}", conn->ID());
 }
 
-void Controller::HandleData(ylg::net::TCPConnection* connection, const ylg::net::Message& msg)
+void Controller::HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg)
 {
-    LOG_DEBUG("new message{} size:{}", msg.GetPayload(), msg.GetPayloadSize());
+    auto header = msg->GetHeader();
+    auto type   = (ylg::internal::MessageType)header._msgType;
 
-    auto task = [&]() {
-        auto header = msg.GetHeader();
-        auto type   = (ylg::internal::MessageType)header._msgType;
+    auto iter = _commands.find(type);
+    if (iter == _commands.end())
+    {
+        LOG_WARN("invalid message type:0x{:04X}", header._msgType);
+        return;
+    }
+    auto processor = iter->second;
 
-        auto iter = _commands.find(type);
-        if (iter != _commands.end())
-        {
-            LOG_WARN("invalid message type:0x%x", header._msgType);
-            return;
-        }
-
-        auto processor = iter->second;
-        auto errcode   = processor->Do(msg);
+    auto task = [=]() {
+        auto errcode = processor->Do(msg);
         if (!ylg::internal::IsSuccess(errcode))
         {
             return;
@@ -97,6 +95,9 @@ void Controller::Run(const std::string& remoteIP, uint16_t remotePort)
 
     _client = std::make_shared<ylg::net::TCPClient>();
     _client->SetCallback(shared_from_this());
+
+    RegisterCommands();
+
     auto errcode = _client->Connect(_remoteIP, _remotePort);
     if (!ylg::error::IsSuccess(errcode))
     {

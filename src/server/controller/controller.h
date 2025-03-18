@@ -20,7 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 #ifndef _YLG_SERVER_CONTROLLER_H_
 #define _YLG_SERVER_CONTROLLER_H_
 
@@ -52,9 +51,9 @@ public:
     ~Controller() = default;
 
 public:
-    virtual void OnConnection(ylg::net::TCPConnection* connection);
-    virtual void OnDisconnection(ylg::net::TCPConnection* connection);
-    virtual void HandleData(ylg::net::TCPConnection* connection, const ylg::net::Message& msg);
+    virtual void OnConnection(ylg::net::TCPConnectionPtr conn) override;
+    virtual void OnDisconnection(ylg::net::TCPConnectionPtr conn) override;
+    virtual void HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg) override;
 
 public:
     void            Run(const std::string& listenIP, uint16_t listenPort);

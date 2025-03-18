@@ -30,6 +30,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <event2/util.h>
 #include <memory>
 #include <vector>
 
@@ -47,11 +48,13 @@ public:
                                sockaddr* address, int socklen, void* ctx);
 
 public:
+    void            SetTimeout(int timeoutSec);
     void            SetCallback(TCPHandlerCallbackFunctor functor);
     std::error_code Run();
     std::error_code Close();
 
 private:
+    int         _timeoutSec  = YLG_NET_TCP_SERVER_TIMEOUT_SECOND_DFT;
     int         _threadCount = 0;
     std::string _listenAddress;
     uint16_t    _listenPort = 0;

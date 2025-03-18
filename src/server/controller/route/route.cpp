@@ -27,7 +27,7 @@
 
 #include "internal/error.h"
 
-std::error_code Route::CreateLocalSession(ylg::net::TCPConnection* conn)
+std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn)
 {
     auto session = std::make_shared<AgentSession>();
 
@@ -57,7 +57,7 @@ AgentSessionPtr Route::FindAgentSession(const std::string& agentID)
     return nullptr;
 }
 
-std::error_code Route::RemoveLocalSession(ylg::net::TCPConnection* conn)
+std::error_code Route::RemoveLocalSession(ylg::net::TCPConnectionPtr conn)
 {
     return ylg::internal::ErrorCode::Success;
 }

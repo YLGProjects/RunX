@@ -36,7 +36,7 @@ public:
     virtual ~MsgProcessor() = default;
 
 public:
-    virtual std::error_code Do(const ylg::net::Message& req, ylg::net::Message& rsp) = 0;
+    virtual std::error_code Do(const ylg::net::MessagePtr req, ylg::net::MessagePtr rsp) = 0;
 };
 
 using MsgProcessorPtr = std::shared_ptr<MsgProcessor>;

@@ -35,6 +35,12 @@
 namespace ylg {
 namespace net {
 
+// clang-format off
+
+#define YLG_NET_TCP_SERVER_TIMEOUT_SECOND_DFT 5
+
+// clang-format on
+
 class TCPHandlerCallback
 {
 public:
@@ -42,9 +48,9 @@ public:
     virtual ~TCPHandlerCallback() = default;
 
 public:
-    virtual void OnConnection(TCPConnection* connection)                   = 0;
-    virtual void OnDisconnection(TCPConnection* connection)                = 0;
-    virtual void HandleData(TCPConnection* connection, const Message& msg) = 0;
+    virtual void OnConnection(TCPConnectionPtr conn)                     = 0;
+    virtual void OnDisconnection(TCPConnectionPtr conn)                  = 0;
+    virtual void HandleData(TCPConnectionPtr conn, const MessagePtr msg) = 0;
 };
 
 using TCPHandlerCallbackFunctor = std::shared_ptr<TCPHandlerCallback>;
@@ -56,10 +62,14 @@ public:
     ~TCPHandler();
 
 public:
+    static void CheckConnectionState(evutil_socket_t fd, short events, void* ctx);
+
+public:
     static void ReadCallback(bufferevent* bev, void* ctx);
     static void EventCallback(bufferevent* bev, short events, void* ctx);
 
 public:
+    void            SetTimeout(int timeoutSec);
     void            SetCallback(TCPHandlerCallbackFunctor functor);
     void            BindConnection(evutil_socket_t fd, sockaddr* address, int socklen);
     std::error_code Start();
@@ -69,12 +79,13 @@ private:
     void Run();
 
 private:
-    TCPHandlerCallbackFunctor _functor = nullptr;
+    timeval                   _timeoutSeconds            = {YLG_NET_TCP_SERVER_TIMEOUT_SECOND_DFT, 0};
+    TCPHandlerCallbackFunctor _functor                   = nullptr;
+    event*                    _checkConnectionStateEvent = nullptr;
+    event_base*               _base                      = nullptr;
+    std::future<void>         _asyncRun;
 
-    event_base*       _base = nullptr;
-    std::future<void> _asyncRun;
-
-    container::SafeMap<std::string, TCPConnection*> _connections;
+    container::SafeMap<std::string, TCPConnectionPtr> _connections;
 };
 
 using TCPHandlerPtr = std::shared_ptr<TCPHandler>;

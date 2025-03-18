@@ -35,7 +35,7 @@ public:
     virtual ~RegisterAgentRespondCMD() = default;
 
 public:
-    std::error_code Do(const ylg::net::Message& msg) override;
+    std::error_code Do(const ylg::net::MessagePtr msg) override;
 };
 
 #endif

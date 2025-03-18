@@ -38,10 +38,10 @@ public:
     ~Route() = default;
 
 public:
-    std::error_code CreateLocalSession(ylg::net::TCPConnection* conn);
+    std::error_code CreateLocalSession(ylg::net::TCPConnectionPtr conn);
     std::error_code CreateRemoteSession(AgentSessionPtr session);
     AgentSessionPtr FindAgentSession(const std::string& agentID);
-    std::error_code RemoveLocalSession(ylg::net::TCPConnection* conn);
+    std::error_code RemoveLocalSession(ylg::net::TCPConnectionPtr conn);
     std::error_code RemoveAgentSession(const std::string& agentID);
     std::error_code Run();
     void            Close();

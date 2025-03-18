@@ -32,14 +32,14 @@
 
 struct AgentSession final
 {
-    std::string              _agentID;
-    std::string              _serviceID;
-    float                    _cpuUsage         = 0.0f;
-    float                    _memUsage         = 0.0f;
-    uint64_t                 _createdTimestamp = 0;
-    uint64_t                 _syncedTimestamp  = 0;
-    ServiceSessionPtr        _serviceSession   = nullptr;
-    ylg::net::TCPConnection* _connection       = nullptr;
+    std::string                _agentID;
+    std::string                _serviceID;
+    float                      _cpuUsage         = 0.0f;
+    float                      _memUsage         = 0.0f;
+    uint64_t                   _createdTimestamp = 0;
+    uint64_t                   _syncedTimestamp  = 0;
+    ServiceSessionPtr          _serviceSession   = nullptr;
+    ylg::net::TCPConnectionPtr _connection       = nullptr;
 };
 
 using AgentSessionPtr = std::shared_ptr<AgentSession>;

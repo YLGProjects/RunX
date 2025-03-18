@@ -126,6 +126,19 @@ public:
         return iter->second == value;
     }
 
+    VAL Remove(KEY key)
+    {
+        std::unique_lock<std::shared_mutex> lock(_mutex);
+
+        auto iter = _elements.find(key);
+        if (iter == _elements.end())
+        {
+            return nullptr;
+        }
+
+        return iter->second;
+    }
+
     /**
      * @brief Delete delete the key from the map
      *

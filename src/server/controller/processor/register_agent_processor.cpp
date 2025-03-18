@@ -27,7 +27,7 @@
 
 #include "core/net/message.h"
 
-std::error_code RegisterAgentProcessor::Do(const ylg::net::Message& req, ylg::net::Message& rsq)
+std::error_code RegisterAgentProcessor::Do(const ylg::net::MessagePtr req, ylg::net::MessagePtr rsq)
 {
     return ylg::internal::ErrorCode::Success;
 }

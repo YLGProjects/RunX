@@ -36,7 +36,7 @@ public:
     ~RegisterAgentProcessor() = default;
 
 public:
-    std::error_code Do(const ylg::net::Message& req, ylg::net::Message& rsp) override;
+    std::error_code Do(const ylg::net::MessagePtr req, ylg::net::MessagePtr rsp) override;
 };
 
 #endif

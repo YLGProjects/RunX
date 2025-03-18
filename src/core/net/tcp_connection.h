@@ -31,6 +31,7 @@
 #include <event2/event.h>
 #include <event2/util.h>
 
+#include <atomic>
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -39,23 +40,36 @@
 namespace ylg {
 namespace net {
 
-class TCPConnection final
+enum class ConnectionState : int
+{
+    Connecting,
+    Connected,
+    Disconnected,
+    Unknown,
+};
+
+class TCPConnection final : public std::enable_shared_from_this<TCPConnection>
 {
 public:
     TCPConnection(evutil_socket_t fd, sockaddr* address, int socklen);
     ~TCPConnection();
 
 public:
-    void BindHandler(bufferevent* bev, void* handler);
-
-public:
     const std::string& ID();
+    void               UpdateState(ConnectionState state);
+    bool               IsTimeout(int timeoutSec);
+    ConnectionState    State();
+    void               BindHandler(bufferevent* bev, void* handler);
     void*              GetHandler();
     std::string        GetRemoteAddress();
-    std::error_code    Read(Message& msg);
+    std::error_code    Read(MessagePtr msg);
     std::error_code    Send(const Message& msg);
+    std::error_code    Send(const MessagePtr msg);
 
 private:
+    std::atomic<ConnectionState> _state             = ConnectionState::Unknown;
+    uint64_t                     _lastReadTimestamp = 0;
+
     std::string     _id;
     evutil_socket_t _fd = EVUTIL_INVALID_SOCKET;
 

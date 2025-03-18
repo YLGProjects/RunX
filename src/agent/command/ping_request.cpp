@@ -25,7 +25,10 @@
 
 #include "internal/error.h"
 
-std::error_code PingRequestCMD::Do(const ylg::net::Message& msg)
+#include "core/log/log.h"
+
+std::error_code PingRequestCMD::Do(const ylg::net::MessagePtr msg)
 {
+    LOG_DEBUG("ping request, message:{} size:{}", msg->GetPayload(), msg->GetPayloadSize());
     return ylg::internal::ErrorCode::Error;
 }
