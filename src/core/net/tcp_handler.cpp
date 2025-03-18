@@ -21,40 +21,51 @@ TCPHandler::~TCPHandler()
 {
 }
 
+void TCPHandler::CheckConnectionState(evutil_socket_t fd, short events, void* ctx)
+{
+    auto server = static_cast<TCPHandler*>(ctx);
+
+    LOG_DEBUG("tcp server handler check the connection state, connection count: {}", server->_connections.Count());
+
+    evtimer_add(server->_checkConnectionStateEvent, &server->_timeoutSeconds);
+}
+
+void TCPHandler::SetTimeout(int timeoutSec)
+{
+    _timeoutSeconds.tv_sec = timeoutSec;
+}
 void TCPHandler::ReadCallback(bufferevent* bev, void* ctx)
 {
-    TCPConnection* connection = static_cast<TCPConnection*>(ctx);
+    TCPConnection* conn = static_cast<TCPConnection*>(ctx);
 
-    Message msg;
-    auto    errcode = connection->Read(msg);
+    MessagePtr msg     = std::make_shared<Message>();
+    auto       errcode = conn->Read(msg);
 
     if ((int)error::ErrorCode::TryAgain == errcode.value())
     {
-        LOG_WARN("more date need to be read from the connection:{}", connection->ID());
+        LOG_WARN("more date need to be read from the connection:{}", conn->ID());
         return;
     }
 
     if (!error::IsSuccess(errcode))
     {
-        LOG_ERROR("failed to read data from connection:{}, errcode:{}", connection->GetRemoteAddress(), errcode.value());
+        LOG_ERROR("failed to read data from connection:{}, errcode:{}", conn->GetRemoteAddress(), errcode.value());
     }
 
-    LOG_DEBUG("readed a message. connection:{}", connection->ID());
-    auto handler = static_cast<TCPHandler*>(connection->GetHandler());
-    handler->_functor->HandleData(connection, msg);
+    LOG_DEBUG("readed a message. connection:{}", conn->ID());
+    auto handler = static_cast<TCPHandler*>(conn->GetHandler());
+    handler->_functor->HandleData(conn->shared_from_this(), msg);
 }
 
 void TCPHandler::EventCallback(bufferevent* bev, short events, void* ctx)
 {
-    TCPConnection* connection = static_cast<TCPConnection*>(ctx);
+    TCPConnection* conn = static_cast<TCPConnection*>(ctx);
     if (events & BEV_EVENT_EOF)
     {
-        auto handler = static_cast<TCPHandler*>(connection->GetHandler());
-        handler->_functor->OnDisconnection(connection);
-        handler->_connections.Delete(connection->ID());
+        auto handler = static_cast<TCPHandler*>(conn->GetHandler());
+        handler->_functor->OnDisconnection(conn->shared_from_this());
+        handler->_connections.Delete(conn->ID());
         bufferevent_free(bev);
-        LOG_DEBUG("connection is disconnected. {}", connection->ID());
-        delete connection;
         return;
     }
 
@@ -71,12 +82,12 @@ void TCPHandler::SetCallback(TCPHandlerCallbackFunctor functor)
 
 void TCPHandler::BindConnection(evutil_socket_t fd, sockaddr* address, int socklen)
 {
-    auto connection = new TCPConnection(fd, address, socklen);
-    auto bev        = bufferevent_socket_new(_base, fd, BEV_OPT_CLOSE_ON_FREE);
+    auto conn = std::make_shared<TCPConnection>(fd, address, socklen);
+    auto bev  = bufferevent_socket_new(_base, fd, BEV_OPT_CLOSE_ON_FREE);
 
-    _functor->OnConnection(connection);
+    _functor->OnConnection(conn);
 
-    bufferevent_setcb(bev, ReadCallback, nullptr, EventCallback, connection);
+    bufferevent_setcb(bev, ReadCallback, nullptr, EventCallback, conn.get());
     bufferevent_setwatermark(bev, EV_READ, Message::MESSAGE_HEADER_SIZE, 10 * 1024 * 1024);
     bufferevent_enable(bev, EV_READ | EV_WRITE);
     timeval timeout;
@@ -84,8 +95,8 @@ void TCPHandler::BindConnection(evutil_socket_t fd, sockaddr* address, int sockl
     timeout.tv_usec = 0;
     bufferevent_set_timeouts(bev, &timeout, &timeout);
 
-    connection->BindHandler(bev, this);
-    _connections.Push(connection->ID(), connection);
+    conn->BindHandler(bev, this);
+    _connections.Push(conn->ID(), conn);
 }
 
 std::error_code TCPHandler::Start()
@@ -110,15 +121,22 @@ std::error_code TCPHandler::Stop()
     }
 
     event_base_loopbreak(_base);
+    event_free(_checkConnectionStateEvent);
     event_base_free(_base);
 
-    _base = nullptr;
+    _base                      = nullptr;
+    _checkConnectionStateEvent = nullptr;
 
     return error::ErrorCode::Success;
 }
 
 void TCPHandler::Run()
 {
+    // set timer callback
+    _checkConnectionStateEvent = evtimer_new(_base, &TCPHandler::CheckConnectionState, this);
+    evtimer_add(_checkConnectionStateEvent, &_timeoutSeconds);
+
+    // start event loop
     int exitedCode = 0;
     do {
         exitedCode = event_base_loop(_base, EVLOOP_NO_EXIT_ON_EMPTY);

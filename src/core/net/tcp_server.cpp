@@ -36,6 +36,11 @@ void TCPServer::AcceptCallback(struct evconnlistener* listener, evutil_socket_t 
     handler->BindConnection(fd, address, socklen);
 }
 
+void TCPServer::SetTimeout(int timeoutSec)
+{
+    _timeoutSec = timeoutSec;
+}
+
 void TCPServer::SetCallback(TCPHandlerCallbackFunctor functor)
 {
     _functor = functor;
@@ -46,6 +51,7 @@ std::error_code TCPServer::Run()
     for (int i = 0; i < _threadCount; ++i)
     {
         auto handler = std::make_shared<TCPHandler>();
+        handler->SetTimeout(_timeoutSec);
         handler->SetCallback(_functor);
         auto errcode = handler->Start();
         if (!error::IsSuccess(errcode))
@@ -104,6 +110,7 @@ std::error_code TCPServer::Run()
         return error::ErrorCode::NetException;
     }
 
+    // start the event loop
     int exitedCode = 0;
     do {
         exitedCode = event_base_loop(_base, EVLOOP_NO_EXIT_ON_EMPTY);

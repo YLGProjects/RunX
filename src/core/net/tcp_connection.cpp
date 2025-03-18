@@ -23,6 +23,7 @@
 
 #include "core/net/tcp_connection.h"
 #include "core/assist/string.h"
+#include "core/assist/time.h"
 #include "core/error/error.h"
 #include "core/log/log.h"
 #include "core/net/message.h"
@@ -52,6 +53,8 @@ TCPConnection::TCPConnection(evutil_socket_t fd, sockaddr* address, int socklen)
 
 TCPConnection::~TCPConnection()
 {
+    LOG_DEBUG("connection is disconnected. {}", _id);
+
     if (_bev)
     {
         bufferevent_free(_bev);
@@ -59,15 +62,31 @@ TCPConnection::~TCPConnection()
     }
 }
 
+const std::string& TCPConnection::ID()
+{
+    return _id;
+}
+
+void TCPConnection::UpdateState(ConnectionState state)
+{
+    _state.store(state);
+}
+
+bool TCPConnection::IsTimeout(int timeoutSec)
+{
+    auto duration = assist::TimestampTickCountSecond() - _lastReadTimestamp;
+    return duration >= timeoutSec;
+}
+
+ConnectionState TCPConnection::State()
+{
+    return _state;
+}
+
 void TCPConnection::BindHandler(bufferevent* bev, void* handler)
 {
     _bev     = bev;
     _handler = handler;
-}
-
-const std::string& TCPConnection::ID()
-{
-    return _id;
 }
 
 void* TCPConnection::GetHandler()
@@ -80,7 +99,7 @@ std::string TCPConnection::GetRemoteAddress()
     return assist::FormatString("%s:%d", _remoteIP.c_str(), _remotePort);
 }
 
-std::error_code TCPConnection::Read(Message& msg)
+std::error_code TCPConnection::Read(MessagePtr msg)
 {
     evbuffer* buffer = bufferevent_get_input(_bev);
     if (Message::MESSAGE_HEADER_SIZE > evbuffer_get_length(buffer))
@@ -99,7 +118,7 @@ std::error_code TCPConnection::Read(Message& msg)
 
     Ntoh(header);
 
-    uint32_t totalSize = Message::MESSAGE_HEADER_SIZE + header._dataSize;
+    uint32_t totalSize = header._dataSize + Message::MESSAGE_HEADER_SIZE;
     if (totalSize > Message::MAX_MESSAGE_SIZE)
     {
         LOG_DEBUG("total size {} more than max message size {}.", totalSize, (uint64_t)Message::MAX_MESSAGE_SIZE);
@@ -109,13 +128,14 @@ std::error_code TCPConnection::Read(Message& msg)
     char* msgBuffer = (char*)evbuffer_pullup(buffer, totalSize);
     if (!msgBuffer)
     {
-        LOG_DEBUG("read buffer size{}", totalSize);
         return error::ErrorCode::TryAgain;
     }
 
-    msg.Reset(header, msgBuffer + Message::MESSAGE_HEADER_SIZE, header._dataSize);
+    LOG_DEBUG("received, body size:{}, total size:{}", header._dataSize, totalSize);
+    msg->Reset(header, msgBuffer + Message::MESSAGE_HEADER_SIZE, header._dataSize);
     evbuffer_drain(buffer, totalSize);
 
+    _lastReadTimestamp = assist::TimestampTickCountSecond();
     return error::ErrorCode::Success;
 }
 
@@ -128,6 +148,11 @@ std::error_code TCPConnection::Send(const Message& msg)
         return error::ErrorCode::WritedException;
     }
     return error::ErrorCode::Success;
+}
+
+std::error_code TCPConnection::Send(const MessagePtr msg)
+{
+    return Send(*msg);
 }
 
 } // namespace net

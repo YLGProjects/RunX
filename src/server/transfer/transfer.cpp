@@ -37,19 +37,19 @@ Transfer::~Transfer()
 {
 }
 
-void Transfer::OnConnection(ylg::net::TCPConnection* connection)
+void Transfer::OnConnection(ylg::net::TCPConnectionPtr conn)
 {
-    LOG_DEBUG("new connection.{}", connection->ID());
+    LOG_DEBUG("new connection.{}", conn->ID());
 }
 
-void Transfer::OnDisconnection(ylg::net::TCPConnection* connection)
+void Transfer::OnDisconnection(ylg::net::TCPConnectionPtr conn)
 {
-    LOG_DEBUG("connection disconnection.{}", connection->ID());
+    LOG_DEBUG("connection disconnection.{}", conn->ID());
 }
 
-void Transfer::HandleData(ylg::net::TCPConnection* connection, const ylg::net::Message& msg)
+void Transfer::HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg)
 {
-    LOG_DEBUG("new message{} size:{}", msg.GetPayload(), msg.GetPayloadSize());
+    LOG_DEBUG("new message{} size:{}", msg->GetPayload(), msg->GetPayloadSize());
 
     // only test
     /*

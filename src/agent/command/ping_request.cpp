@@ -21,13 +21,14 @@
  * SOFTWARE.
  */
 
-#include "server/controller/processor/register_agent_processor.h"
+#include "agent/command/ping_request.h"
 
 #include "internal/error.h"
 
-#include "core/net/message.h"
+#include "core/log/log.h"
 
-std::error_code RegisterAgentProcessor::Do(const ylg::net::MessagePtr req, ylg::net::MessagePtr rsq)
+std::error_code PingRequestCMD::Do(const ylg::net::MessagePtr msg)
 {
-    return ylg::internal::ErrorCode::Success;
+    LOG_DEBUG("ping request, message:{} size:{}", msg->GetPayload(), msg->GetPayloadSize());
+    return ylg::internal::ErrorCode::Error;
 }

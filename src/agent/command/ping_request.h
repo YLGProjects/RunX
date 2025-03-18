@@ -21,13 +21,23 @@
  * SOFTWARE.
  */
 
-#include "server/controller/processor/register_agent_processor.h"
+#ifndef _YLG_AGENT_COMMAND_PING_REQUEST_H_
+#define _YLG_AGENT_COMMAND_PING_REQUEST_H_
 
-#include "internal/error.h"
-
+#include "agent/command/command.h"
 #include "core/net/message.h"
 
-std::error_code RegisterAgentProcessor::Do(const ylg::net::MessagePtr req, ylg::net::MessagePtr rsq)
+#include <system_error>
+
+class PingRequestCMD final : public Command
 {
-    return ylg::internal::ErrorCode::Success;
-}
+public:
+    PingRequestCMD()  = default;
+    ~PingRequestCMD() = default;
+
+public:
+    std::error_code Do(const ylg::net::MessagePtr msg) override;
+};
+
+#endif
+

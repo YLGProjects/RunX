@@ -25,7 +25,7 @@
 
 #include "internal/error.h"
 
-std::error_code RegisterAgentRespondCMD::Do(const ylg::net::Message& msg)
+std::error_code RegisterAgentRespondCMD::Do(const ylg::net::MessagePtr msg)
 {
     return ylg::internal::ErrorCode::Success;
 }

@@ -24,14 +24,12 @@
 #ifndef _YLG_CORE_NET_TCP_CLIENT_H_
 #define _YLG_CORE_NET_TCP_CLIENT_H_
 
-#include "core/container/safe_vector.h"
 #include "core/net/message.h"
 #include "core/net/tcp_handler.h"
 
 #include <event2/bufferevent.h>
 #include <event2/event.h>
 
-#include <atomic>
 #include <cstdint>
 #include <future>
 #include <memory>
@@ -39,6 +37,12 @@
 
 namespace ylg {
 namespace net {
+
+// clang-format off
+
+#define YLG_NET_TCP_CLIENT_TIMEOUT_SECOND_DFT 5
+
+// clang-format on
 
 class TCPClient final
 {
@@ -49,26 +53,29 @@ public:
 public:
     static void ReadCallback(bufferevent* bev, void* ctx);
     static void EventCallback(bufferevent* bev, short events, void* ctx);
+    static void CheckConnectionState(evutil_socket_t fd, short events, void* ctx);
 
 public:
+    void            SetTimeout(int timeoutSec);
     void            SetCallback(TCPHandlerCallbackFunctor functor);
-    std::error_code Connect(const std::string& ip, uint16_t port, uint32_t poolSize = 1);
+    std::error_code Connect(const std::string& ip, uint16_t port);
     void            Close();
     std::error_code Send(const Message& msg);
 
 private:
-    void Run();
+    void            Run();
+    std::error_code Reconnect();
 
 private:
-    TCPHandlerCallbackFunctor             _functor = nullptr;
-    std::string                           _remoteIP;
-    uint16_t                              _remotePort = 0;
-    uint32_t                              _poolSize   = 0;
-    std::future<void>                     _asyncRun;
-    std::atomic_uint64_t                  _connIndex = 0;
-    container::SafeVector<TCPConnection*> _connections;
-    event_base*                           _base = nullptr;
-    bufferevent*                          _bev  = nullptr;
+    timeval                   _timeoutSeconds = {YLG_NET_TCP_CLIENT_TIMEOUT_SECOND_DFT, 0};
+    TCPHandlerCallbackFunctor _functor        = nullptr;
+    std::string               _remoteIP;
+    uint16_t                  _remotePort = 0;
+    std::future<void>         _asyncRun;
+    TCPConnectionPtr          _connection                = nullptr;
+    event*                    _checkConnectionStateEvent = nullptr;
+    event_base*               _base                      = nullptr;
+    bufferevent*              _bev                       = nullptr;
 };
 
 using TCPClientPtr = std::shared_ptr<TCPClient>;

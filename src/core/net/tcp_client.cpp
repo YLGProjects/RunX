@@ -27,6 +27,7 @@
 #include "core/net/message.h"
 #include "core/net/tcp_connection.h"
 #include "core/net/tcp_handler.h"
+#include "internal/error.h"
 
 #include <event2/bufferevent.h>
 #include <event2/event.h>
@@ -48,10 +49,9 @@ TCPClient::~TCPClient()
 
 void TCPClient::ReadCallback(bufferevent* bev, void* ctx)
 {
-    TCPConnection* connection = static_cast<TCPConnection*>(ctx);
-
-    Message msg;
-    auto    errcode = connection->Read(msg);
+    auto       conn    = static_cast<TCPConnection*>(ctx);
+    MessagePtr msg     = std::make_shared<Message>();
+    auto       errcode = conn->Read(msg);
     if ((int)error::ErrorCode::TryAgain == errcode.value())
     {
         return;
@@ -59,30 +59,31 @@ void TCPClient::ReadCallback(bufferevent* bev, void* ctx)
 
     if (!error::IsSuccess(errcode))
     {
-        LOG_ERROR("failed to read data from connection:{}", connection->GetRemoteAddress());
+        LOG_ERROR("failed to read data from connection:{}", conn->GetRemoteAddress());
     }
 
-    auto handler = static_cast<TCPClient*>(connection->GetHandler());
-    handler->_functor->HandleData(connection, msg);
+    auto handler = static_cast<TCPClient*>(conn->GetHandler());
+    handler->_functor->HandleData(conn->shared_from_this(), msg);
 }
 
 void TCPClient::EventCallback(bufferevent* bev, short events, void* ctx)
 {
-    TCPConnection* connection = static_cast<TCPConnection*>(ctx);
-    TCPClient*     client     = (TCPClient*)connection->GetHandler();
+    auto       conn   = static_cast<TCPConnection*>(ctx);
+    TCPClient* client = (TCPClient*)conn->GetHandler();
 
     if (events & BEV_EVENT_CONNECTED)
     {
-        client->_functor->OnConnection(connection);
-        client->_connections.Push(connection);
+        conn->UpdateState(ConnectionState::Connected);
+        client->_functor->OnConnection(conn->shared_from_this());
         return;
     }
 
     if (events & BEV_EVENT_EOF)
     {
-        client->_functor->OnDisconnection(connection);
-        client->_connections.Delete(connection);
-        delete connection;
+        conn->UpdateState(ConnectionState::Disconnected);
+        auto sharedConn = conn->shared_from_this();
+        client->_functor->OnDisconnection(sharedConn);
+        client->_connection.reset();
         return;
     }
 
@@ -92,8 +93,32 @@ void TCPClient::EventCallback(bufferevent* bev, short events, void* ctx)
 
     if (events & BEV_EVENT_TIMEOUT)
     {
-        LOG_WARN("connection timeout. connection:{}", connection->ID());
+        LOG_WARN("connection timeout. connection:{}", conn->ID());
     }
+}
+
+void TCPClient::CheckConnectionState(evutil_socket_t fd, short events, void* ctx)
+{
+    auto client = static_cast<TCPClient*>(ctx);
+
+    LOG_DEBUG("tcp client check the connection state, remote server: {}:{}", client->_remoteIP, client->_remotePort);
+
+    if (client->_connection == nullptr || client->_connection->State() != ConnectionState::Connected)
+    {
+        auto errcode = client->Reconnect();
+        if (!ylg::error::IsSuccess(errcode))
+        {
+            LOG_WARN("failed to reconnect. remote server:{}:{}", client->_remoteIP, client->_remotePort);
+        }
+    }
+
+    // set the next timer
+    evtimer_add(client->_checkConnectionStateEvent, &client->_timeoutSeconds);
+}
+
+void TCPClient::SetTimeout(int timeoutSec)
+{
+    _timeoutSeconds.tv_sec = timeoutSec;
 }
 
 void TCPClient::SetCallback(TCPHandlerCallbackFunctor functor)
@@ -101,7 +126,7 @@ void TCPClient::SetCallback(TCPHandlerCallbackFunctor functor)
     _functor = functor;
 }
 
-std::error_code TCPClient::Connect(const std::string& ip, uint16_t port, uint32_t poolSize)
+std::error_code TCPClient::Connect(const std::string& ip, uint16_t port)
 {
     _base = event_base_new();
     if (!_base)
@@ -113,6 +138,66 @@ std::error_code TCPClient::Connect(const std::string& ip, uint16_t port, uint32_
     _remoteIP   = ip;
     _remotePort = port;
 
+    auto errcode = Reconnect();
+    if (!ylg::error::IsSuccess(errcode))
+    {
+        return errcode;
+    }
+
+    _asyncRun = std::async(std::launch::async, &TCPClient::Run, this);
+    return error::ErrorCode::Success;
+}
+
+void TCPClient::Close()
+{
+    if (!_base)
+    {
+        return;
+    }
+
+    event_base_loopbreak(_base);
+    bufferevent_free(_bev);
+    event_base_free(_base);
+
+    _base = nullptr;
+    _bev  = nullptr;
+
+    _asyncRun.wait();
+}
+
+std::error_code TCPClient::Send(const Message& msg)
+{
+    if (_connection == nullptr)
+    {
+        return error::ErrorCode::ConnectionIsNotReady;
+    }
+
+    if (_connection->State() != ConnectionState::Connected)
+    {
+        return ylg::error::ErrorCode::ConnectionIsNotReady;
+    }
+
+    return _connection->Send(msg);
+}
+
+void TCPClient::Run()
+{
+    // set timer callback
+    _checkConnectionStateEvent = evtimer_new(_base, &TCPClient::CheckConnectionState, this);
+    evtimer_add(_checkConnectionStateEvent, &_timeoutSeconds);
+
+    // start the event loop
+    int exitedCode = 0;
+    do {
+        exitedCode = event_base_loop(_base, EVLOOP_NO_EXIT_ON_EMPTY);
+    } while (exitedCode != -1);
+
+    LOG_WARN("tcp client run exited. exited code:{}", exitedCode);
+    bufferevent_free(_bev);
+}
+
+std::error_code TCPClient::Reconnect()
+{
     evutil_addrinfo hints;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family   = AF_UNSPEC;
@@ -137,50 +222,17 @@ std::error_code TCPClient::Connect(const std::string& ip, uint16_t port, uint32_
             continue;
         }
 
-        auto conn = new TCPConnection(-1, p->ai_addr, p->ai_addrlen);
+        auto conn = std::make_shared<TCPConnection>(-1, p->ai_addr, p->ai_addrlen);
+        conn->UpdateState(ConnectionState::Connecting);
         conn->BindHandler(_bev, this);
-        bufferevent_setcb(_bev, &TCPClient::ReadCallback, nullptr, &TCPClient::EventCallback, conn);
+        bufferevent_setcb(_bev, &TCPClient::ReadCallback, nullptr, &TCPClient::EventCallback, conn.get());
         bufferevent_enable(_bev, EV_READ | EV_WRITE);
+        _connection = conn;
         break;
     }
 
     freeaddrinfo(servinfo);
-    _asyncRun = std::async(std::launch::async, &TCPClient::Run, this);
-    return error::ErrorCode::Success;
-}
-
-void TCPClient::Close()
-{
-    if (!_base)
-    {
-        return;
-    }
-
-    event_base_loopbreak(_base);
-    bufferevent_free(_bev);
-    _asyncRun.wait();
-}
-
-std::error_code TCPClient::Send(const Message& msg)
-{
-    if (_connections.Count() == 0)
-    {
-        return error::ErrorCode::ConnectionIsNotReady;
-    }
-
-    auto idx = _connIndex++ % _connections.Count();
-    return _connections.At(idx)->Send(msg);
-}
-
-void TCPClient::Run()
-{
-    int exitedCode = 0;
-    do {
-        exitedCode = event_base_loop(_base, EVLOOP_NO_EXIT_ON_EMPTY);
-    } while (exitedCode != -1);
-
-    LOG_WARN("tcp client run exited. exited code:{}", exitedCode);
-    bufferevent_free(_bev);
+    return ylg::internal::ErrorCode::Success;
 }
 
 } // namespace net

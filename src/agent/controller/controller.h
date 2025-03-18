@@ -50,9 +50,9 @@ public:
     ~Controller();
 
 public:
-    virtual void OnConnection(ylg::net::TCPConnection* connection);
-    virtual void OnDisconnection(ylg::net::TCPConnection* connection);
-    virtual void HandleData(ylg::net::TCPConnection* connection, const ylg::net::Message& msg);
+    virtual void OnConnection(ylg::net::TCPConnectionPtr conn) override;
+    virtual void OnDisconnection(ylg::net::TCPConnectionPtr conn) override;
+    virtual void HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg) override;
 
 public:
     void Run(const std::string& remoteIP, uint16_t remotePort);

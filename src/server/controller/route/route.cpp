@@ -26,10 +26,17 @@
 #include "server/controller/route/agent_session.h"
 
 #include "internal/error.h"
-#include <system_error>
 
-std::error_code Route::CreateLocalSession(ylg::net::TCPConnection* conn)
+std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn)
 {
+    auto session = std::make_shared<AgentSession>();
+
+    session->_agentID    = conn->ID();
+    session->_connection = conn;
+
+    _connAgentIDs.Push(conn->ID(), session->_agentID);
+    _agents.Push(session->_agentID, session);
+
     return ylg::internal::ErrorCode::Success;
 }
 
@@ -40,10 +47,17 @@ std::error_code Route::CreateRemoteSession(AgentSessionPtr session)
 
 AgentSessionPtr Route::FindAgentSession(const std::string& agentID)
 {
+    // TODO: only test
+    std::map<std::string, AgentSessionPtr> sessions;
+    _agents.CopyTo(sessions);
+    for (auto iter : sessions)
+    {
+        return iter.second;
+    }
     return nullptr;
 }
 
-std::error_code Route::RemoveLocalSession(ylg::net::TCPConnection* conn)
+std::error_code Route::RemoveLocalSession(ylg::net::TCPConnectionPtr conn)
 {
     return ylg::internal::ErrorCode::Success;
 }

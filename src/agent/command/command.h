@@ -36,7 +36,7 @@ public:
     virtual ~Command() = default;
 
 public:
-    virtual std::error_code Do(const ylg::net::Message& msg) = 0;
+    virtual std::error_code Do(const ylg::net::MessagePtr msg) = 0;
 };
 
 using CommandPtr = std::shared_ptr<Command>;
