@@ -24,6 +24,8 @@
 #ifndef _YLG_INTERNAL_CONTROLLER_PROTOCOL_H_
 #define _YLG_INTERNAL_CONTROLLER_PROTOCOL_H_
 
+#include "core/net/message.h"
+
 #include <cstdint>
 #include <string>
 #include <system_error>
@@ -35,22 +37,22 @@ namespace internal {
 
 enum class MessageType : uint32_t
 {
-    Ping                     = 0x0001,
-    Pong                     = 0x0002,
-    AuthRequest              = 0x0003,
-    AuthResponse             = 0x0004,
-    RegisterAgentRequest     = 0x0005,
-    RegisterAgentResponse    = 0x0006,
-    UnregisterAgentRequest   = 0x0007,
-    UnregisterAgentResponse  = 0x0008,
-    ReportAgentState         = 0x0009,
-    RegisterPluginRequest    = 0x000A,
-    RegisterPluginResponse   = 0x000B,
-    UnregisterPluginRequest  = 0x000C,
-    UnregisterPluginResponse = 0x000D,
-    ReportPluginState        = 0x000E,
-    OperatePluginRequest     = 0x000F,
-    OperatePluginResponse    = 0x0010,
+    Ping                     = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x001),
+    Pong                     = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x002),
+    AuthRequest              = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x003),
+    AuthResponse             = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x004),
+    RegisterAgentRequest     = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x005),
+    RegisterAgentResponse    = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x006),
+    UnregisterAgentRequest   = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x007),
+    UnregisterAgentResponse  = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x008),
+    ReportAgentState         = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x009),
+    RegisterPluginRequest    = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x00A),
+    RegisterPluginResponse   = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x00B),
+    UnregisterPluginRequest  = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x00C),
+    UnregisterPluginResponse = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x00D),
+    ReportPluginState        = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x00E),
+    OperatePluginRequest     = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x00F),
+    OperatePluginResponse    = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x010),
 };
 
 enum class AgentState : uint32_t

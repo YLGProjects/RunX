@@ -25,6 +25,7 @@
 #define _YLG_CORE_NET_TCP_HANDLER_H_
 
 #include "core/container/safe_map.h"
+#include "core/net/message.h"
 #include "core/net/tcp_connection.h"
 
 #include <event2/bufferevent.h>
@@ -34,12 +35,6 @@
 
 namespace ylg {
 namespace net {
-
-// clang-format off
-
-#define YLG_NET_TCP_SERVER_TIMEOUT_SECOND_DFT 5
-
-// clang-format on
 
 class TCPHandlerCallback
 {
@@ -77,9 +72,10 @@ public:
 
 private:
     void Run();
+    bool ProcessCoreMessage(TCPConnectionPtr conn, MessagePtr msg);
 
 private:
-    timeval                   _timeoutSeconds            = {YLG_NET_TCP_SERVER_TIMEOUT_SECOND_DFT, 0};
+    timeval                   _timeoutSeconds            = {YLG_NET_TCP_CONNECTION_TIMEOUT_SECOND_DFT, 0};
     TCPHandlerCallbackFunctor _functor                   = nullptr;
     event*                    _checkConnectionStateEvent = nullptr;
     event_base*               _base                      = nullptr;

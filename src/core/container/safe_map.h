@@ -254,7 +254,7 @@ public:
      */
     void Foreach(std::function<void(KEY, VAL)> callback)
     {
-        std::shared_lock<std::shared_mutex> lock(_mutex);
+        std::unique_lock<std::shared_mutex> lock(_mutex);
 
         for (auto ele : _elements)
         {
@@ -269,7 +269,7 @@ public:
      */
     void ForeachAndDoOnce(std::function<bool(KEY, VAL)> callback)
     {
-        std::shared_lock<std::shared_mutex> lock(_mutex);
+        std::unique_lock<std::shared_mutex> lock(_mutex);
 
         for (auto ele : _elements)
         {

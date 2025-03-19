@@ -25,6 +25,7 @@
 #define _YLG_CORE_NET_TCP_CLIENT_H_
 
 #include "core/net/message.h"
+#include "core/net/tcp_connection.h"
 #include "core/net/tcp_handler.h"
 
 #include <event2/bufferevent.h>
@@ -38,12 +39,6 @@
 namespace ylg {
 namespace net {
 
-// clang-format off
-
-#define YLG_NET_TCP_CLIENT_TIMEOUT_SECOND_DFT 5
-
-// clang-format on
-
 class TCPClient final
 {
 public:
@@ -54,6 +49,7 @@ public:
     static void ReadCallback(bufferevent* bev, void* ctx);
     static void EventCallback(bufferevent* bev, short events, void* ctx);
     static void CheckConnectionState(evutil_socket_t fd, short events, void* ctx);
+    static void ConnectionKeepalive(evutil_socket_t fd, short events, void* ctx);
 
 public:
     void            SetTimeout(int timeoutSec);
@@ -65,15 +61,18 @@ public:
 private:
     void            Run();
     std::error_code Reconnect();
+    bool            ProcessCoreMessage(TCPConnectionPtr conn, MessagePtr msg);
 
 private:
-    timeval                   _timeoutSeconds = {YLG_NET_TCP_CLIENT_TIMEOUT_SECOND_DFT, 0};
-    TCPHandlerCallbackFunctor _functor        = nullptr;
+    timeval                   _checkConnectionTimeoutSeconds     = {YLG_NET_TCP_CONNECTION_TIMEOUT_SECOND_DFT, 0};
+    timeval                   _connectionKeepaliveTimeoutSeconds = {YLG_NET_TCP_CONNECTION_KEEPALIVE_TIMEOUT_SECOND_DFT, 0};
+    TCPHandlerCallbackFunctor _functor                           = nullptr;
     std::string               _remoteIP;
     uint16_t                  _remotePort = 0;
     std::future<void>         _asyncRun;
     TCPConnectionPtr          _connection                = nullptr;
     event*                    _checkConnectionStateEvent = nullptr;
+    event*                    _connectionKeepaliveEvent  = nullptr;
     event_base*               _base                      = nullptr;
     bufferevent*              _bev                       = nullptr;
 };

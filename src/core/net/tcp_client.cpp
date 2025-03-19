@@ -27,12 +27,12 @@
 #include "core/net/message.h"
 #include "core/net/tcp_connection.h"
 #include "core/net/tcp_handler.h"
-#include "internal/error.h"
 
 #include <event2/bufferevent.h>
 #include <event2/event.h>
 #include <event2/util.h>
 
+#include <cmath>
 #include <memory.h>
 #include <string>
 
@@ -49,21 +49,38 @@ TCPClient::~TCPClient()
 
 void TCPClient::ReadCallback(bufferevent* bev, void* ctx)
 {
-    auto       conn    = static_cast<TCPConnection*>(ctx);
+    auto conn = static_cast<TCPConnection*>(ctx);
+
     MessagePtr msg     = std::make_shared<Message>();
     auto       errcode = conn->Read(msg);
-    if ((int)error::ErrorCode::TryAgain == errcode.value())
+
+    if (errcode == error::ErrorCode::TryAgain)
     {
+        LOG_DEBUG("no more data to read, try again, connection:{}", conn->ID());
+        return;
+    }
+
+    if (errcode == error::ErrorCode::InvalidMagic)
+    {
+        LOG_WARN("invalid connection:{}", conn->ID());
+        conn->UpdateState(ConnectionState::Invalid);
         return;
     }
 
     if (!error::IsSuccess(errcode))
     {
-        LOG_ERROR("failed to read data from connection:{}", conn->GetRemoteAddress());
+        LOG_ERROR("failed to read data from connection:{}, errcode:{}", conn->GetRemoteAddress(), errcode.value());
     }
 
-    auto handler = static_cast<TCPClient*>(conn->GetHandler());
-    handler->_functor->HandleData(conn->shared_from_this(), msg);
+    LOG_DEBUG("readed a message. connection:{}", conn->ID());
+
+    auto handler    = static_cast<TCPClient*>(conn->GetHandler());
+    auto sharedConn = conn->shared_from_this();
+
+    if (!handler->ProcessCoreMessage(sharedConn, msg))
+    {
+        handler->_functor->HandleData(sharedConn, msg);
+    }
 }
 
 void TCPClient::EventCallback(bufferevent* bev, short events, void* ctx)
@@ -113,12 +130,53 @@ void TCPClient::CheckConnectionState(evutil_socket_t fd, short events, void* ctx
     }
 
     // set the next timer
-    evtimer_add(client->_checkConnectionStateEvent, &client->_timeoutSeconds);
+    evtimer_add(client->_checkConnectionStateEvent, &client->_checkConnectionTimeoutSeconds);
+}
+
+void TCPClient::ConnectionKeepalive(evutil_socket_t fd, short events, void* ctx)
+{
+    auto client = static_cast<TCPClient*>(ctx);
+
+    LOG_DEBUG("tcp client connection keepalive, remote server: {}:{}", client->_remoteIP, client->_remotePort);
+
+    if (client->_connection == nullptr)
+    {
+        // set the next timer
+        evtimer_add(client->_connectionKeepaliveEvent, &client->_connectionKeepaliveTimeoutSeconds);
+        return;
+    }
+
+    static std::string data(YLG_NET_MESSAGE_KEEPALIVE_PING);
+
+    ylg::net::Header header;
+    header._dataSize = data.size();
+    header._msgType  = (uint32_t)YLG_NET_MESSAGE_PROTOCOL_KEEPALIVE_PING;
+
+    ylg::net::Hton(header);
+    ylg::net::Message msg(header, data.data(), data.size());
+
+    auto errcode = client->_connection->Send(msg);
+
+    if (!ylg::error::IsSuccess(errcode))
+    {
+        LOG_WARN("failed to send keepalive ping. connection: {}", client->_connection->ID());
+    }
+
+    // set the next timer
+    evtimer_add(client->_connectionKeepaliveEvent, &client->_connectionKeepaliveTimeoutSeconds);
 }
 
 void TCPClient::SetTimeout(int timeoutSec)
 {
-    _timeoutSeconds.tv_sec = timeoutSec;
+    if (timeoutSec < YLG_NET_TCP_CONNECTION_TIMEOUT_SECOND_DFT)
+    {
+        _checkConnectionTimeoutSeconds.tv_sec     = YLG_NET_TCP_CONNECTION_TIMEOUT_SECOND_DFT;
+        _connectionKeepaliveTimeoutSeconds.tv_sec = YLG_NET_TCP_CONNECTION_KEEPALIVE_TIMEOUT_SECOND_DFT;
+        return;
+    }
+
+    _checkConnectionTimeoutSeconds.tv_sec     = timeoutSec;
+    _connectionKeepaliveTimeoutSeconds.tv_sec = std::floor(timeoutSec / 2);
 }
 
 void TCPClient::SetCallback(TCPHandlerCallbackFunctor functor)
@@ -182,9 +240,13 @@ std::error_code TCPClient::Send(const Message& msg)
 
 void TCPClient::Run()
 {
-    // set timer callback
+    // set connection state check timer
     _checkConnectionStateEvent = evtimer_new(_base, &TCPClient::CheckConnectionState, this);
-    evtimer_add(_checkConnectionStateEvent, &_timeoutSeconds);
+    evtimer_add(_checkConnectionStateEvent, &_checkConnectionTimeoutSeconds);
+
+    // set connection keepalive timer
+    _connectionKeepaliveEvent = evtimer_new(_base, &TCPClient::ConnectionKeepalive, this);
+    evtimer_add(_connectionKeepaliveEvent, &_connectionKeepaliveTimeoutSeconds);
 
     // start the event loop
     int exitedCode = 0;
@@ -208,7 +270,9 @@ std::error_code TCPClient::Reconnect()
 
     if (getaddrinfo(_remoteIP.c_str(), remotePort.c_str(), &hints, &servinfo) != 0)
     {
+        LOG_WARN("failed to get addr info. remote server: {}:{}", _remoteIP, remotePort);
         event_base_free(_base);
+        _base = nullptr;
         return error::ErrorCode::ConnectionAborted;
     }
 
@@ -219,6 +283,7 @@ std::error_code TCPClient::Reconnect()
         if (bufferevent_socket_connect(_bev, p->ai_addr, p->ai_addrlen) < 0)
         {
             bufferevent_free(_bev);
+            _bev = nullptr;
             continue;
         }
 
@@ -232,7 +297,25 @@ std::error_code TCPClient::Reconnect()
     }
 
     freeaddrinfo(servinfo);
-    return ylg::internal::ErrorCode::Success;
+    return error::ErrorCode::Success;
+}
+
+bool TCPClient::ProcessCoreMessage(TCPConnectionPtr conn, MessagePtr msg)
+{
+    const auto& header = msg->GetHeader();
+
+    if (header._msgType > YLG_NET_MESSAGE_PROTOCOL_BASE)
+    {
+        return false;
+    }
+
+    if (header._msgType == YLG_NET_MESSAGE_PROTOCOL_KEEPALIVE_PONG)
+    {
+        LOG_DEBUG("received keepalive pong. remote server: {}", conn->GetRemoteAddress());
+        return true;
+    }
+
+    return true;
 }
 
 } // namespace net

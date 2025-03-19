@@ -57,6 +57,7 @@ TCPConnection::~TCPConnection()
 
     if (_bev)
     {
+        bufferevent_disable(_bev, EV_WRITE | EV_READ);
         bufferevent_free(_bev);
         _bev = nullptr;
     }
@@ -74,8 +75,17 @@ void TCPConnection::UpdateState(ConnectionState state)
 
 bool TCPConnection::IsTimeout(int timeoutSec)
 {
+    if (0 == _lastReadTimestamp)
+    {
+        _lastReadTimestamp = assist::TimestampTickCountSecond();
+        return false;
+    }
+
+    // A timeout is only recognized if it exceeds the timeout period five times.
     auto duration = assist::TimestampTickCountSecond() - _lastReadTimestamp;
-    return duration >= timeoutSec;
+    auto timeout  = timeoutSec * 5;
+    LOG_DEBUG("check timeout. duration: {}, timeout seconds: {}, connection: {}", duration, timeout, ID());
+    return duration >= timeout;
 }
 
 ConnectionState TCPConnection::State()
@@ -121,13 +131,23 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     uint32_t totalSize = header._dataSize + Message::MESSAGE_HEADER_SIZE;
     if (totalSize > Message::MAX_MESSAGE_SIZE)
     {
-        LOG_DEBUG("total size {} more than max message size {}.", totalSize, (uint64_t)Message::MAX_MESSAGE_SIZE);
+        LOG_WARN("total size {} more than max message size {}.", totalSize, (uint64_t)Message::MAX_MESSAGE_SIZE);
         return error::ErrorCode::ReceivedTooLarge;
     }
+
+    if (header._magic != YLG_NET_MESSAGE_MAGIC)
+    {
+        LOG_WARN("invalid connection: {}, magic: 0x{:04X}", ID(), header._magic);
+        return error::ErrorCode::InvalidMagic;
+    }
+
+    _lastReadTimestamp = assist::TimestampTickCountSecond();
+    UpdateState(ConnectionState::Connected);
 
     char* msgBuffer = (char*)evbuffer_pullup(buffer, totalSize);
     if (!msgBuffer)
     {
+        LOG_DEBUG("no more data to read, connection: {}", ID());
         return error::ErrorCode::TryAgain;
     }
 
@@ -135,7 +155,6 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     msg->Reset(header, msgBuffer + Message::MESSAGE_HEADER_SIZE, header._dataSize);
     evbuffer_drain(buffer, totalSize);
 
-    _lastReadTimestamp = assist::TimestampTickCountSecond();
     return error::ErrorCode::Success;
 }
 

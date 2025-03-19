@@ -24,6 +24,7 @@
 #ifndef _YLG_CORE_NET_TCP_SERVER_H_
 #define _YLG_CORE_NET_TCP_SERVER_H_
 
+#include "core/net/tcp_connection.h"
 #include "core/net/tcp_handler.h"
 
 #include <event2/listener.h>
@@ -54,7 +55,7 @@ public:
     std::error_code Close();
 
 private:
-    int         _timeoutSec  = YLG_NET_TCP_SERVER_TIMEOUT_SECOND_DFT;
+    int         _timeoutSec  = YLG_NET_TCP_CONNECTION_TIMEOUT_SECOND_DFT;
     int         _threadCount = 0;
     std::string _listenAddress;
     uint16_t    _listenPort = 0;
