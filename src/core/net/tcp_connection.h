@@ -76,6 +76,9 @@ public:
     std::error_code    Send(const MessagePtr msg);
 
 private:
+    void BuildID();
+
+private:
     std::atomic<ConnectionState> _state             = ConnectionState::Unknown;
     uint64_t                     _lastReadTimestamp = 0;
 

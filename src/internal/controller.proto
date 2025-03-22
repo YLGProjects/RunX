@@ -21,23 +21,60 @@
  * SOFTWARE.
  */
 
-#include "agent/command/ping_request.h"
+syntax = "proto3";
 
-#include "internal/controller.pb.h"
-#include "internal/error.h"
+package ylg.internal;
 
-#include "core/log/log.h"
+import "base.proto";
 
-std::error_code PingRequestCMD::Do(const ylg::net::MessagePtr msg)
+message Ping
 {
-    ylg::internal::Ping ping;
-
-    if (!ping.ParseFromArray(msg->GetPayload(), msg->GetPayloadSize()))
-    {
-        LOG_DEBUG("failed to parse ping request, message:{}", ping.DebugString());
-        return ylg::internal::ErrorCode::Error;
-    }
-
-    LOG_DEBUG("ping request, message:{}", ping._msg());
-    return ylg::internal::ErrorCode::Success;
+    string _msg = 1;
 }
+
+message Pong
+{
+    string _agentID = 1;
+    string _msg     = 2;
+}
+
+message AuthRequest
+{
+    string _agentID = 1;
+}
+
+message AuthRespond
+{
+    string _agentID = 1;
+}
+
+message RegisterAgentRequest
+{
+    string _ip         = 1;
+    string _mac        = 2;
+    string _netDevName = 3;
+    string _machineID  = 4;
+    string _hostName   = 5;
+}
+
+message RegisterAgentRespond
+{
+    string _agentID = 1;
+}
+
+message UnregisterAgentRequest
+{
+    string _agentID = 1;
+}
+
+message UnregisterAgentRespond
+{
+    string _agentID = 1;
+}
+
+message ReportAgentState
+{
+    string _agentID   = 1;
+    AgentState _state = 2;
+}
+

@@ -21,16 +21,24 @@
  * SOFTWARE.
  */
 
-#include "internal/controller_protocol.h"
-#include "core/error/error.h"
+syntax = "proto3";
 
-namespace ylg {
-namespace internal {
+package ylg.internal;
 
-std::error_code AuthRequest::ToJSON(std::string& data)
+enum AgentState
 {
-    return error::ErrorCode::Success;
+    Offine = 0;
+    Online = 1;
 }
 
-} // namespace internal
-} // namespace ylg
+message PluginBase
+{
+    string _name               = 1;
+    string _version            = 2;
+    string _logLevel           = 3;
+    string _installedLocation  = 4;
+    uint64 _installedTimestamp = 5;
+    uint64 _startedTimestamp   = 6;
+    uint64 _runningDuration    = 7;
+
+}

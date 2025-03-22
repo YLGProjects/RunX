@@ -23,11 +23,13 @@
 
 #include "server/controller/api/http/server.h"
 
-#include "core/error/error.h"
+#include "internal/controller.h"
+#include "internal/controller.pb.h"
+#include "internal/error.h"
+
 #include "core/log/log.h"
 #include "core/net/http_context.h"
 #include "core/net/http_server.h"
-#include "internal/error.h"
 
 HTTPAPIServer::HTTPAPIServer(ControllerPtr controller)
 {
@@ -74,10 +76,18 @@ void HTTPAPIServer::Test(const ylg::net::Parameters& inParameters,
                          ylg::net::Parameters&       outParameters,
                          int& status, std::string& response)
 {
+    // TODO: ONLY TEST
     std::string postData = "hello world";
     status               = 200;
-    response             = "[TEST API]hello world";
-    auto errcode         = _controller->PostToAgent({}, postData.data(), postData.size());
+
+    ylg::internal::Ping ping;
+
+    ping.set__msg(postData);
+
+    auto post = ping.SerializeAsString();
+
+    response     = "[TEST API]hello world";
+    auto errcode = _controller->PostToAgent({}, ylg::internal::MessageType::Ping, post.data(), post.size());
     if (!ylg::internal::IsSuccess(errcode))
     {
         response = errcode.message();

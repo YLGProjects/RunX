@@ -48,7 +48,7 @@ TCPConnection::TCPConnection(evutil_socket_t fd, sockaddr* address, int socklen)
 
     _remoteIP   = host;
     _remotePort = std::atoi(service);
-    _id         = assist::FormatString("%s-%d", _remoteIP.c_str(), _remotePort);
+    BuildID();
 }
 
 TCPConnection::~TCPConnection()
@@ -172,6 +172,12 @@ std::error_code TCPConnection::Send(const Message& msg)
 std::error_code TCPConnection::Send(const MessagePtr msg)
 {
     return Send(*msg);
+}
+
+void TCPConnection::BuildID()
+{
+    _id = assist::FormatString("%s-%d", _remoteIP.c_str(), _remotePort);
+    assist::Trim(_id, ":-.");
 }
 
 } // namespace net

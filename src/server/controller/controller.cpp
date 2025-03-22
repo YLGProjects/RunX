@@ -23,7 +23,7 @@
 
 #include "server/controller/controller.h"
 
-#include "internal/controller_protocol.h"
+#include "internal/controller.h"
 #include "internal/error.h"
 
 #include "core/error/error.h"
@@ -132,13 +132,13 @@ void Controller::Close()
     _asyncRun.wait();
 }
 
-std::error_code Controller::PostToAgent(const std::vector<std::string>& agentIDs, const char* data, uint32_t size)
+std::error_code Controller::PostToAgent(const std::vector<std::string>& agentIDs, ylg::internal::MessageType msgType, const char* data, uint32_t size)
 {
     auto agentSession = _route->FindAgentSession("");
 
     ylg::net::Header header;
     header._dataSize = size;
-    header._msgType  = (uint32_t)ylg::internal::MessageType::Ping;
+    header._msgType  = (uint32_t)msgType;
 
     ylg::net::Hton(header);
 
