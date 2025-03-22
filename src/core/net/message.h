@@ -30,7 +30,16 @@
 namespace ylg {
 namespace net {
 
-#define MESSAGE_MAGIC 0xbeeabeaf
+// clang-format off
+
+#define YLG_NET_MESSAGE_MAGIC                   0xbeeabeaf
+#define YLG_NET_MESSAGE_KEEPALIVE_PING          "KEEPALIVE PING"
+#define YLG_NET_MESSAGE_KEEPALIVE_PONG          "KEEPALIVE PONG"
+#define YLG_NET_MESSAGE_PROTOCOL_KEEPALIVE_PING 0x0000
+#define YLG_NET_MESSAGE_PROTOCOL_KEEPALIVE_PONG 0x0001
+#define YLG_NET_MESSAGE_PROTOCOL_BASE           0x0010
+
+// clang-format on
 
 struct Header
 {
@@ -38,7 +47,7 @@ struct Header
     uint32_t _msgType   = 0;
     uint32_t _tag       = 0;
     uint32_t _dataSize  = 0;
-    uint64_t _magic     = MESSAGE_MAGIC;
+    uint64_t _magic     = YLG_NET_MESSAGE_MAGIC;
     uint64_t _sequence  = 0;
     uint64_t _timestamp = 0;
 };

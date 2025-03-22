@@ -26,7 +26,7 @@
 
 #include "agent/command/command.h"
 
-#include "internal/controller_protocol.h"
+#include "internal/controller.h"
 
 #include "core/assist/execution_multi_queue.h"
 #include "core/net/tcp_client.h"

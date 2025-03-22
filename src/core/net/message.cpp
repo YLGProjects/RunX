@@ -108,24 +108,36 @@ uint32_t Message::GetPayloadSize() const
 
 void Hton(Header& header)
 {
-    header._version   = htonl(header._version);
-    header._msgType   = htonl(header._msgType);
-    header._tag       = htonl(header._tag);
-    header._dataSize  = htonl(header._dataSize);
-    header._magic     = htole64(header._magic);
-    header._sequence  = htole64(header._sequence);
-    header._timestamp = htole64(header._timestamp);
+    header._version  = htonl(header._version);
+    header._msgType  = htonl(header._msgType);
+    header._tag      = htonl(header._tag);
+    header._dataSize = htonl(header._dataSize);
+
+    // Net Byte Order is Big-Endian
+
+    if (__BYTE_ORDER == __LITTLE_ENDIAN)
+    {
+        header._magic     = htobe64(header._magic);
+        header._sequence  = htobe64(header._sequence);
+        header._timestamp = htobe64(header._timestamp);
+    }
 }
 
 void Ntoh(Header& header)
 {
-    header._version   = ntohl(header._version);
-    header._msgType   = ntohl(header._msgType);
-    header._tag       = ntohl(header._tag);
-    header._dataSize  = ntohl(header._dataSize);
-    header._magic     = be64toh(header._magic);
-    header._sequence  = be64toh(header._sequence);
-    header._timestamp = be64toh(header._timestamp);
+    header._version  = ntohl(header._version);
+    header._msgType  = ntohl(header._msgType);
+    header._tag      = ntohl(header._tag);
+    header._dataSize = ntohl(header._dataSize);
+
+    // Net Byte Order is Big-Endian
+
+    if (__BYTE_ORDER == __LITTLE_ENDIAN)
+    {
+        header._magic     = be64toh(header._magic);
+        header._sequence  = be64toh(header._sequence);
+        header._timestamp = be64toh(header._timestamp);
+    }
 }
 
 } // namespace net

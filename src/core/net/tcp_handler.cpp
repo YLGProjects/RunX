@@ -9,6 +9,7 @@
 #include <event2/event.h>
 
 #include <future>
+#include <string>
 
 namespace ylg {
 namespace net {
@@ -27,6 +28,23 @@ void TCPHandler::CheckConnectionState(evutil_socket_t fd, short events, void* ct
 
     LOG_DEBUG("tcp server handler check the connection state, connection count: {}", server->_connections.Count());
 
+    server->_connections.Delete([server](std::string key, TCPConnectionPtr conn) -> bool {
+        if (conn->State() != ConnectionState::Connected)
+        {
+            // delete this connection
+            return true;
+        }
+
+        if (conn->IsTimeout(server->_timeoutSeconds.tv_sec))
+        {
+            LOG_DEBUG("timeout. connection: {}", conn->ID());
+            conn->UpdateState(ConnectionState::Timeout);
+            return false;
+        }
+
+        return false;
+    });
+
     evtimer_add(server->_checkConnectionStateEvent, &server->_timeoutSeconds);
 }
 
@@ -34,6 +52,7 @@ void TCPHandler::SetTimeout(int timeoutSec)
 {
     _timeoutSeconds.tv_sec = timeoutSec;
 }
+
 void TCPHandler::ReadCallback(bufferevent* bev, void* ctx)
 {
     TCPConnection* conn = static_cast<TCPConnection*>(ctx);
@@ -41,9 +60,16 @@ void TCPHandler::ReadCallback(bufferevent* bev, void* ctx)
     MessagePtr msg     = std::make_shared<Message>();
     auto       errcode = conn->Read(msg);
 
-    if ((int)error::ErrorCode::TryAgain == errcode.value())
+    if (errcode == error::ErrorCode::TryAgain)
     {
-        LOG_WARN("more date need to be read from the connection:{}", conn->ID());
+        LOG_DEBUG("no more data to read, try again, connection:{}", conn->ID());
+        return;
+    }
+
+    if (errcode == error::ErrorCode::InvalidMagic)
+    {
+        LOG_WARN("invalid connection:{}", conn->ID());
+        conn->UpdateState(ConnectionState::Invalid);
         return;
     }
 
@@ -53,8 +79,14 @@ void TCPHandler::ReadCallback(bufferevent* bev, void* ctx)
     }
 
     LOG_DEBUG("readed a message. connection:{}", conn->ID());
-    auto handler = static_cast<TCPHandler*>(conn->GetHandler());
-    handler->_functor->HandleData(conn->shared_from_this(), msg);
+
+    auto handler    = static_cast<TCPHandler*>(conn->GetHandler());
+    auto sharedConn = conn->shared_from_this();
+
+    if (!handler->ProcessCoreMessage(sharedConn, msg))
+    {
+        handler->_functor->HandleData(sharedConn, msg);
+    }
 }
 
 void TCPHandler::EventCallback(bufferevent* bev, short events, void* ctx)
@@ -62,6 +94,7 @@ void TCPHandler::EventCallback(bufferevent* bev, short events, void* ctx)
     TCPConnection* conn = static_cast<TCPConnection*>(ctx);
     if (events & BEV_EVENT_EOF)
     {
+        conn->UpdateState(ConnectionState::Connected);
         auto handler = static_cast<TCPHandler*>(conn->GetHandler());
         handler->_functor->OnDisconnection(conn->shared_from_this());
         handler->_connections.Delete(conn->ID());
@@ -85,13 +118,15 @@ void TCPHandler::BindConnection(evutil_socket_t fd, sockaddr* address, int sockl
     auto conn = std::make_shared<TCPConnection>(fd, address, socklen);
     auto bev  = bufferevent_socket_new(_base, fd, BEV_OPT_CLOSE_ON_FREE);
 
+    conn->UpdateState(ConnectionState::Connected);
     _functor->OnConnection(conn);
 
     bufferevent_setcb(bev, ReadCallback, nullptr, EventCallback, conn.get());
     bufferevent_setwatermark(bev, EV_READ, Message::MESSAGE_HEADER_SIZE, 10 * 1024 * 1024);
     bufferevent_enable(bev, EV_READ | EV_WRITE);
+
     timeval timeout;
-    timeout.tv_sec  = 10;
+    timeout.tv_sec  = _timeoutSeconds.tv_sec;
     timeout.tv_usec = 0;
     bufferevent_set_timeouts(bev, &timeout, &timeout);
 
@@ -143,6 +178,42 @@ void TCPHandler::Run()
     } while (exitedCode != -1);
 
     LOG_WARN("tcp handler run exited. exited code:{}", exitedCode);
+}
+
+bool TCPHandler::ProcessCoreMessage(TCPConnectionPtr conn, MessagePtr msg)
+{
+    const auto& header = msg->GetHeader();
+
+    if (header._msgType > YLG_NET_MESSAGE_PROTOCOL_BASE)
+    {
+        LOG_DEBUG("tcp handler, is not core message protocol");
+        return false;
+    }
+
+    if (header._msgType == YLG_NET_MESSAGE_PROTOCOL_KEEPALIVE_PING)
+    {
+        LOG_DEBUG("received keepalive ping. client: {}", conn->GetRemoteAddress());
+
+        static std::string data(YLG_NET_MESSAGE_KEEPALIVE_PONG);
+        ylg::net::Header   header;
+        header._dataSize = data.size();
+        header._msgType  = (uint32_t)YLG_NET_MESSAGE_PROTOCOL_KEEPALIVE_PONG;
+
+        ylg::net::Hton(header);
+
+        ylg::net::Message msg(header, data.data(), data.size());
+
+        auto errcode = conn->Send(msg);
+
+        if (!ylg::error::IsSuccess(errcode))
+        {
+            LOG_WARN("failed to respond keepalive pong. connection: {}", conn->ID());
+        }
+
+        return true;
+    }
+
+    return true;
 }
 
 } // namespace net

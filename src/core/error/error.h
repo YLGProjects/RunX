@@ -44,6 +44,7 @@ enum class ErrorCode : int32_t
     TryAgain,
     ConnectionAborted,
     ReceivedTooLarge,
+    InvalidMagic,
     WritedException,
     ConnectionIsNotReady,
     InvalidHTTPMethod,

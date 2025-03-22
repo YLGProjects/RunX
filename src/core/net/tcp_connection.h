@@ -40,11 +40,20 @@
 namespace ylg {
 namespace net {
 
+// clang-format off
+
+#define YLG_NET_TCP_CONNECTION_TIMEOUT_SECOND_DFT           6
+#define YLG_NET_TCP_CONNECTION_KEEPALIVE_TIMEOUT_SECOND_DFT 3
+
+// clang-format on
+
 enum class ConnectionState : int
 {
     Connecting,
     Connected,
     Disconnected,
+    Timeout,
+    Invalid,
     Unknown,
 };
 
@@ -65,6 +74,9 @@ public:
     std::error_code    Read(MessagePtr msg);
     std::error_code    Send(const Message& msg);
     std::error_code    Send(const MessagePtr msg);
+
+private:
+    void BuildID();
 
 private:
     std::atomic<ConnectionState> _state             = ConnectionState::Unknown;

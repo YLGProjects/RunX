@@ -26,7 +26,7 @@
 #include "server/controller/processor/processor.h"
 #include "server/controller/route/route.h"
 
-#include "internal/controller_protocol.h"
+#include "internal/controller.h"
 
 #include "core/assist/execution_multi_queue.h"
 #include "core/net/tcp_connection.h"
@@ -58,7 +58,7 @@ public:
 public:
     void            Run(const std::string& listenIP, uint16_t listenPort);
     void            Close();
-    std::error_code PostToAgent(const std::vector<std::string>& agentIDs, const char* data, uint32_t size);
+    std::error_code PostToAgent(const std::vector<std::string>& agentIDs, ylg::internal::MessageType msgType, const char* data, uint32_t size);
 
 private:
     void RegisterProcessor();

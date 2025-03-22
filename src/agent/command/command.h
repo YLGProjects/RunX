@@ -26,6 +26,8 @@
 
 #include "core/net/message.h"
 
+#include "internal/controller.h"
+
 #include <memory>
 #include <system_error>
 
