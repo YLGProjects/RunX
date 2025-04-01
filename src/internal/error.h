@@ -25,6 +25,7 @@
 #define _YLG_INTERNAL_ERROR_H_
 
 #include "core/error/error.h"
+#include "core/log/log.h"
 
 #include <climits>
 #include <cstdint>
@@ -34,10 +35,10 @@ namespace internal {
 
 enum class ErrorCode : int32_t
 {
-    Unknown  = (int32_t)ylg::error::ErrorCode::Unknown,
-    Error    = (int32_t)ylg::error::ErrorCode::Error,
-    Success  = (int32_t)ylg::error::ErrorCode::Success,
-    MaxValue = INT_MAX,
+    UNKNOWN = (int32_t)ylg::error::ErrorCode::UNKNOWN,
+    ERROR   = (int32_t)ylg::error::ErrorCode::ERROR,
+    SUCCESS = (int32_t)ylg::error::ErrorCode::SUCCESS,
+    MAX     = INT_MAX,
 };
 
 class ErrorCodeCategory final : public std::error_category

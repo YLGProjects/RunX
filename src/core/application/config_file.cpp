@@ -52,16 +52,16 @@ std::error_code ConfigFile::Load(const std::string& filePath)
     END_TRY_BEGIN_CATCH(YAML::ParserException, ex)
 
     LOG_ERROR("failed to parse the yaml file. file({}), errmsg({})", filePath, ex.what());
-    return error::ErrorCode::ParseConfigFailure;
+    return error::ErrorCode::PARSE_CONFIG_FAILURE;
 
     END_TRY_BEGIN_CATCH(YAML::BadFile, ex)
 
     LOG_ERROR("failed to parse the yaml file. file({}), errmsg({})", filePath, ex.what());
-    return error::ErrorCode::ParseConfigFailure;
+    return error::ErrorCode::PARSE_CONFIG_FAILURE;
 
     END_CATCH
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 void ConfigFile::PrintVars()

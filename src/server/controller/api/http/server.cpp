@@ -87,7 +87,7 @@ void HTTPAPIServer::Test(const ylg::net::Parameters& inParameters,
     auto post = ping.SerializeAsString();
 
     response     = "[TEST API]hello world";
-    auto errcode = _controller->PostToAgent({}, ylg::internal::MessageType::Ping, post.data(), post.size());
+    auto errcode = _controller->PostToAgent({}, ylg::internal::MessageType::PING, post.data(), post.size());
     if (!ylg::internal::IsSuccess(errcode))
     {
         response = errcode.message();

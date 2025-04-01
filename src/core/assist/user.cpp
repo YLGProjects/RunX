@@ -60,13 +60,13 @@ std::error_code GetUserUidGid(const std::string& userName, int& uid, int& gid)
     if (!isOK)
     {
         LOG_ERROR("can not get uid and gid. errmsg({})", error::ToString(errno));
-        return error::ErrorCode::Error;
+        return error::ErrorCode::ERROR;
     }
 
     uid = res->pw_uid;
     gid = res->pw_gid;
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code GetUserUidGid(const std::string& userName, int& uid, int& gid, std::string& homeDirectory, std::string& shell)
@@ -81,7 +81,7 @@ std::error_code GetUserUidGid(const std::string& userName, int& uid, int& gid, s
     if (!isOK)
     {
         LOG_ERROR("can not get uid and gid. errmsg({})", error::ToString(errno));
-        return error::ErrorCode::Error;
+        return error::ErrorCode::ERROR;
     }
 
     uid           = res->pw_uid;
@@ -89,7 +89,7 @@ std::error_code GetUserUidGid(const std::string& userName, int& uid, int& gid, s
     shell         = res->pw_shell;
     homeDirectory = res->pw_dir;
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code SetUserUidGid(int uid, int gid)
@@ -97,16 +97,16 @@ std::error_code SetUserUidGid(int uid, int gid)
     if (setregid(gid, gid))
     {
         LOG_ERROR("can not set gid. errmsg({})", error::ToString(errno));
-        return error::ErrorCode::Error;
+        return error::ErrorCode::ERROR;
     }
 
     if (setreuid(uid, uid))
     {
         LOG_ERROR("can not get uid. errmsg({})", error::ToString(errno));
-        return error::ErrorCode::Error;
+        return error::ErrorCode::ERROR;
     }
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 } // namespace assist

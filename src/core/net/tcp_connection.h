@@ -49,12 +49,12 @@ namespace net {
 
 enum class ConnectionState : int
 {
-    Connecting,
-    Connected,
-    Disconnected,
-    Timeout,
-    Invalid,
-    Unknown,
+    CONNECTING,
+    CONNECTED,
+    DISCONNECTED,
+    TIMEOUT,
+    INVALID,
+    UNKNOWN,
 };
 
 class TCPConnection final : public std::enable_shared_from_this<TCPConnection>
@@ -79,7 +79,7 @@ private:
     void BuildID();
 
 private:
-    std::atomic<ConnectionState> _state             = ConnectionState::Unknown;
+    std::atomic<ConnectionState> _state             = ConnectionState::UNKNOWN;
     uint64_t                     _lastReadTimestamp = 0;
 
     std::string     _id;

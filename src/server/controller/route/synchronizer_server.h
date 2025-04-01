@@ -21,55 +21,36 @@
  * SOFTWARE.
  */
 
-#include "core/error/error.h"
+#ifndef _YLG_SERVER_CONTROLLER_ROUTE_SYNCHRONIZER_SERVER_H_
+#define _YLG_SERVER_CONTROLLER_ROUTE_SYNCHRONIZER_SERVER_H_
 
-#include <system_error>
+#include "core/container/safe_map.h"
+#include "core/net/message.h"
+#include "core/net/tcp_connection.h"
+#include "core/net/tcp_handler.h"
+#include "core/net/tcp_server.h"
 
-namespace ylg {
-namespace error {
-
-ErrorCodeCategory& ErrorCodeCategory::Instance()
+class SynchronizerServer final : public ylg::net::TCPHandlerCallback, public std::enable_shared_from_this<SynchronizerServer>
 {
-    static ErrorCodeCategory instance;
-    return instance;
-}
+public:
+    SynchronizerServer()  = default;
+    ~SynchronizerServer() = default;
 
-const char* ErrorCodeCategory::name() const noexcept
-{
-    return "ylg-core-error";
-}
+public:
+    virtual void OnConnection(ylg::net::TCPConnectionPtr conn) override;
+    virtual void OnDisconnection(ylg::net::TCPConnectionPtr conn) override;
+    virtual void HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg) override;
 
-std::string ErrorCodeCategory::message(int code) const
-{
-    std::string errMsg;
-    switch (static_cast<ErrorCode>(code))
-    {
-    default:
-        errMsg = std::to_string(code) + ": unknown error code";
-    }
-    return errMsg;
-}
+public:
+    void Run(const std::string& listenIP, uint16_t listenPort);
+    void Close();
 
-std::error_code make_error_code(ErrorCode e)
-{
-    return {static_cast<int>(e), ErrorCodeCategory::Instance()};
-}
+private:
+    ylg::net::TCPServerPtr _serever = nullptr;
 
-bool IsSuccess(const std::error_code& ec)
-{
-    if (ec.value() == (int)ErrorCode::SUCCESS)
-    {
-        return true;
-    }
+    // KEY: connection id, VALUE: connection
+    ylg::container::SafeMap<std::string, ylg::net::TCPConnectionPtr> _conns;
+};
 
-    return false;
-}
-
-std::string ToString(int ec)
-{
-    return std::system_category().message(ec);
-}
-
-} // namespace error
-} // namespace ylg
+#endif
 

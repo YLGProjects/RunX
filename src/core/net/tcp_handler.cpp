@@ -29,7 +29,7 @@ void TCPHandler::CheckConnectionState(evutil_socket_t fd, short events, void* ct
     LOG_DEBUG("tcp server handler check the connection state, connection count: {}", server->_connections.Count());
 
     server->_connections.Delete([server](std::string key, TCPConnectionPtr conn) -> bool {
-        if (conn->State() != ConnectionState::Connected)
+        if (conn->State() != ConnectionState::CONNECTED)
         {
             // delete this connection
             return true;
@@ -38,7 +38,7 @@ void TCPHandler::CheckConnectionState(evutil_socket_t fd, short events, void* ct
         if (conn->IsTimeout(server->_timeoutSeconds.tv_sec))
         {
             LOG_DEBUG("timeout. connection: {}", conn->ID());
-            conn->UpdateState(ConnectionState::Timeout);
+            conn->UpdateState(ConnectionState::TIMEOUT);
             return false;
         }
 
@@ -60,16 +60,16 @@ void TCPHandler::ReadCallback(bufferevent* bev, void* ctx)
     MessagePtr msg     = std::make_shared<Message>();
     auto       errcode = conn->Read(msg);
 
-    if (errcode == error::ErrorCode::TryAgain)
+    if (errcode == error::ErrorCode::TRYAGAIN)
     {
         LOG_DEBUG("no more data to read, try again, connection:{}", conn->ID());
         return;
     }
 
-    if (errcode == error::ErrorCode::InvalidMagic)
+    if (errcode == error::ErrorCode::INVALID_MAGIC)
     {
         LOG_WARN("invalid connection:{}", conn->ID());
-        conn->UpdateState(ConnectionState::Invalid);
+        conn->UpdateState(ConnectionState::INVALID);
         return;
     }
 
@@ -88,13 +88,12 @@ void TCPHandler::ReadCallback(bufferevent* bev, void* ctx)
         handler->_functor->HandleData(sharedConn, msg);
     }
 }
-
 void TCPHandler::EventCallback(bufferevent* bev, short events, void* ctx)
 {
     TCPConnection* conn = static_cast<TCPConnection*>(ctx);
     if (events & BEV_EVENT_EOF)
     {
-        conn->UpdateState(ConnectionState::Connected);
+        conn->UpdateState(ConnectionState::CONNECTED);
         auto handler = static_cast<TCPHandler*>(conn->GetHandler());
         handler->_functor->OnDisconnection(conn->shared_from_this());
         handler->_connections.Delete(conn->ID());
@@ -118,7 +117,7 @@ void TCPHandler::BindConnection(evutil_socket_t fd, sockaddr* address, int sockl
     auto conn = std::make_shared<TCPConnection>(fd, address, socklen);
     auto bev  = bufferevent_socket_new(_base, fd, BEV_OPT_CLOSE_ON_FREE);
 
-    conn->UpdateState(ConnectionState::Connected);
+    conn->UpdateState(ConnectionState::CONNECTED);
     _functor->OnConnection(conn);
 
     bufferevent_setcb(bev, ReadCallback, nullptr, EventCallback, conn.get());
@@ -140,19 +139,19 @@ std::error_code TCPHandler::Start()
     if (!_base)
     {
         LOG_ERROR("failed to create event base");
-        return error::ErrorCode::LibException;
+        return error::ErrorCode::LIB_EXCEPTION;
     }
 
     _asyncRun = std::async(std::launch::async, &TCPHandler::Run, this);
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code TCPHandler::Stop()
 {
     if (!_base)
     {
-        return error::ErrorCode::Success;
+        return error::ErrorCode::SUCCESS;
     }
 
     event_base_loopbreak(_base);
@@ -162,7 +161,7 @@ std::error_code TCPHandler::Stop()
     _base                      = nullptr;
     _checkConnectionStateEvent = nullptr;
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 void TCPHandler::Run()

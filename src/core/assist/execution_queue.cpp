@@ -61,15 +61,15 @@ std::error_code ExecutionQueue::Enqueue(const TaskFunctor& task, std::size_t max
 {
     if (_tasks.size_approx() > _maxTaskCount)
     {
-        return error::ErrorCode::Overflow;
+        return error::ErrorCode::OVERFLOW;
     }
 
     if (!_tasks.enqueue(task))
     {
-        return error::ErrorCode::Error;
+        return error::ErrorCode::ERROR;
     }
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 void ExecutionQueue::BlockEnqueue(const TaskFunctor& task)

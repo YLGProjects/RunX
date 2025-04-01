@@ -37,12 +37,12 @@ std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn)
     _connAgentIDs.Push(conn->ID(), session->_agentID);
     _agents.Push(session->_agentID, session);
 
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }
 
 std::error_code Route::CreateRemoteSession(AgentSessionPtr session)
 {
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }
 
 AgentSessionPtr Route::FindAgentSession(const std::string& agentID)
@@ -59,17 +59,17 @@ AgentSessionPtr Route::FindAgentSession(const std::string& agentID)
 
 std::error_code Route::RemoveLocalSession(ylg::net::TCPConnectionPtr conn)
 {
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }
 
 std::error_code Route::RemoveAgentSession(const std::string& agentID)
 {
-    return ylg::internal::ErrorCode::Error;
+    return ylg::internal::ErrorCode::ERROR;
 }
 
 std::error_code Route::Run()
 {
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }
 
 void Route::Close()

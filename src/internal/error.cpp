@@ -55,7 +55,7 @@ std::error_code make_error_code(ErrorCode e)
 
 bool IsSuccess(const std::error_code& ec)
 {
-    if (ec.value() == (int)ErrorCode::Success)
+    if (ec.value() == (int)ErrorCode::SUCCESS)
     {
         return true;
     }

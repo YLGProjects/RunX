@@ -67,7 +67,7 @@ std::error_code TCPServer::Run()
     if (!_base)
     {
         LOG_ERROR("failed to create event base");
-        return error::ErrorCode::NetException;
+        return error::ErrorCode::NET_EXCEPTION;
     }
 
     evutil_addrinfo hints;
@@ -84,7 +84,7 @@ std::error_code TCPServer::Run()
         LOG_ERROR("failed to get the service info. listen address:{}, listen port:{}", _listenAddress, port);
         event_base_free(_base);
         _base = nullptr;
-        return error::ErrorCode::NetException;
+        return error::ErrorCode::NET_EXCEPTION;
     }
 
     evutil_addrinfo* p = nullptr;
@@ -107,7 +107,7 @@ std::error_code TCPServer::Run()
         event_base_free(_base);
         _base = nullptr;
         freeaddrinfo(serviceInfo);
-        return error::ErrorCode::NetException;
+        return error::ErrorCode::NET_EXCEPTION;
     }
 
     // start the event loop
@@ -124,14 +124,14 @@ std::error_code TCPServer::Run()
     _base     = nullptr;
     _listener = nullptr;
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code TCPServer::Close()
 {
     if (!_base)
     {
-        return error::ErrorCode::Success;
+        return error::ErrorCode::SUCCESS;
     }
 
     for (auto& handler : _handlers)
@@ -145,7 +145,7 @@ std::error_code TCPServer::Close()
     _handlers.clear();
 
     event_base_loopbreak(_base);
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 } // namespace net

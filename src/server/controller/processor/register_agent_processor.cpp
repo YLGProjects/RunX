@@ -29,5 +29,5 @@
 
 std::error_code RegisterAgentProcessor::Do(const ylg::net::MessagePtr req, ylg::net::MessagePtr rsq)
 {
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }

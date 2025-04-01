@@ -150,7 +150,7 @@ std::error_code Controller::PostToAgent(const std::vector<std::string>& agentIDs
         return errcode;
     }
 
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }
 
 void Controller::RegisterProcessor()

@@ -35,9 +35,9 @@ std::error_code PingRequestCMD::Do(const ylg::net::MessagePtr msg)
     if (!ping.ParseFromArray(msg->GetPayload(), msg->GetPayloadSize()))
     {
         LOG_DEBUG("failed to parse ping request, message:{}", ping.DebugString());
-        return ylg::internal::ErrorCode::Error;
+        return ylg::internal::ErrorCode::ERROR;
     }
 
     LOG_DEBUG("ping request, message:{}", ping._msg());
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }

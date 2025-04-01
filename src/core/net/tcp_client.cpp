@@ -54,16 +54,16 @@ void TCPClient::ReadCallback(bufferevent* bev, void* ctx)
     MessagePtr msg     = std::make_shared<Message>();
     auto       errcode = conn->Read(msg);
 
-    if (errcode == error::ErrorCode::TryAgain)
+    if (errcode == error::ErrorCode::TRYAGAIN)
     {
         LOG_DEBUG("no more data to read, try again, connection:{}", conn->ID());
         return;
     }
 
-    if (errcode == error::ErrorCode::InvalidMagic)
+    if (errcode == error::ErrorCode::INVALID_MAGIC)
     {
         LOG_WARN("invalid connection:{}", conn->ID());
-        conn->UpdateState(ConnectionState::Invalid);
+        conn->UpdateState(ConnectionState::INVALID);
         return;
     }
 
@@ -90,14 +90,14 @@ void TCPClient::EventCallback(bufferevent* bev, short events, void* ctx)
 
     if (events & BEV_EVENT_CONNECTED)
     {
-        conn->UpdateState(ConnectionState::Connected);
+        conn->UpdateState(ConnectionState::CONNECTED);
         client->_functor->OnConnection(conn->shared_from_this());
         return;
     }
 
     if (events & BEV_EVENT_EOF)
     {
-        conn->UpdateState(ConnectionState::Disconnected);
+        conn->UpdateState(ConnectionState::DISCONNECTED);
         auto sharedConn = conn->shared_from_this();
         client->_functor->OnDisconnection(sharedConn);
         client->_connection.reset();
@@ -120,7 +120,7 @@ void TCPClient::CheckConnectionState(evutil_socket_t fd, short events, void* ctx
 
     LOG_DEBUG("tcp client check the connection state, remote server: {}:{}", client->_remoteIP, client->_remotePort);
 
-    if (client->_connection == nullptr || client->_connection->State() != ConnectionState::Connected)
+    if (client->_connection == nullptr || client->_connection->State() != ConnectionState::CONNECTED)
     {
         auto errcode = client->Reconnect();
         if (!ylg::error::IsSuccess(errcode))
@@ -190,7 +190,7 @@ std::error_code TCPClient::Connect(const std::string& ip, uint16_t port)
     if (!_base)
     {
         LOG_ERROR("failed to create evnet base:{}:{}", ip, port);
-        return error::ErrorCode::LibException;
+        return error::ErrorCode::LIB_EXCEPTION;
     }
 
     _remoteIP   = ip;
@@ -203,7 +203,7 @@ std::error_code TCPClient::Connect(const std::string& ip, uint16_t port)
     }
 
     _asyncRun = std::async(std::launch::async, &TCPClient::Run, this);
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 void TCPClient::Close()
@@ -227,12 +227,12 @@ std::error_code TCPClient::Send(const Message& msg)
 {
     if (_connection == nullptr)
     {
-        return error::ErrorCode::ConnectionIsNotReady;
+        return error::ErrorCode::CONNECTION_IS_NOT_READY;
     }
 
-    if (_connection->State() != ConnectionState::Connected)
+    if (_connection->State() != ConnectionState::CONNECTED)
     {
-        return ylg::error::ErrorCode::ConnectionIsNotReady;
+        return ylg::error::ErrorCode::CONNECTION_IS_NOT_READY;
     }
 
     return _connection->Send(msg);
@@ -273,7 +273,7 @@ std::error_code TCPClient::Reconnect()
         LOG_WARN("failed to get addr info. remote server: {}:{}", _remoteIP, remotePort);
         event_base_free(_base);
         _base = nullptr;
-        return error::ErrorCode::ConnectionAborted;
+        return error::ErrorCode::CONNECTION_ABORTED;
     }
 
     evutil_addrinfo* p = nullptr;
@@ -288,7 +288,7 @@ std::error_code TCPClient::Reconnect()
         }
 
         auto conn = std::make_shared<TCPConnection>(-1, p->ai_addr, p->ai_addrlen);
-        conn->UpdateState(ConnectionState::Connecting);
+        conn->UpdateState(ConnectionState::CONNECTING);
         conn->BindHandler(_bev, this);
         bufferevent_setcb(_bev, &TCPClient::ReadCallback, nullptr, &TCPClient::EventCallback, conn.get());
         bufferevent_enable(_bev, EV_READ | EV_WRITE);
@@ -297,7 +297,7 @@ std::error_code TCPClient::Reconnect()
     }
 
     freeaddrinfo(servinfo);
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 bool TCPClient::ProcessCoreMessage(TCPConnectionPtr conn, MessagePtr msg)

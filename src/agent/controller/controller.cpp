@@ -62,8 +62,8 @@ void Controller::OnDisconnection(ylg::net::TCPConnectionPtr conn)
 
 void Controller::HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg)
 {
-    auto header = msg->GetHeader();
-    auto type   = (ylg::internal::MessageType)header._msgType;
+    const auto& header = msg->GetHeader();
+    auto        type   = (ylg::internal::MessageType)header._msgType;
 
     auto iter = _commands.find(type);
     if (iter == _commands.end())
@@ -118,10 +118,10 @@ void Controller::Close()
 
 void Controller::RegisterCommands()
 {
-    _commands[ylg::internal::MessageType::Ping]                  = std::make_shared<PingRequestCMD>();
-    _commands[ylg::internal::MessageType::RegisterAgentResponse] = std::make_shared<RegisterAgentRespondCMD>();
-    _commands[ylg::internal::MessageType::AuthRequest]           = std::make_shared<AuthRequestCMD>();
-    _commands[ylg::internal::MessageType::AuthResponse]          = std::make_shared<AuthRespondCMD>();
-    _commands[ylg::internal::MessageType::OperatePluginRequest]  = std::make_shared<OperatePluginRequestCMD>();
+    _commands[ylg::internal::MessageType::PING]                    = std::make_shared<PingRequestCMD>();
+    _commands[ylg::internal::MessageType::REGISTER_AGENT_RESPONSE] = std::make_shared<RegisterAgentRespondCMD>();
+    _commands[ylg::internal::MessageType::AUTH_REQUEST]            = std::make_shared<AuthRequestCMD>();
+    _commands[ylg::internal::MessageType::AUTH_RESPONSE]           = std::make_shared<AuthRespondCMD>();
+    _commands[ylg::internal::MessageType::OPERATE_PLUGIN_REQUEST]  = std::make_shared<OperatePluginRequestCMD>();
 }
 

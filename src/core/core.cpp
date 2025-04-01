@@ -8,7 +8,7 @@ namespace ylg {
 std::error_code Init()
 {
     curl_global_init(CURL_GLOBAL_ALL);
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 void Uninit()
