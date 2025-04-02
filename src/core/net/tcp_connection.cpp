@@ -115,7 +115,7 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     if (Message::MESSAGE_HEADER_SIZE > evbuffer_get_length(buffer))
     {
         LOG_DEBUG("evbuffer length less than header size");
-        return error::ErrorCode::TryAgain;
+        return error::ErrorCode::TRYAGAIN;
     }
 
     Header header;
@@ -123,7 +123,7 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     if (Message::MESSAGE_HEADER_SIZE > length)
     {
         LOG_DEBUG("evbuffer copied size less than header size");
-        return error::ErrorCode::TryAgain;
+        return error::ErrorCode::TRYAGAIN;
     }
 
     Ntoh(header);
@@ -132,30 +132,30 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     if (totalSize > Message::MAX_MESSAGE_SIZE)
     {
         LOG_WARN("total size {} more than max message size {}.", totalSize, (uint64_t)Message::MAX_MESSAGE_SIZE);
-        return error::ErrorCode::ReceivedTooLarge;
+        return error::ErrorCode::RECEIVED_TOO_LARGE;
     }
 
     if (header._magic != YLG_NET_MESSAGE_MAGIC)
     {
         LOG_WARN("invalid connection: {}, magic: 0x{:04X}", ID(), header._magic);
-        return error::ErrorCode::InvalidMagic;
+        return error::ErrorCode::INVALID_MAGIC;
     }
 
     _lastReadTimestamp = assist::TimestampTickCountSecond();
-    UpdateState(ConnectionState::Connected);
+    UpdateState(ConnectionState::CONNECTED);
 
     char* msgBuffer = (char*)evbuffer_pullup(buffer, totalSize);
     if (!msgBuffer)
     {
         LOG_DEBUG("no more data to read, connection: {}", ID());
-        return error::ErrorCode::TryAgain;
+        return error::ErrorCode::TRYAGAIN;
     }
 
     LOG_DEBUG("received, body size:{}, total size:{}", header._dataSize, totalSize);
     msg->Reset(header, msgBuffer + Message::MESSAGE_HEADER_SIZE, header._dataSize);
     evbuffer_drain(buffer, totalSize);
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code TCPConnection::Send(const Message& msg)
@@ -164,9 +164,9 @@ std::error_code TCPConnection::Send(const Message& msg)
     int errcode = bufferevent_write(_bev, msg.GetData(), msg.GetDataSize());
     if (errcode)
     {
-        return error::ErrorCode::WritedException;
+        return error::ErrorCode::WRITED_EXCEPTION;
     }
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code TCPConnection::Send(const MessagePtr msg)

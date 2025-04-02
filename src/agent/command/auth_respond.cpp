@@ -27,6 +27,6 @@
 
 std::error_code AuthRespondCMD::Do(const ylg::net::MessagePtr msg)
 {
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }
 

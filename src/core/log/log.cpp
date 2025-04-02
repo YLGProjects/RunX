@@ -131,17 +131,17 @@ std::error_code Logger::Init(const std::string& name, const LogConfig& cfg)
     END_TRY_BEGIN_CATCH(spdlog::spdlog_ex, ex)
 
     LOG_STD("can not init spd log. errmsg({})", ex.what());
-    return error::ErrorCode::Error;
+    return error::ErrorCode::ERROR;
 
     END_CATCH_AND_BEGIN_CATCH_ALL
 
     LOG_STD("can not init spd log. errmsg({})", "unknown exception");
-    return error::ErrorCode::Error;
+    return error::ErrorCode::ERROR;
 
     END_CATCH_ALL
 
     _isOpen.store(true);
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 void Logger::Close()

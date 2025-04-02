@@ -27,5 +27,5 @@
 
 std::error_code OperatePluginRequestCMD::Do(const ylg::net::MessagePtr msg)
 {
-    return ylg::internal::ErrorCode::Success;
+    return ylg::internal::ErrorCode::SUCCESS;
 }

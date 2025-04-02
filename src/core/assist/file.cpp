@@ -92,19 +92,19 @@ std::error_code ReadFullFile(const std::string& fileName, std::string& content)
 
     if (fileName.empty())
     {
-        return error::ErrorCode::InvalidParameter;
+        return error::ErrorCode::INVALID_PARAMETER;
     }
 
     if (!FileExists(fileName))
     {
-        return error::ErrorCode::FileException;
+        return error::ErrorCode::FILE_EXCEPTION;
     }
 
     std::ifstream file(fileName);
 
     if (!file.is_open())
     {
-        return error::ErrorCode::FileException;
+        return error::ErrorCode::FILE_EXCEPTION;
     }
 
     std::string line;
@@ -115,14 +115,14 @@ std::error_code ReadFullFile(const std::string& fileName, std::string& content)
 
     file.close();
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code DeleteFile(const std::string& fileName)
 {
     if (fileName.empty())
     {
-        return error::ErrorCode::InvalidParameter;
+        return error::ErrorCode::INVALID_PARAMETER;
     }
 
     bool isOK = false;
@@ -134,17 +134,17 @@ std::error_code DeleteFile(const std::string& fileName)
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not delete the file({}). errmsg({})", fileName, e.what());
-        return error::ErrorCode::FileException;
+        return error::ErrorCode::FILE_EXCEPTION;
     }
 
-    return isOK ? error::ErrorCode::Success : error::ErrorCode::FileException;
+    return isOK ? error::ErrorCode::SUCCESS : error::ErrorCode::FILE_EXCEPTION;
 }
 
 std::error_code DeleteDirectory(const std::string& fileName)
 {
     if (fileName.empty())
     {
-        return error::ErrorCode::InvalidParameter;
+        return error::ErrorCode::INVALID_PARAMETER;
     }
 
     std::uintmax_t removedNum = 0;
@@ -156,22 +156,22 @@ std::error_code DeleteDirectory(const std::string& fileName)
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not delete the file({}). errmsg({})", fileName, e.what());
-        return error::ErrorCode::FileException;
+        return error::ErrorCode::FILE_EXCEPTION;
     }
 
-    return removedNum > 0 ? error::ErrorCode::Success : error::ErrorCode::FileException;
+    return removedNum > 0 ? error::ErrorCode::SUCCESS : error::ErrorCode::FILE_EXCEPTION;
 }
 
 std::error_code RenameFile(const std::string& oldName, const std::string& newName)
 {
     if (oldName.empty())
     {
-        return error::ErrorCode::InvalidParameter;
+        return error::ErrorCode::INVALID_PARAMETER;
     }
 
     if (newName.empty())
     {
-        return error::ErrorCode::InvalidParameter;
+        return error::ErrorCode::INVALID_PARAMETER;
     }
 
     try
@@ -181,40 +181,40 @@ std::error_code RenameFile(const std::string& oldName, const std::string& newNam
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not rename the file({}). new file({}), errmsg({})", oldName, newName, e.what());
-        return error::ErrorCode::FileException;
+        return error::ErrorCode::FILE_EXCEPTION;
     }
 
-    return error::ErrorCode::FileException;
+    return error::ErrorCode::FILE_EXCEPTION;
 }
 
 std::error_code SetFileUser(const std::string& fileName, const std::string& userName)
 {
     if (fileName.empty())
     {
-        return error::ErrorCode::InvalidParameter;
+        return error::ErrorCode::INVALID_PARAMETER;
     }
 
     if (userName.empty())
     {
-        return error::ErrorCode::InvalidUser;
+        return error::ErrorCode::INVALID_USER;
     }
 
     int uid = 0;
     int gid = 0;
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code SetFilePermission(const std::string& fileName, int mode)
 {
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code ListFile(const std::string& dirName, std::vector<std::string>& files, bool recursive)
 {
     if (dirName.empty())
     {
-        return error::ErrorCode::InvalidParameter;
+        return error::ErrorCode::INVALID_PARAMETER;
     }
 
     try
@@ -240,17 +240,17 @@ std::error_code ListFile(const std::string& dirName, std::vector<std::string>& f
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not list file. dir({}), errmsg({}))", dirName, e.what());
-        return error::ErrorCode::FileException;
+        return error::ErrorCode::FILE_EXCEPTION;
     }
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code MakeDirectory(const std::string& dirPath)
 {
     if (dirPath.empty())
     {
-        return error::ErrorCode::InvalidParameter;
+        return error::ErrorCode::INVALID_PARAMETER;
     }
 
     try
@@ -260,10 +260,10 @@ std::error_code MakeDirectory(const std::string& dirPath)
     catch (std::filesystem::filesystem_error& e)
     {
         LOG_ERROR("can not make the directory. dir({}), errmsg({}))", dirPath, e.what());
-        return error::ErrorCode::FileException;
+        return error::ErrorCode::FILE_EXCEPTION;
     }
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::string JoinPath(const std::vector<std::string>& paths)
@@ -307,10 +307,10 @@ std::error_code LockFile(int fileFD)
     if (fcntl(fileFD, F_SETLK, &fl) == -1)
     {
         LOG_ERROR("can not lock file, errmsg({})", error::ToString(errno));
-        return error::ErrorCode::Error;
+        return error::ErrorCode::ERROR;
     }
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code UnlockFile(int fileFD)
@@ -324,10 +324,10 @@ std::error_code UnlockFile(int fileFD)
     if (fcntl(fileFD, F_SETLK, &fl) == -1)
     {
         LOG_ERROR("can not unlock file, errmsg({})", error::ToString(errno));
-        return error::ErrorCode::Error;
+        return error::ErrorCode::ERROR;
     }
 
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 } // namespace assist

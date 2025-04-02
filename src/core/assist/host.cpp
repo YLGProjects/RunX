@@ -79,16 +79,16 @@ std::error_code Hostname(std::string& hostName)
     if (gethostname(buffer, sizeof(buffer) - 1) < 0)
     {
         LOG_ERROR("can not get host name. errmsg({})", error::ToString(errno));
-        return error::ErrorCode::Error;
+        return error::ErrorCode::ERROR;
     }
 
     if (strlen(buffer) > 0 && strlen(buffer) < sizeof(buffer))
     {
         hostName = buffer;
-        return error::ErrorCode::Success;
+        return error::ErrorCode::SUCCESS;
     }
 
-    return error::ErrorCode::Error;
+    return error::ErrorCode::ERROR;
 }
 
 } // namespace assist

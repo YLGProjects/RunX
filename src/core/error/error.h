@@ -33,35 +33,35 @@ namespace error {
 
 enum class ErrorCode : int32_t
 {
-    Unknown = -2,
-    Error   = -1,
-    Success = 0,
+    UNKNOWN = -2,
+    ERROR   = -1,
+    SUCCESS = 0,
 
     // net error code
-    NetException,
-    LibException,
-    MemException,
-    TryAgain,
-    ConnectionAborted,
-    ReceivedTooLarge,
-    InvalidMagic,
-    WritedException,
-    ConnectionIsNotReady,
-    InvalidHTTPMethod,
-    RepeatedHTTPURI,
-    HTTPRespondFailed,
+    NET_EXCEPTION,
+    LIB_EXCEPTION,
+    MEM_EXCEPTION,
+    TRYAGAIN,
+    CONNECTION_ABORTED,
+    RECEIVED_TOO_LARGE,
+    INVALID_MAGIC,
+    WRITED_EXCEPTION,
+    CONNECTION_IS_NOT_READY,
+    INVALID_HTTP_METHOD,
+    REPEATED_HTTP_URI,
+    HTTP_RESPOND_FAILED,
 
     // application error code
-    ParseConfigFailure,
+    PARSE_CONFIG_FAILURE,
 
     // assist error code
-    Overflow,
-    FileException,
-    InvalidParameter,
-    InvalidUser,
+    OVERFLOW,
+    FILE_EXCEPTION,
+    INVALID_PARAMETER,
+    INVALID_USER,
 
     // max code
-    MaxValue = USHRT_MAX,
+    MAX = USHRT_MAX,
 };
 
 class ErrorCodeCategory final : public std::error_category

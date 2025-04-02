@@ -29,22 +29,22 @@ namespace app {
 
 std::error_code Discovery::Watch(const std::string& key, CallbackFunctor callback)
 {
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code Discovery::GetList(const std::string& key, std::vector<std::string>& elements)
 {
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code Discovery::GetValue(const std::string& key, std::string& value)
 {
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 std::error_code Discovery::Start(const std::string& endpoints, std::string* errMsg)
 {
-    return error::ErrorCode::Success;
+    return error::ErrorCode::SUCCESS;
 }
 
 void Stop();
