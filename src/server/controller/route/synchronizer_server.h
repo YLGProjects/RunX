@@ -24,16 +24,26 @@
 #ifndef _YLG_SERVER_CONTROLLER_ROUTE_SYNCHRONIZER_SERVER_H_
 #define _YLG_SERVER_CONTROLLER_ROUTE_SYNCHRONIZER_SERVER_H_
 
+#include "core/assist/execution_multi_queue.h"
 #include "core/container/safe_map.h"
 #include "core/net/message.h"
 #include "core/net/tcp_connection.h"
 #include "core/net/tcp_handler.h"
 #include "core/net/tcp_server.h"
 
+#include <future>
+
+// clang-format off
+
+#define SERVER_CONTROLLER_ROUTE_SYNCHRONIZER_SERVER_TASK_QUEUE_SIZE_DFT  40960
+#define SERVER_CONTROLLER_ROUTE_SYNCHRONIZER_SERVER_TASK_QUEUE_COUNT_DFT 10
+
+// clang-format on
+
 class SynchronizerServer final : public ylg::net::TCPHandlerCallback, public std::enable_shared_from_this<SynchronizerServer>
 {
 public:
-    SynchronizerServer()  = default;
+    SynchronizerServer();
     ~SynchronizerServer() = default;
 
 public:
@@ -46,7 +56,11 @@ public:
     void Close();
 
 private:
-    ylg::net::TCPServerPtr _serever = nullptr;
+    std::future<void>                   _asyncRun;
+    std::string                         _listenIP;
+    uint16_t                            _listenPort = 0;
+    ylg::assist::ExecutionMultiQueuePtr _tasks      = nullptr;
+    ylg::net::TCPServerPtr              _server     = nullptr;
 
     // KEY: connection id, VALUE: connection
     ylg::container::SafeMap<std::string, ylg::net::TCPConnectionPtr> _conns;

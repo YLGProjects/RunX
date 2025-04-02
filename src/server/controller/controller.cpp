@@ -42,7 +42,7 @@ Controller::Controller()
 
 void Controller::OnConnection(ylg::net::TCPConnectionPtr conn)
 {
-    LOG_DEBUG("new connection.{}", conn->ID());
+    LOG_DEBUG("new connection:{}", conn->ID());
     auto errcode = _route->CreateLocalSession(conn);
     if (!ylg::internal::IsSuccess(errcode))
     {
@@ -54,7 +54,7 @@ void Controller::OnConnection(ylg::net::TCPConnectionPtr conn)
 
 void Controller::OnDisconnection(ylg::net::TCPConnectionPtr conn)
 {
-    LOG_DEBUG("connection disconnection.{}", conn->ID());
+    LOG_DEBUG("connection disconnected:{}", conn->ID());
     auto errcode = _route->RemoveLocalSession(conn);
     if (!ylg::internal::IsSuccess(errcode))
     {
@@ -66,11 +66,11 @@ void Controller::OnDisconnection(ylg::net::TCPConnectionPtr conn)
 
 void Controller::HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg)
 {
-    LOG_DEBUG("new message{} size:{}", msg->GetPayload(), msg->GetPayloadSize());
+    LOG_DEBUG("new message, remote server:{} size:{}", conn->GetRemoteAddress(), msg->GetPayloadSize());
 
-    auto task = [&]() {
-        auto header = msg->GetHeader();
-        auto type   = (ylg::internal::MessageType)header._msgType;
+    auto task = [=, this]() {
+        const auto& header = msg->GetHeader();
+        auto        type   = (ylg::internal::MessageType)header._msgType;
 
         auto iter = _processors.find(type);
         if (iter != _processors.end())
@@ -114,7 +114,7 @@ void Controller::Run(const std::string& listenIP, uint16_t listenPort)
         auto errcode = _server->Run();
         if (!ylg::error::IsSuccess(errcode))
         {
-            LOG_FATAL("the tcp server can not be started. errcode:{}", errcode.value());
+            LOG_FATAL("can not start controller server. errcode:{}", errcode.value());
         }
     };
 
@@ -126,7 +126,7 @@ void Controller::Close()
     auto errcode = _server->Close();
     if (!ylg::error::IsSuccess(errcode))
     {
-        LOG_WARN("failed to stop tcp server. errcode:{}", errcode.value());
+        LOG_WARN("failed to stop controller server. errcode:{}", errcode.value());
     }
 
     _asyncRun.wait();
