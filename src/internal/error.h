@@ -25,7 +25,6 @@
 #define _YLG_INTERNAL_ERROR_H_
 
 #include "core/error/error.h"
-#include "core/log/log.h"
 
 #include <climits>
 #include <cstdint>

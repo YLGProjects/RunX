@@ -21,34 +21,47 @@
  * SOFTWARE.
  */
 
-#include "core/application/discovery.h"
+#ifndef _YLG_CORE_APP_SERVICE_DISCOVERY_H_
+#define _YLG_CORE_APP_SERVICE_DISCOVERY_H_
+
+#include "core/container/safe_map.h"
 #include "core/error/error.h"
+
+#include <etcd/Client.hpp>
+#include <etcd/Response.hpp>
+#include <etcd/Watcher.hpp>
+
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace ylg {
 namespace app {
 
-std::error_code Discovery::Watch(const std::string& key, CallbackFunctor callback)
+class ServiceDiscovery
 {
-    return error::ErrorCode::SUCCESS;
-}
+public:
+    ServiceDiscovery(const std::string& etcdURL, const std::string& user, const std::string& password);
+    ~ServiceDiscovery();
 
-std::error_code Discovery::GetList(const std::string& key, std::vector<std::string>& elements)
-{
-    return error::ErrorCode::SUCCESS;
-}
+public:
+    std::vector<std::string> Discover(const std::string& serviceName);
+    std::error_code          OpenWatcher(const std::string& key);
+    void                     CloseWatcher(const std::string& key);
 
-std::error_code Discovery::GetValue(const std::string& key, std::string& value)
-{
-    return error::ErrorCode::SUCCESS;
-}
+private:
+    void HandleWatchResponse(etcd::Response response);
 
-std::error_code Discovery::Start(const std::string& endpoints, std::string* errMsg)
-{
-    return error::ErrorCode::SUCCESS;
-}
+private:
+    etcd::Client _client;
+    // Key: service name, Value: watcher
+    container::SafeMap<std::string, std::shared_ptr<etcd::Watcher>> _watchers;
+};
 
-void Stop();
+using ServiceDiscoveryPtr = std::shared_ptr<ServiceDiscovery>;
 
 } // namespace app
 } // namespace ylg
+
+#endif
 

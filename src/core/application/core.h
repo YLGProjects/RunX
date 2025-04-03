@@ -25,7 +25,6 @@
 #define _YLG_CORE_APP_CORE_H_
 
 #include "core/application/context.h"
-#include "core/application/discovery.h"
 #include "core/application/env.h"
 #include "third-party/cmdline/cmdline.h"
 
@@ -75,7 +74,6 @@ private:
     ContextPtr               _ctx;
     EnvPtr                   _env;
     ConfigFilePtr            _file;
-    DiscoveryPtr             _discovery;
     cmdline::parser          _parser;
     std::vector<FlagInt>     _iFlags;
     std::vector<FlagString>  _sFlags;

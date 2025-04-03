@@ -14,6 +14,8 @@ list(FILTER SOURCES EXCLUDE REGEX "test")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 find_package(protobuf REQUIRED)
+find_package(gRPC REQUIRED)
+#find_package(etcd-cpp-api REQUIRED)
 
 list(APPEND LIBS core)
 list(APPEND LIBS curl)
@@ -21,6 +23,9 @@ list(APPEND LIBS yaml-cpp)
 list(APPEND LIBS event)
 list(APPEND LIBS pthread)
 list(APPEND LIBS event_openssl)
+list(APPEND LIBS etcd-cpp-api)
+list(APPEND LIBS gRPC::grpc++)
+list(APPEND LIBS cpprest)
 list(APPEND LIBS protobuf::libprotobuf)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS})

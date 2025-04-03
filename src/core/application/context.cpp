@@ -242,6 +242,7 @@ std::error_code Context::LoadConfig(const std::string& fileName)
         return ec;
     }
 
+    _fileCfg->PrintVars();
     return ec;
 }
 
