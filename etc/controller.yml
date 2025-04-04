@@ -7,9 +7,9 @@ controller:
       port: 26688
 discovery:
   - endpoint:
-      host: http://ylgeeker.com:2379
+      host: http://127.0.0.1:2379
       user: root
-      password: zlgmcu2010T
+      password: 123456789
 log:
   path: /var/log/ylg/
   level: debug

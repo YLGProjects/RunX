@@ -62,24 +62,22 @@ public:
 
 private:
     void            CreateEtcdClient();
-    std::error_code DoRegister(const std::string& key, const std::string& value,
-                               int ttl, int retryMax);
-
-    void CheckHealthy(const std::string& key, const std::string& value);
-    bool CheckRegistrationActive(const std::string& key, const std::string& endpoint);
+    std::error_code DoRegister(const std::string& key, const std::string& value, int retryMax);
+    void            CheckHealthy(const std::string& key, const std::string& value);
+    bool            CheckRegistrationActive(const std::string& key, const std::string& endpoint);
 
 private:
-    std::string                   _serviceName;
-    std::string                   _instanceID;
-    std::string                   _etcdURL;
-    std::string                   _user;
-    std::string                   _password;
-    std::shared_ptr<etcd::Client> _client;
-    int                           _ttl     = YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT;
-    int64_t                       _leaseID = 0;
-    std::thread                   _keepaliveThread;
-    std::thread                   _checkHealthyThread;
-    std::atomic_bool              _keepRunning = true;
+    std::string                      _serviceName;
+    std::string                      _instanceID;
+    std::string                      _etcdURL;
+    std::string                      _user;
+    std::string                      _password;
+    std::shared_ptr<etcd::Client>    _client;
+    int                              _ttl     = YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT;
+    int64_t                          _leaseID = 0;
+    std::shared_ptr<etcd::KeepAlive> _keepalive;
+    std::thread                      _checkHealthyThread;
+    std::atomic_bool                 _keepRunning = true;
 };
 
 using ServiceRegistryPtr = std::shared_ptr<ServiceRegistry>;

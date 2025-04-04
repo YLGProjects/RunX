@@ -29,6 +29,10 @@
 #include "core/log/log.h"
 
 #include <etcd/Client.hpp>
+#include <etcd/KeepAlive.hpp>
+
+#include <exception>
+#include <memory>
 #include <string>
 
 namespace ylg {
@@ -45,8 +49,10 @@ ServiceRegistry::ServiceRegistry(const std::string& serviceName, const std::stri
 
     if (ttl < YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT)
     {
-        _ttl = ttl;
+        ttl = YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT;
     }
+
+    _ttl = ttl;
 }
 
 ETCDClientPtr ServiceRegistry::GetClient()
@@ -61,21 +67,14 @@ std::error_code ServiceRegistry::Run()
         CreateEtcdClient();
     }
 
-    auto ec = DoRegister(_serviceName, _instanceID, _ttl, YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT);
+    auto ec = DoRegister(_serviceName, _instanceID, YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT);
     if (!ylg::error::IsSuccess(ec))
     {
         LOG_WARN("can not register service. name:{}", _serviceName);
         return ec;
     }
 
-    _keepaliveThread = std::thread([this]() {
-        while (_keepRunning)
-        {
-            _client->leasekeepalive(_leaseID).get();
-            assist::Sleep(_ttl / 2);
-        }
-    });
-
+    _keepRunning        = true;
     _checkHealthyThread = std::thread([this]() {
         while (_keepRunning)
         {
@@ -91,9 +90,9 @@ void ServiceRegistry::Close()
 {
     _keepRunning = false;
 
-    if (_keepaliveThread.joinable())
+    if (_keepalive)
     {
-        _keepaliveThread.join();
+        _keepalive->Cancel();
     }
 
     if (_checkHealthyThread.joinable())
@@ -112,30 +111,25 @@ void ServiceRegistry::CreateEtcdClient()
     }
 }
 
-std::error_code ServiceRegistry::DoRegister(const std::string& key, const std::string& value,
-                                            int ttl, int retryMax)
+std::error_code ServiceRegistry::DoRegister(const std::string& key, const std::string& value, int retryMax)
 {
-    if (ttl < YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT)
-    {
-        ttl = YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT;
-    }
-
     if (retryMax < YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT)
     {
         retryMax = YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT;
     }
 
-    etcd::Response resp = _client->leasegrant(ttl).get();
+    etcd::Response resp = _client->leasegrant(_ttl).get();
     if (!resp.is_ok())
     {
         return ylg::error::ErrorCode::DISCOVERY_CREATE_LEASE_FAILURE;
     }
 
-    _leaseID = resp.value().lease();
+    _leaseID   = resp.value().lease();
+    _keepalive = std::make_shared<etcd::KeepAlive>(*_client, _ttl, _leaseID);
 
     while (--retryMax > 0)
     {
-        resp = _client->set(key, value, _leaseID).get();
+        auto resp = _client->set(key, value, _leaseID).get();
         if (!resp.is_ok())
         {
             assist::MilliSleep(50);
@@ -150,6 +144,18 @@ std::error_code ServiceRegistry::DoRegister(const std::string& key, const std::s
 
 void ServiceRegistry::CheckHealthy(const std::string& key, const std::string& value)
 {
+    BEGIN_TRY
+
+    _keepalive->Check();
+
+    END_TRY_BEGIN_CATCH(std::exception, e)
+
+    LOG_WARN("service registry, keepalive is invalid, renew one. key:{}, ttl:{}, errmsg:{}", key, _ttl, e.what());
+
+    _keepalive = std::make_shared<etcd::KeepAlive>(*_client, _ttl, _leaseID);
+
+    END_CATCH
+
     if (CheckRegistrationActive(key, value))
     {
         return;
@@ -157,7 +163,7 @@ void ServiceRegistry::CheckHealthy(const std::string& key, const std::string& va
 
     LOG_DEBUG("register service. name:{}", key);
 
-    auto ec = DoRegister(key, value, _ttl, YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT);
+    auto ec = DoRegister(key, value, YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT);
     if (!ylg::error::IsSuccess(ec))
     {
         LOG_WARN("can not register service. name:{}", key);
@@ -186,9 +192,12 @@ bool ServiceRegistry::CheckRegistrationActive(const std::string& key, const std:
     lastResult = keyOk && leaseOk;
     lastCheck  = now;
 
+    LOG_DEBUG("check registration result. key:{}, value:{}, endpoint:{}, result:{}", key, keyResp.value().as_string(), endpoint, lastResult);
+
     END_TRY
     BEGIN_CATCH(std::exception, e)
 
+    LOG_WARN("check registration failed. key:{}, endpoint:{}, errmsg:{}", key, endpoint, e.what());
     lastResult = false;
 
     END_CATCH
