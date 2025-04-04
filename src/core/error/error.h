@@ -24,6 +24,9 @@
 #ifndef _YLG_ERROR_ERROR_H_
 #define _YLG_ERROR_ERROR_H_
 
+#include "core/assist/macro.h"
+#include "core/log/log.h"
+
 #include <climits>
 #include <cstdint>
 #include <system_error>
@@ -53,6 +56,9 @@ enum class ErrorCode : int32_t
 
     // application error code
     PARSE_CONFIG_FAILURE,
+    DISCOVERY_CREATE_LEASE_FAILURE,
+    DISCOVERY_REGISTER_SERVICE_FAILURE,
+    DISCOVERY_WATCHER_REPEATED,
 
     // assist error code
     OVERFLOW,

@@ -43,7 +43,10 @@ struct Configuration
     std::string          _name;
     std::string          _version;
     std::string          _endpointIP;
-    uint16_t             _endpointPort  = 0;
+    uint16_t             _endpointPort = 0;
+    std::string          _discoveryEndpoint;
+    std::string          _discoveryUser;
+    std::string          _discoveryPassword;
     std::string          _logPath       = YLG_SERVER_CONTROLLER_LOG_PATH_DFT;
     std::string          _logLevel      = YLG_SERVER_CONTROLLER_LOG_LEVEL_DFT;
     uint32_t             _maxFileCount  = YLG_SERVER_CONTROLLER_LOG_FILE_MAX_COUNT_DFT;
@@ -57,9 +60,14 @@ static std::string DumpConfig(const Configuration& cfg)
     ss << "\nname: " << cfg._name
        << "\nversion: " << cfg._version;
 
-    ss << "\nendpoint:"
+    ss << "\ncontroller endpoint:"
        << "\n\tip:" << cfg._endpointIP
        << "\n\tport:" << cfg._endpointPort;
+
+    ss << "\ndiscovery:"
+       << "\n\tendpoint:" << cfg._discoveryEndpoint
+       << "\n\tuser:" << cfg._discoveryUser
+       << "\n\tpassword:" << cfg._discoveryPassword;
 
     ss << "\nlog.path: " << cfg._logPath
        << "\nlog.level: " << cfg._logLevel

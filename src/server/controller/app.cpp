@@ -22,6 +22,8 @@
  */
 
 #include "server/controller/app.h"
+#include "core/application/service_discovery.h"
+#include "core/application/service_registry.h"
 #include "server/controller/api/http/server.h"
 
 #include "internal/error.h"
@@ -123,6 +125,22 @@ ylg::internal::ErrorCode App::InitLogs()
     return ylg::internal::ErrorCode::SUCCESS;
 }
 
+ylg::internal::ErrorCode App::InitDiscovery()
+{
+    _registry = std::make_shared<ylg::app::ServiceRegistry>("/ylg/runx/services/controller",
+                                                            _localConfig->_discoveryEndpoint,
+                                                            _localConfig->_discoveryUser,
+                                                            _localConfig->_discoveryPassword);
+
+    auto ec = _registry->Run();
+    if (!ylg::internal::IsSuccess(ec))
+    {
+        return ylg::internal::ErrorCode::ERROR;
+    }
+
+    return ylg::internal::ErrorCode::SUCCESS;
+}
+
 ylg::internal::ErrorCode App::InitController()
 {
     _controller = std::make_shared<Controller>();
@@ -161,8 +179,13 @@ ylg::internal::ErrorCode App::LoadConfig(ylg::app::ContextPtr ctx)
     _localConfig->_version = ctx->GetFileConfig<std::string>("version");
 
     // parse controller
-    _localConfig->_endpointIP   = ctx->GetFileConfig<std::string>("controller.endpoint.ip", "0.0.0.0");
-    _localConfig->_endpointPort = ctx->GetFileConfig<uint16_t>("controller.endpoint.port", 26688);
+    _localConfig->_endpointIP   = ctx->GetFileConfig<std::string>("controller.[0].endpoint.ip", "0.0.0.0");
+    _localConfig->_endpointPort = ctx->GetFileConfig<uint16_t>("controller.[0].endpoint.port", 26688);
+
+    // parse discovery
+    _localConfig->_discoveryEndpoint = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.host", "");
+    _localConfig->_discoveryUser     = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.user", "");
+    _localConfig->_discoveryPassword = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.password", "");
 
     // parse log
     _localConfig->_logLevel      = ctx->GetFileConfig<std::string>("log.level", YLG_SERVER_CONTROLLER_LOG_LEVEL_DFT);
@@ -190,6 +213,12 @@ std::error_code App::Execute(ylg::app::ContextPtr ctx)
     }
 
     DumpConfiguration();
+
+    ec = InitDiscovery();
+    if (!ylg::internal::IsSuccess(ec))
+    {
+        return ec;
+    }
 
     ec = InitController();
     if (!ylg::internal::IsSuccess(ec))

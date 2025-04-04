@@ -5,7 +5,11 @@ controller:
   - endpoint:
       ip: 127.0.0.1
       port: 26688
-
+discovery:
+  - endpoint:
+      host: http://127.0.0.1:2379
+      user: root
+      password: 123456789
 log:
   path: /var/log/ylg/
   level: debug

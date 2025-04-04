@@ -31,6 +31,8 @@
 #include "internal/error.h"
 
 #include "core/application/core.h"
+#include "core/application/service_discovery.h"
+#include "core/application/service_registry.h"
 
 #include <future>
 
@@ -49,18 +51,21 @@ private:
     void                     DumpConfiguration();
     ylg::internal::ErrorCode InitFlags();
     ylg::internal::ErrorCode InitLogs();
+    ylg::internal::ErrorCode InitDiscovery();
     ylg::internal::ErrorCode InitController();
     ylg::internal::ErrorCode InitAPIs();
     ylg::internal::ErrorCode LoadConfig(ylg::app::ContextPtr ctx);
     std::error_code          Execute(ylg::app::ContextPtr ctx);
 
 private:
-    std::future<void>           _controllerRun;
-    ConfigurationPtr            _localConfig;
-    HTTPAPIServerPtr            _httpAPI    = nullptr;
-    std::shared_ptr<Controller> _controller = nullptr;
-    ylg::app::CorePtr           _core       = nullptr;
-    std::atomic_bool            _needStop   = false;
+    std::future<void>             _controllerRun;
+    ConfigurationPtr              _localConfig;
+    ylg::app::ServiceDiscoveryPtr _discovery  = nullptr;
+    ylg::app::ServiceRegistryPtr  _registry   = nullptr;
+    HTTPAPIServerPtr              _httpAPI    = nullptr;
+    std::shared_ptr<Controller>   _controller = nullptr;
+    ylg::app::CorePtr             _core       = nullptr;
+    std::atomic_bool              _needStop   = false;
 };
 
 #endif
