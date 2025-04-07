@@ -44,7 +44,7 @@ App::~App()
     Close();
 }
 
-ylg::internal::ErrorCode App::Run(int argc, char *argv[])
+ylg::internal::ErrorCode App::Run(int argc, char* argv[])
 {
     auto ec = ylg::Init();
     if (!ylg::error::IsSuccess(ec))
@@ -138,6 +138,18 @@ ylg::internal::ErrorCode App::InitDiscovery()
         return ylg::internal::ErrorCode::ERROR;
     }
 
+    _discovery = std::make_shared<ylg::app::ServiceDiscovery>(_registry->EtcdClient());
+
+    // TODO: only test
+    ec = _discovery->OpenWatcher("/ylg/runx/services/controller", [](const std::string& key, const std::string& value, ylg::app::EventType type) {
+        LOG_DEBUG("controller app test, key:{}, value:{}, event:{}", key, value, (int)type);
+    });
+
+    if (!ylg::internal::IsSuccess(ec))
+    {
+        LOG_DEBUG("controller open watcher, errmsg:{}", ec.message());
+    }
+
     return ylg::internal::ErrorCode::SUCCESS;
 }
 
@@ -179,13 +191,13 @@ ylg::internal::ErrorCode App::LoadConfig(ylg::app::ContextPtr ctx)
     _localConfig->_version = ctx->GetFileConfig<std::string>("version");
 
     // parse controller
-    _localConfig->_endpointIP   = ctx->GetFileConfig<std::string>("controller.[0].endpoint.ip", "0.0.0.0");
-    _localConfig->_endpointPort = ctx->GetFileConfig<uint16_t>("controller.[0].endpoint.port", 26688);
+    _localConfig->_endpointIP   = ctx->GetFileConfig<std::string>("controller.endpoint_ip", "0.0.0.0");
+    _localConfig->_endpointPort = ctx->GetFileConfig<uint16_t>("controller.endpoint_port", 26688);
 
     // parse discovery
-    _localConfig->_discoveryEndpoint = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.host", "");
-    _localConfig->_discoveryUser     = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.user", "");
-    _localConfig->_discoveryPassword = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.password", "");
+    _localConfig->_discoveryEndpoint = ctx->GetFileConfig<std::string>("discovery.endpoints", "");
+    _localConfig->_discoveryUser     = ctx->GetFileConfig<std::string>("discovery.user", "");
+    _localConfig->_discoveryPassword = ctx->GetFileConfig<std::string>("discovery.password", "");
 
     // parse log
     _localConfig->_logLevel      = ctx->GetFileConfig<std::string>("log.level", YLG_SERVER_CONTROLLER_LOG_LEVEL_DFT);

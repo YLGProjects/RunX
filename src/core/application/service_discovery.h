@@ -38,24 +38,50 @@
 namespace ylg {
 namespace app {
 
+enum class EventType : int32_t
+{
+    PUT,
+    DELETE,
+    UNKNOWN,
+};
+
+using EventHandler = std::function<void(const std::string& key, const std::string& value, EventType type)>;
+
+struct WatcherHandler
+{
+    std::string                    _key;
+    EventHandler                   _handler;
+    bool                           _recursive = true;
+    std::shared_ptr<etcd::Watcher> _watcher;
+};
+
+using WatcherHandlerPtr = std::shared_ptr<WatcherHandler>;
+
 class ServiceDiscovery
 {
 public:
-    ServiceDiscovery(const std::string& etcdURL, const std::string& user, const std::string& password);
+    ServiceDiscovery(const std::string& etcdURLs, const std::string& user, const std::string& password);
+    ServiceDiscovery(std::shared_ptr<etcd::Client> etcdClient);
     ~ServiceDiscovery();
 
 public:
     std::vector<std::string> Discover(const std::string& serviceName);
-    std::error_code          OpenWatcher(const std::string& key);
+    std::error_code          OpenWatcher(const std::string& key, EventHandler handler, bool recursive = true);
     void                     CloseWatcher(const std::string& key);
 
 private:
+    void CreateEtcdClient();
     void HandleWatchResponse(etcd::Response response);
 
 private:
-    etcd::Client _client;
+    // eg: http://127.0.0.1:2379;http://127.0.0.1:2379
+    std::string                   _etcdURLs;
+    std::string                   _user;
+    std::string                   _password;
+    std::shared_ptr<etcd::Client> _client;
+
     // Key: service name, Value: watcher
-    container::SafeMap<std::string, std::shared_ptr<etcd::Watcher>> _watchers;
+    container::SafeMap<std::string, WatcherHandlerPtr> _watcherHandlers;
 };
 
 using ServiceDiscoveryPtr = std::shared_ptr<ServiceDiscovery>;

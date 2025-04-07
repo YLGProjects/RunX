@@ -2,14 +2,14 @@ name: server
 version: v1.0
 
 controller:
-  - endpoint:
-      ip: 127.0.0.1
-      port: 26688
+  endpoint_ip: 127.0.0.1
+  endopoint_port: 26688
+
 discovery:
-  - endpoint:
-      host: http://127.0.0.1:2379
-      user: root
-      password: 123456789
+  endpoints: http://127.0.0.1:2379;http://127.0.0.2:2379
+  user: root
+  password: 123456789
+
 log:
   path: /var/log/ylg/
   level: debug

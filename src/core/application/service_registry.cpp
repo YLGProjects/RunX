@@ -38,11 +38,11 @@
 namespace ylg {
 namespace app {
 
-ServiceRegistry::ServiceRegistry(const std::string& serviceName, const std::string& etcdURL,
+ServiceRegistry::ServiceRegistry(const std::string& serviceName, const std::string& etcdURLs,
                                  const std::string& user, const std::string& password, int ttl)
 {
     _serviceName = serviceName;
-    _etcdURL     = etcdURL;
+    _etcdURLs    = etcdURLs;
     _user        = user;
     _password    = password;
     _instanceID  = assist::UUID();
@@ -55,7 +55,7 @@ ServiceRegistry::ServiceRegistry(const std::string& serviceName, const std::stri
     _ttl = ttl;
 }
 
-ETCDClientPtr ServiceRegistry::GetClient()
+EtcdClientPtr ServiceRegistry::EtcdClient()
 {
     return _client;
 }
@@ -107,7 +107,7 @@ void ServiceRegistry::CreateEtcdClient()
 {
     if (_client == nullptr)
     {
-        _client = std::make_shared<etcd::Client>(_etcdURL, _user, _password);
+        _client = std::make_shared<etcd::Client>(_etcdURLs, _user, _password);
     }
 }
 
@@ -121,6 +121,7 @@ std::error_code ServiceRegistry::DoRegister(const std::string& key, const std::s
     etcd::Response resp = _client->leasegrant(_ttl).get();
     if (!resp.is_ok())
     {
+        LOG_WARN("service registry, lease grant failed. key:{}, errmsg:{}", key, resp.error_message());
         return ylg::error::ErrorCode::DISCOVERY_CREATE_LEASE_FAILURE;
     }
 

@@ -45,18 +45,18 @@
 namespace ylg {
 namespace app {
 
-using ETCDClientPtr = std::shared_ptr<etcd::Client>;
+using EtcdClientPtr = std::shared_ptr<etcd::Client>;
 
 class ServiceRegistry final
 {
 public:
-    ServiceRegistry(const std::string& serviceName, const std::string& etcdURL,
+    ServiceRegistry(const std::string& serviceName, const std::string& etcdURLs,
                     const std::string& user, const std::string& password, int ttl = 0);
 
     ~ServiceRegistry() = default;
 
 public:
-    ETCDClientPtr   GetClient();
+    EtcdClientPtr   EtcdClient();
     std::error_code Run();
     void            Close();
 
@@ -67,11 +67,12 @@ private:
     bool            CheckRegistrationActive(const std::string& key, const std::string& endpoint);
 
 private:
-    std::string                      _serviceName;
-    std::string                      _instanceID;
-    std::string                      _etcdURL;
+    // eg: http://127.0.0.1:2379;http://127.0.0.1:2379
+    std::string                      _etcdURLs;
     std::string                      _user;
     std::string                      _password;
+    std::string                      _serviceName;
+    std::string                      _instanceID;
     std::shared_ptr<etcd::Client>    _client;
     int                              _ttl     = YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT;
     int64_t                          _leaseID = 0;
