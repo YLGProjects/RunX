@@ -62,6 +62,21 @@ enum class MessageType : uint32_t
     ROUTE_SYNC_RESPONSE      = (YLG_NET_MESSAGE_PROTOCOL_BASE + 0x103),
 };
 
+struct ServiceInfo
+{
+    std::string _serviceID;
+    std::string _serviceName;
+    std::string _listeningAddress;
+    std::string _apiAddress;
+
+    // load value is between [0, 100]
+    float    _load             = 0.0;
+    uint64_t _updatedTimestamp = 0;
+
+    std::string ToJSON();
+    bool        LoadJSON(const std::string& json, std::string& errMsg);
+};
+
 } // namespace internal
 } // namespace ylg
 

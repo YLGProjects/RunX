@@ -20,6 +20,7 @@ list(APPEND LIBS yaml-cpp)
 list(APPEND LIBS event)
 list(APPEND LIBS pthread)
 list(APPEND LIBS event_openssl)
+list(APPEND LIBS stdc++fs)
 list(APPEND LIBS protobuf::libprotobuf)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS})
