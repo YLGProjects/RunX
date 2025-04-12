@@ -22,12 +22,14 @@
  */
 
 #include "server/controller/app.h"
-#include "core/application/service_discovery.h"
-#include "core/application/service_registry.h"
+#include "core/assist/string.h"
 #include "server/controller/api/http/server.h"
 
+#include "internal/controller.h"
 #include "internal/error.h"
 
+#include "core/application/service_discovery.h"
+#include "core/application/service_registry.h"
 #include "core/assist/time.h"
 #include "core/core.h"
 #include "core/error/error.h"
@@ -127,28 +129,28 @@ ylg::internal::ErrorCode App::InitLogs()
 
 ylg::internal::ErrorCode App::InitDiscovery()
 {
-    _registry = std::make_shared<ylg::app::ServiceRegistry>("/ylg/runx/services/controller",
-                                                            _localConfig->_discoveryEndpoint,
-                                                            _localConfig->_discoveryUser,
-                                                            _localConfig->_discoveryPassword);
+    auto                       registry = std::make_shared<ylg::app::ServiceRegistry>(YLG_SERVER_CONTROLLER_APP_SERVICE_REGISTRY,
+                                                                                      _localConfig->_discoveryEndpoint,
+                                                                                      _localConfig->_discoveryUser,
+                                                                                      _localConfig->_discoveryPassword);
+    ylg::internal::ServiceInfo service;
+    service._serviceID        = registry->GetID();
+    service._serviceName      = "controller";
+    service._apiAddress       = "";
+    service._updatedTimestamp = ylg::assist::TimestampMillisecond();
+    service._listeningAddress = ylg::assist::FormatString("%s:%d", _localConfig->_endpointIP.c_str(), _localConfig->_endpointPort);
 
-    auto ec = _registry->Run();
+    auto value = service.ToJSON();
+    auto ec    = registry->Run(value);
     if (!ylg::internal::IsSuccess(ec))
     {
         return ylg::internal::ErrorCode::ERROR;
     }
 
-    _discovery = std::make_shared<ylg::app::ServiceDiscovery>(_registry->EtcdClient());
+    auto discovery = std::make_shared<ylg::app::ServiceDiscovery>(registry->EtcdClient());
 
-    // TODO: only test
-    ec = _discovery->OpenWatcher("/ylg/runx/services/controller", [](const std::string& key, const std::string& value, ylg::app::EventType type) {
-        LOG_DEBUG("controller app test, key:{}, value:{}, event:{}", key, value, (int)type);
-    });
-
-    if (!ylg::internal::IsSuccess(ec))
-    {
-        LOG_DEBUG("controller open watcher, errmsg:{}", ec.message());
-    }
+    _localConfig->_ctx->SaveRegistry(registry);
+    _localConfig->_ctx->SaveDiscovery(discovery);
 
     return ylg::internal::ErrorCode::SUCCESS;
 }

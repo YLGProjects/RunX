@@ -34,6 +34,7 @@
 #include <exception>
 #include <memory>
 #include <string>
+#include <system_error>
 
 namespace ylg {
 namespace app {
@@ -46,6 +47,7 @@ ServiceRegistry::ServiceRegistry(const std::string& serviceName, const std::stri
     _user        = user;
     _password    = password;
     _instanceID  = assist::UUID();
+    _rootKey     = serviceName + "/" + _instanceID;
 
     if (ttl < YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT)
     {
@@ -60,14 +62,15 @@ EtcdClientPtr ServiceRegistry::EtcdClient()
     return _client;
 }
 
-std::error_code ServiceRegistry::Run()
+std::error_code ServiceRegistry::Run(const std::string& rootKeyValue)
 {
     if (_client == nullptr)
     {
         CreateEtcdClient();
     }
 
-    auto ec = DoRegister(_serviceName, _instanceID, YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT);
+    _rootKeyValue.store(std::make_shared<std::string>(rootKeyValue));
+    auto ec = DoRegister(_rootKey, rootKeyValue, YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT);
     if (!ylg::error::IsSuccess(ec))
     {
         LOG_WARN("can not register service. name:{}", _serviceName);
@@ -78,12 +81,56 @@ std::error_code ServiceRegistry::Run()
     _checkHealthyThread = std::thread([this]() {
         while (_keepRunning)
         {
-            CheckHealthy(_serviceName, _instanceID);
+            auto value = _rootKeyValue.load();
+            CheckHealthy(_rootKey, *value);
             assist::MilliSleep(50);
         }
     });
 
     return ylg::error::ErrorCode::SUCCESS;
+}
+
+std::error_code ServiceRegistry::Set(const std::string& key, const std::string& value, int retryMax)
+{
+    if (retryMax < YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT)
+    {
+        retryMax = YLG_CORE_APP_SERVICE_REGISTRY_RETRY_MAX_DFT;
+    }
+
+    auto _value = _rootKeyValue.load();
+    if (key == _rootKey && *_value == value)
+    {
+        return ylg::error::ErrorCode::SUCCESS;
+    }
+
+    if (key == _rootKey && *_value != value)
+    {
+        _rootKeyValue.store(std::make_shared<std::string>(value));
+    }
+
+    while (--retryMax > 0)
+    {
+        auto resp = _client->set(key, value, _leaseID).get();
+        if (!resp.is_ok())
+        {
+            assist::MilliSleep(50);
+            continue;
+        }
+
+        return ylg::error::ErrorCode::SUCCESS;
+    }
+
+    return ylg::error::ErrorCode::ERROR;
+}
+
+std::string ServiceRegistry::GetID()
+{
+    return _instanceID;
+}
+
+std::string ServiceRegistry::GetRootKey()
+{
+    return _rootKey;
 }
 
 void ServiceRegistry::Close()

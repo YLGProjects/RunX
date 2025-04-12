@@ -246,6 +246,26 @@ std::error_code Context::LoadConfig(const std::string& fileName)
     return ec;
 }
 
+void Context::SaveRegistry(ServiceRegistryPtr registry)
+{
+    _registry = registry;
+}
+
+void Context::SaveDiscovery(ServiceDiscoveryPtr discovery)
+{
+    _discovery = discovery;
+}
+
+ServiceRegistryPtr Context::GetRegistry()
+{
+    return _registry;
+}
+
+ServiceDiscoveryPtr Context::GetDiscocery()
+{
+    return _discovery;
+}
+
 } // namespace app
 } // namespace ylg
 

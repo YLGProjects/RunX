@@ -46,6 +46,7 @@ namespace ylg {
 namespace app {
 
 using EtcdClientPtr = std::shared_ptr<etcd::Client>;
+using RootKeyValue  = std::atomic<std::shared_ptr<std::string>>;
 
 class ServiceRegistry final
 {
@@ -57,12 +58,15 @@ public:
 
 public:
     EtcdClientPtr   EtcdClient();
-    std::error_code Run();
+    std::error_code Run(const std::string& rootKeyValue);
+    std::error_code Set(const std::string& key, const std::string& value, int retryMax);
+    std::string     GetID();
+    std::string     GetRootKey();
     void            Close();
 
 private:
     void            CreateEtcdClient();
-    std::error_code DoRegister(const std::string& key, const std::string& value, int retryMax);
+    std::error_code DoRegister(const std::string& key, const std::string& value, int retryMax = 0);
     void            CheckHealthy(const std::string& key, const std::string& value);
     bool            CheckRegistrationActive(const std::string& key, const std::string& endpoint);
 
@@ -73,6 +77,8 @@ private:
     std::string                      _password;
     std::string                      _serviceName;
     std::string                      _instanceID;
+    std::string                      _rootKey;
+    RootKeyValue                     _rootKeyValue;
     std::shared_ptr<etcd::Client>    _client;
     int                              _ttl     = YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT;
     int64_t                          _leaseID = 0;

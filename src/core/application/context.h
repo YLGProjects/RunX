@@ -26,6 +26,8 @@
 
 #include "core/application/config_file.h"
 #include "core/application/flag.h"
+#include "core/application/service_discovery.h"
+#include "core/application/service_registry.h"
 #include "core/container/safe_map.h"
 
 #include <cstdint>
@@ -64,15 +66,20 @@ public:
     template <typename T>
     T GetFileConfig(const std::string& name, T defaultValue = T{});
 
-    bool FileConfigExist(const std::string& name);
-
-    std::error_code LoadConfig(const std::string& fileName);
+    bool                FileConfigExist(const std::string& name);
+    std::error_code     LoadConfig(const std::string& fileName);
+    void                SaveRegistry(ServiceRegistryPtr registry);
+    void                SaveDiscovery(ServiceDiscoveryPtr discovery);
+    ServiceRegistryPtr  GetRegistry();
+    ServiceDiscoveryPtr GetDiscocery();
 
 private:
     friend class Core;
     container::SafeMap<std::string, void*> _caches;
     ContextFlagPtr                         _flags;
     ConfigFilePtr                          _fileCfg;
+    ServiceDiscoveryPtr                    _discovery;
+    ServiceRegistryPtr                     _registry;
 };
 
 using ContextPtr = std::shared_ptr<Context>;
