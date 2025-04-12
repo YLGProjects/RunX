@@ -45,33 +45,40 @@
 namespace ylg {
 namespace app {
 
-using ETCDClientPtr = std::shared_ptr<etcd::Client>;
+using EtcdClientPtr = std::shared_ptr<etcd::Client>;
+using RootKeyValue  = std::atomic<std::shared_ptr<std::string>>;
 
 class ServiceRegistry final
 {
 public:
-    ServiceRegistry(const std::string& serviceName, const std::string& etcdURL,
+    ServiceRegistry(const std::string& serviceName, const std::string& etcdURLs,
                     const std::string& user, const std::string& password, int ttl = 0);
 
     ~ServiceRegistry() = default;
 
 public:
-    ETCDClientPtr   GetClient();
-    std::error_code Run();
+    EtcdClientPtr   EtcdClient();
+    std::error_code Run(const std::string& rootKeyValue);
+    std::error_code Set(const std::string& key, const std::string& value, int retryMax);
+    std::string     GetID();
+    std::string     GetRootKey();
     void            Close();
 
 private:
     void            CreateEtcdClient();
-    std::error_code DoRegister(const std::string& key, const std::string& value, int retryMax);
+    std::error_code DoRegister(const std::string& key, const std::string& value, int retryMax = 0);
     void            CheckHealthy(const std::string& key, const std::string& value);
     bool            CheckRegistrationActive(const std::string& key, const std::string& endpoint);
 
 private:
-    std::string                      _serviceName;
-    std::string                      _instanceID;
-    std::string                      _etcdURL;
+    // eg: http://127.0.0.1:2379;http://127.0.0.1:2379
+    std::string                      _etcdURLs;
     std::string                      _user;
     std::string                      _password;
+    std::string                      _serviceName;
+    std::string                      _instanceID;
+    std::string                      _rootKey;
+    RootKeyValue                     _rootKeyValue;
     std::shared_ptr<etcd::Client>    _client;
     int                              _ttl     = YLG_CORE_APP_SERVICE_REGISTRY_TTL_DFT;
     int64_t                          _leaseID = 0;

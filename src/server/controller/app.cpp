@@ -22,12 +22,14 @@
  */
 
 #include "server/controller/app.h"
-#include "core/application/service_discovery.h"
-#include "core/application/service_registry.h"
+#include "core/assist/string.h"
 #include "server/controller/api/http/server.h"
 
+#include "internal/controller.h"
 #include "internal/error.h"
 
+#include "core/application/service_discovery.h"
+#include "core/application/service_registry.h"
 #include "core/assist/time.h"
 #include "core/core.h"
 #include "core/error/error.h"
@@ -44,7 +46,7 @@ App::~App()
     Close();
 }
 
-ylg::internal::ErrorCode App::Run(int argc, char *argv[])
+ylg::internal::ErrorCode App::Run(int argc, char* argv[])
 {
     auto ec = ylg::Init();
     if (!ylg::error::IsSuccess(ec))
@@ -127,16 +129,28 @@ ylg::internal::ErrorCode App::InitLogs()
 
 ylg::internal::ErrorCode App::InitDiscovery()
 {
-    _registry = std::make_shared<ylg::app::ServiceRegistry>("/ylg/runx/services/controller",
-                                                            _localConfig->_discoveryEndpoint,
-                                                            _localConfig->_discoveryUser,
-                                                            _localConfig->_discoveryPassword);
+    auto                       registry = std::make_shared<ylg::app::ServiceRegistry>(YLG_SERVER_CONTROLLER_APP_SERVICE_REGISTRY,
+                                                                                      _localConfig->_discoveryEndpoint,
+                                                                                      _localConfig->_discoveryUser,
+                                                                                      _localConfig->_discoveryPassword);
+    ylg::internal::ServiceInfo service;
+    service._serviceID        = registry->GetID();
+    service._serviceName      = "controller";
+    service._apiAddress       = "";
+    service._updatedTimestamp = ylg::assist::TimestampMillisecond();
+    service._listeningAddress = ylg::assist::FormatString("%s:%d", _localConfig->_endpointIP.c_str(), _localConfig->_endpointPort);
 
-    auto ec = _registry->Run();
+    auto value = service.ToJSON();
+    auto ec    = registry->Run(value);
     if (!ylg::internal::IsSuccess(ec))
     {
         return ylg::internal::ErrorCode::ERROR;
     }
+
+    auto discovery = std::make_shared<ylg::app::ServiceDiscovery>(registry->EtcdClient());
+
+    _localConfig->_ctx->SaveRegistry(registry);
+    _localConfig->_ctx->SaveDiscovery(discovery);
 
     return ylg::internal::ErrorCode::SUCCESS;
 }
@@ -179,13 +193,13 @@ ylg::internal::ErrorCode App::LoadConfig(ylg::app::ContextPtr ctx)
     _localConfig->_version = ctx->GetFileConfig<std::string>("version");
 
     // parse controller
-    _localConfig->_endpointIP   = ctx->GetFileConfig<std::string>("controller.[0].endpoint.ip", "0.0.0.0");
-    _localConfig->_endpointPort = ctx->GetFileConfig<uint16_t>("controller.[0].endpoint.port", 26688);
+    _localConfig->_endpointIP   = ctx->GetFileConfig<std::string>("controller.endpoint_ip", "0.0.0.0");
+    _localConfig->_endpointPort = ctx->GetFileConfig<uint16_t>("controller.endpoint_port", 26688);
 
     // parse discovery
-    _localConfig->_discoveryEndpoint = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.host", "");
-    _localConfig->_discoveryUser     = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.user", "");
-    _localConfig->_discoveryPassword = ctx->GetFileConfig<std::string>("discovery.[0].endpoint.password", "");
+    _localConfig->_discoveryEndpoint = ctx->GetFileConfig<std::string>("discovery.endpoints", "");
+    _localConfig->_discoveryUser     = ctx->GetFileConfig<std::string>("discovery.user", "");
+    _localConfig->_discoveryPassword = ctx->GetFileConfig<std::string>("discovery.password", "");
 
     // parse log
     _localConfig->_logLevel      = ctx->GetFileConfig<std::string>("log.level", YLG_SERVER_CONTROLLER_LOG_LEVEL_DFT);

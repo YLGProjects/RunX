@@ -24,6 +24,8 @@
 #ifndef _YLG_SERVER_CONTROLLER_APP_H_
 #define _YLG_SERVER_CONTROLLER_APP_H_
 
+#include "core/application/service_discovery.h"
+#include "core/application/service_registry.h"
 #include "server/controller/api/http/server.h"
 #include "server/controller/configuration.h"
 #include "server/controller/controller.h"
@@ -31,10 +33,14 @@
 #include "internal/error.h"
 
 #include "core/application/core.h"
-#include "core/application/service_discovery.h"
-#include "core/application/service_registry.h"
 
 #include <future>
+
+// clang-format off
+
+#define YLG_SERVER_CONTROLLER_APP_SERVICE_REGISTRY "/ylg/runx/services/controller"
+
+// clang-format on
 
 class App final
 {
@@ -58,14 +64,12 @@ private:
     std::error_code          Execute(ylg::app::ContextPtr ctx);
 
 private:
-    std::future<void>             _controllerRun;
-    ConfigurationPtr              _localConfig;
-    ylg::app::ServiceDiscoveryPtr _discovery  = nullptr;
-    ylg::app::ServiceRegistryPtr  _registry   = nullptr;
-    HTTPAPIServerPtr              _httpAPI    = nullptr;
-    std::shared_ptr<Controller>   _controller = nullptr;
-    ylg::app::CorePtr             _core       = nullptr;
-    std::atomic_bool              _needStop   = false;
+    std::future<void>           _controllerRun;
+    ConfigurationPtr            _localConfig;
+    HTTPAPIServerPtr            _httpAPI    = nullptr;
+    std::shared_ptr<Controller> _controller = nullptr;
+    ylg::app::CorePtr           _core       = nullptr;
+    std::atomic_bool            _needStop   = false;
 };
 
 #endif

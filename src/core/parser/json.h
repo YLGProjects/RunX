@@ -189,6 +189,23 @@ struct JValue<VAL, bool> final
 };
 
 template <typename VAL>
+struct JValue<VAL, float> final
+{
+    static void Get(const rj::Value::ConstMemberIterator& iter, JResult<VAL>& result)
+    {
+        if (iter->value.IsFloat())
+        {
+            result._value = iter->value.GetFloat();
+        }
+        else
+        {
+            result._ok      = false;
+            result._message = "invalid value type";
+        }
+    }
+};
+
+template <typename VAL>
 struct JValue<VAL, double> final
 {
     static void Get(const rj::Value::ConstMemberIterator& iter, JResult<VAL>& result)
