@@ -22,6 +22,7 @@
  */
 
 #include "server/controller/controller.h"
+#include "server/controller/configuration.h"
 
 #include "internal/controller.h"
 #include "internal/error.h"
@@ -103,13 +104,18 @@ void Controller::HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::Mes
     }
 }
 
-void Controller::Run(const std::string& listenIP, uint16_t listenPort)
+void Controller::Run(std::shared_ptr<Configuration> cfg)
 {
-    _listenIP   = listenIP;
-    _listenPort = listenPort;
+    _localConfig = cfg;
+    auto ec      = _route->Run(_localConfig);
+
+    if (!ylg::internal::IsSuccess(ec))
+    {
+        LOG_FATAL("can not start route manager. errmsg:{}", ec.message());
+    }
 
     auto runFunctor = [&]() {
-        _server = std::make_shared<ylg::net::TCPServer>(_listenIP, _listenPort);
+        _server = std::make_shared<ylg::net::TCPServer>(_localConfig->_endpointIP, _localConfig->_endpointPort);
         _server->SetCallback(shared_from_this());
         auto errcode = _server->Run();
         if (!ylg::error::IsSuccess(errcode))
@@ -141,7 +147,6 @@ std::error_code Controller::PostToAgent(const std::vector<std::string>& agentIDs
     header._msgType  = (uint32_t)msgType;
 
     ylg::net::Hton(header);
-
     ylg::net::Message msg(header, data, size);
 
     auto errcode = agentSession->_connection->Send(msg);

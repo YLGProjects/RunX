@@ -52,7 +52,7 @@ ServiceDiscovery::~ServiceDiscovery()
     _watcherHandlers.Clean();
 }
 
-std::vector<std::string> ServiceDiscovery::Discover(const std::string& key)
+std::error_code ServiceDiscovery::List(const std::string& key, std::vector<std::string>& values)
 {
     if (_client == nullptr)
     {
@@ -62,15 +62,18 @@ std::vector<std::string> ServiceDiscovery::Discover(const std::string& key)
     etcd::Response resp = _client->ls(key).get();
 
     std::vector<std::string> endpoints;
-    if (resp.is_ok())
+    if (!resp.is_ok())
     {
-        for (const auto& kv : resp.values())
-        {
-            endpoints.push_back(kv.as_string());
-        }
+        LOG_WARN("failed to list the key:{}, errmsg:{}", key, resp.error_message());
+        return ylg::error::ErrorCode::ERROR;
     }
 
-    return endpoints;
+    for (const auto& kv : resp.values())
+    {
+        endpoints.push_back(kv.as_string());
+    }
+
+    return ylg::error::ErrorCode::SUCCESS;
 }
 
 std::error_code ServiceDiscovery::OpenWatcher(const std::string& key, EventHandler handler, bool recursive)

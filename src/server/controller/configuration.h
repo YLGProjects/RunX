@@ -54,29 +54,6 @@ struct Configuration
     ylg::app::ContextPtr _ctx;
 };
 
-static std::string DumpConfig(const Configuration& cfg)
-{
-    std::stringstream ss;
-    ss << "\nname: " << cfg._name
-       << "\nversion: " << cfg._version;
-
-    ss << "\ncontroller endpoint:"
-       << "\n\tip:" << cfg._endpointIP
-       << "\n\tport:" << cfg._endpointPort;
-
-    ss << "\ndiscovery:"
-       << "\n\tendpoint:" << cfg._discoveryEndpoint
-       << "\n\tuser:" << cfg._discoveryUser
-       << "\n\tpassword:" << cfg._discoveryPassword;
-
-    ss << "\nlog.path: " << cfg._logPath
-       << "\nlog.level: " << cfg._logLevel
-       << "\nlog.file-count: " << cfg._maxFileCount
-       << "\nlog.file-sizeMB: " << cfg._maxFileSizeMB;
-
-    return ss.str();
-}
-
 using ConfigurationPtr = std::shared_ptr<Configuration>;
 
 #endif

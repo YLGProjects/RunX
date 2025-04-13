@@ -13,5 +13,5 @@ discovery:
 log:
   path: /var/log/ylg/
   level: debug
-  file-count: 10
-  file-sizeMB: 100
+  file_count: 10
+  file_size: 100

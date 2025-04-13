@@ -26,11 +26,10 @@
 
 #include "server/controller/route/agent_session.h"
 
-#include "internal/error.h"
-
 #include "core/container/safe_map.h"
 #include "core/net/tcp_connection.h"
 
+struct Configuration;
 class Route final
 {
 public:
@@ -39,14 +38,16 @@ public:
 
 public:
     std::error_code CreateLocalSession(ylg::net::TCPConnectionPtr conn);
-    std::error_code CreateRemoteSession(AgentSessionPtr session);
     AgentSessionPtr FindAgentSession(const std::string& agentID);
     std::error_code RemoveLocalSession(ylg::net::TCPConnectionPtr conn);
     std::error_code RemoveAgentSession(const std::string& agentID);
-    std::error_code Run();
+    std::error_code Run(std::shared_ptr<Configuration> cfg);
     void            Close();
 
 private:
+    std::string                    _routeRootKey;
+    std::shared_ptr<Configuration> _localConfig;
+
     // Key: Connection ID, Value: Agent ID
     ylg::container::SafeMap<std::string, std::string> _connAgentIDs;
 

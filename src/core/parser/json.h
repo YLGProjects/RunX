@@ -91,11 +91,6 @@ struct JResult final
     {
         return _ok;
     }
-
-    VAL operator()()
-    {
-        return _value;
-    }
 };
 
 template <typename VAL, typename T = VAL>

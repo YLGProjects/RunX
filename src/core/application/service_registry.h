@@ -59,7 +59,7 @@ public:
 public:
     EtcdClientPtr   EtcdClient();
     std::error_code Run(const std::string& rootKeyValue);
-    std::error_code Set(const std::string& key, const std::string& value, int retryMax);
+    std::error_code Set(const std::string& key, const std::string& value, int retryMax = 0);
     std::string     GetID();
     std::string     GetRootKey();
     void            Close();

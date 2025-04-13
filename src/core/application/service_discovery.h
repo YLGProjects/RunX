@@ -65,9 +65,9 @@ public:
     ~ServiceDiscovery();
 
 public:
-    std::vector<std::string> Discover(const std::string& serviceName);
-    std::error_code          OpenWatcher(const std::string& key, EventHandler handler, bool recursive = true);
-    void                     CloseWatcher(const std::string& key);
+    std::error_code List(const std::string& key, std::vector<std::string>& values);
+    std::error_code OpenWatcher(const std::string& key, EventHandler handler, bool recursive = true);
+    void            CloseWatcher(const std::string& key);
 
 private:
     void CreateEtcdClient();

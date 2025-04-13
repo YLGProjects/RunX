@@ -22,7 +22,6 @@
  */
 
 #include "server/controller/app.h"
-#include "core/assist/string.h"
 #include "server/controller/api/http/server.h"
 
 #include "internal/controller.h"
@@ -30,6 +29,7 @@
 
 #include "core/application/service_discovery.h"
 #include "core/application/service_registry.h"
+#include "core/assist/string.h"
 #include "core/assist/time.h"
 #include "core/core.h"
 #include "core/error/error.h"
@@ -88,11 +88,6 @@ ylg::internal::ErrorCode App::GuardLoop()
 
     LOG_INFO("agent exited");
     return ylg::internal::ErrorCode::SUCCESS;
-}
-
-void App::DumpConfiguration()
-{
-    LOG_INFO("{}", DumpConfig(*_localConfig));
 }
 
 ylg::internal::ErrorCode App::InitFlags()
@@ -158,7 +153,7 @@ ylg::internal::ErrorCode App::InitDiscovery()
 ylg::internal::ErrorCode App::InitController()
 {
     _controller = std::make_shared<Controller>();
-    _controller->Run(_localConfig->_endpointIP, _localConfig->_endpointPort);
+    _controller->Run(_localConfig);
     return ylg::internal::ErrorCode::SUCCESS;
 }
 
@@ -204,8 +199,8 @@ ylg::internal::ErrorCode App::LoadConfig(ylg::app::ContextPtr ctx)
     // parse log
     _localConfig->_logLevel      = ctx->GetFileConfig<std::string>("log.level", YLG_SERVER_CONTROLLER_LOG_LEVEL_DFT);
     _localConfig->_logPath       = ctx->GetFileConfig<std::string>("log.path", YLG_SERVER_CONTROLLER_LOG_PATH_DFT);
-    _localConfig->_maxFileCount  = ctx->GetFileConfig<uint32_t>("log.file-count", YLG_SERVER_CONTROLLER_LOG_FILE_MAX_COUNT_DFT);
-    _localConfig->_maxFileSizeMB = ctx->GetFileConfig<uint32_t>("log.file-sizeMB", YLG_SERVER_CONTROLLER_LOG_FILE_MAX_FILE_SIZE_MB_DFT);
+    _localConfig->_maxFileCount  = ctx->GetFileConfig<uint32_t>("log.file_count", YLG_SERVER_CONTROLLER_LOG_FILE_MAX_COUNT_DFT);
+    _localConfig->_maxFileSizeMB = ctx->GetFileConfig<uint32_t>("log.file_size", YLG_SERVER_CONTROLLER_LOG_FILE_MAX_FILE_SIZE_MB_DFT);
 
     return ylg::internal::ErrorCode::SUCCESS;
 }
@@ -225,8 +220,6 @@ std::error_code App::Execute(ylg::app::ContextPtr ctx)
     {
         return ec;
     }
-
-    DumpConfiguration();
 
     ec = InitDiscovery();
     if (!ylg::internal::IsSuccess(ec))

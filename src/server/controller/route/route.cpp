@@ -22,10 +22,13 @@
  */
 
 #include "server/controller/route/route.h"
-#include "core/net/tcp_connection.h"
+#include "core/log/log.h"
+#include "server/controller/configuration.h"
 #include "server/controller/route/agent_session.h"
 
 #include "internal/error.h"
+
+#include "core/net/tcp_connection.h"
 
 std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn)
 {
@@ -34,31 +37,28 @@ std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn)
     session->_agentID    = conn->ID();
     session->_connection = conn;
 
+    auto value    = session->ToJSON();
+    auto agentKey = _routeRootKey + "/" + session->_agentID;
+    auto ec       = _localConfig->_ctx->GetRegistry()->Set(agentKey, value);
+    if (!ylg::internal::IsSuccess(ec))
+    {
+        LOG_WARN("failed to set agent info in the registry. key:{}, errmsg:{}", agentKey, ec.message());
+    }
+
     _connAgentIDs.Push(conn->ID(), session->_agentID);
     _agents.Push(session->_agentID, session);
 
     return ylg::internal::ErrorCode::SUCCESS;
 }
 
-std::error_code Route::CreateRemoteSession(AgentSessionPtr session)
-{
-    return ylg::internal::ErrorCode::SUCCESS;
-}
-
 AgentSessionPtr Route::FindAgentSession(const std::string& agentID)
 {
-    // TODO: only test
-    std::map<std::string, AgentSessionPtr> sessions;
-    _agents.CopyTo(sessions);
-    for (auto iter : sessions)
-    {
-        return iter.second;
-    }
     return nullptr;
 }
 
 std::error_code Route::RemoveLocalSession(ylg::net::TCPConnectionPtr conn)
 {
+    // TODO: only test, test
     return ylg::internal::ErrorCode::SUCCESS;
 }
 
@@ -67,8 +67,10 @@ std::error_code Route::RemoveAgentSession(const std::string& agentID)
     return ylg::internal::ErrorCode::ERROR;
 }
 
-std::error_code Route::Run()
+std::error_code Route::Run(std::shared_ptr<Configuration> cfg)
 {
+    _localConfig  = cfg;
+    _routeRootKey = _localConfig->_ctx->GetRegistry()->GetRootKey() + "/routes";
     return ylg::internal::ErrorCode::SUCCESS;
 }
 
