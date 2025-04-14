@@ -169,7 +169,7 @@ std::error_code ServiceRegistry::DoRegister(const std::string& key, const std::s
     if (!resp.is_ok())
     {
         LOG_WARN("service registry, lease grant failed. key:{}, errmsg:{}", key, resp.error_message());
-        return ylg::error::ErrorCode::DISCOVERY_CREATE_LEASE_FAILURE;
+        return ylg::error::ErrorCode::APP_DISCOVERY_CREATE_LEASE_FAILED;
     }
 
     _leaseID   = resp.value().lease();
@@ -187,7 +187,7 @@ std::error_code ServiceRegistry::DoRegister(const std::string& key, const std::s
         return ylg::error::ErrorCode::SUCCESS;
     }
 
-    return ylg::error::ErrorCode::DISCOVERY_REGISTER_SERVICE_FAILURE;
+    return ylg::error::ErrorCode::APP_DISCOVERY_REGISTER_SERVICE_FAILED;
 }
 
 void ServiceRegistry::CheckHealthy(const std::string& key, const std::string& value)

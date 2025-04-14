@@ -115,7 +115,7 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     if (Message::MESSAGE_HEADER_SIZE > evbuffer_get_length(buffer))
     {
         LOG_DEBUG("evbuffer length less than header size");
-        return error::ErrorCode::TRYAGAIN;
+        return error::ErrorCode::SYSTEM_TRY_AGAIN;
     }
 
     Header header;
@@ -123,7 +123,7 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     if (Message::MESSAGE_HEADER_SIZE > length)
     {
         LOG_DEBUG("evbuffer copied size less than header size");
-        return error::ErrorCode::TRYAGAIN;
+        return error::ErrorCode::SYSTEM_TRY_AGAIN;
     }
 
     Ntoh(header);
@@ -132,13 +132,13 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     if (totalSize > Message::MAX_MESSAGE_SIZE)
     {
         LOG_WARN("total size {} more than max message size {}.", totalSize, (uint64_t)Message::MAX_MESSAGE_SIZE);
-        return error::ErrorCode::RECEIVED_TOO_LARGE;
+        return error::ErrorCode::NET_MESSAGE_TOO_LARGE;
     }
 
     if (header._magic != YLG_NET_MESSAGE_MAGIC)
     {
         LOG_WARN("invalid connection: {}, magic: 0x{:04X}", ID(), header._magic);
-        return error::ErrorCode::INVALID_MAGIC;
+        return error::ErrorCode::NET_INVALID_MAGIC;
     }
 
     _lastReadTimestamp = assist::TimestampTickCountSecond();
@@ -148,7 +148,7 @@ std::error_code TCPConnection::Read(MessagePtr msg)
     if (!msgBuffer)
     {
         LOG_DEBUG("no more data to read, connection: {}", ID());
-        return error::ErrorCode::TRYAGAIN;
+        return error::ErrorCode::SYSTEM_TRY_AGAIN;
     }
 
     LOG_DEBUG("received, body size:{}, total size:{}", header._dataSize, totalSize);
@@ -164,7 +164,7 @@ std::error_code TCPConnection::Send(const Message& msg)
     int errcode = bufferevent_write(_bev, msg.GetData(), msg.GetDataSize());
     if (errcode)
     {
-        return error::ErrorCode::WRITED_EXCEPTION;
+        return error::ErrorCode::NET_SEND_FAILED;
     }
     return error::ErrorCode::SUCCESS;
 }

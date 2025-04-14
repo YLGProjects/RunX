@@ -86,7 +86,7 @@ std::error_code ServiceDiscovery::OpenWatcher(const std::string& key, EventHandl
     if (_watcherHandlers.Exists(key))
     {
         LOG_WARN("service discovery, rewatched. key:{}, watcher size:{}", key, _watcherHandlers.Count());
-        return ylg::error::ErrorCode::DISCOVERY_WATCHER_REPEATED;
+        return ylg::error::ErrorCode::APP_DISCOVERY_WATCHER_REPEATED;
     }
 
     auto watcherHandler        = std::make_shared<WatcherHandler>();

@@ -22,7 +22,6 @@
  */
 
 #include "server/controller/route/route.h"
-#include "core/log/log.h"
 #include "server/controller/configuration.h"
 #include "server/controller/route/agent_session.h"
 
@@ -58,7 +57,13 @@ AgentSessionPtr Route::FindAgentSession(const std::string& agentID)
 
 std::error_code Route::RemoveLocalSession(ylg::net::TCPConnectionPtr conn)
 {
-    // TODO: only test, test
+    if (!_connAgentIDs.Exists(conn->ID()))
+    {
+        return ylg::error::ErrorCode::SYSTEM_NOT_FOUND;
+    }
+
+    auto agentID = _connAgentIDs.Find(conn->ID());
+
     return ylg::internal::ErrorCode::SUCCESS;
 }
 

@@ -54,13 +54,13 @@ void TCPClient::ReadCallback(bufferevent* bev, void* ctx)
     MessagePtr msg     = std::make_shared<Message>();
     auto       errcode = conn->Read(msg);
 
-    if (errcode == error::ErrorCode::TRYAGAIN)
+    if (errcode == error::ErrorCode::SYSTEM_TRY_AGAIN)
     {
         LOG_DEBUG("no more data to read, try again, connection:{}", conn->ID());
         return;
     }
 
-    if (errcode == error::ErrorCode::INVALID_MAGIC)
+    if (errcode == error::ErrorCode::NET_INVALID_MAGIC)
     {
         LOG_WARN("invalid connection:{}", conn->ID());
         conn->UpdateState(ConnectionState::INVALID);
@@ -190,7 +190,7 @@ std::error_code TCPClient::Connect(const std::string& ip, uint16_t port)
     if (!_base)
     {
         LOG_ERROR("failed to create evnet base:{}:{}", ip, port);
-        return error::ErrorCode::LIB_EXCEPTION;
+        return error::ErrorCode::SYSTEM_LIB_EXCEPTION;
     }
 
     _remoteIP   = ip;
@@ -227,12 +227,12 @@ std::error_code TCPClient::Send(const Message& msg)
 {
     if (_connection == nullptr)
     {
-        return error::ErrorCode::CONNECTION_IS_NOT_READY;
+        return error::ErrorCode::NET_DISCONNECTED;
     }
 
     if (_connection->State() != ConnectionState::CONNECTED)
     {
-        return ylg::error::ErrorCode::CONNECTION_IS_NOT_READY;
+        return ylg::error::ErrorCode::NET_DISCONNECTED;
     }
 
     return _connection->Send(msg);
@@ -273,7 +273,7 @@ std::error_code TCPClient::Reconnect()
         LOG_WARN("failed to get addr info. remote server: {}:{}", _remoteIP, remotePort);
         event_base_free(_base);
         _base = nullptr;
-        return error::ErrorCode::CONNECTION_ABORTED;
+        return error::ErrorCode::NET_DISCONNECTED;
     }
 
     evutil_addrinfo* p = nullptr;
