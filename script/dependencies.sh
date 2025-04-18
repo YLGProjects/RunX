@@ -1,4 +1,6 @@
-#!/bin/bash
+!/bin/bash
+
+source ./devenv.sh
 
 mkdir -p /tmp/ylgeeker/
 
@@ -92,34 +94,108 @@ make -j$(nproc)
 make install
 rm -rf /tmp/ylgeeker/*
 
-# install grpc(dependenced by etcd-cpp-apiv3)
-apt-get install libcpprest-dev
-apt-get install libgrpc-dev \
-        libgrpc++-dev \
-        libprotobuf-dev \
-        protobuf-compiler-grpc
 
-cd /tmp/ylgeeker
-git clone --recurse-submodules -b v1.62.0 --depth 1 --shallow-submodules https://github.com/grpc/grpc
-cd grpc
-mkdir -p cmake/build
-pushd cmake/build
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local/grpc-1.62.0 -DgRPC_INSTALL=ON \
-      -DgRPC_BUILD_TESTS=OFF \
-      ../..
+# install abseil
+wget https://github.com/abseil/abseil-cpp/archive/refs/tags/20250127.1.tar.gz --no-check-certificate
+tar -xzvf 20250127.1.tar.gz
+cd abseil-cpp-20250127.1
+mkdir build && cd build
+cmake .. \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DBUILD_TESTING=OFF \
+  -DABSL_BUILD_TESTING=OFF \
+  -DBUILD_SHARED_LIBS=OFF \
+  -DABSL_ENABLE_INSTALL=ON \
+  -DCMAKE_INSTALL_PREFIX=/usr/local/abseil/20250127.1
 
-make -j$(nproc)
-make install
-popd
+cmake --build . -j --target all
+cmake --install .
+
+cmake .. \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DBUILD_TESTING=OFF \
+  -DABSL_BUILD_TESTING=OFF \
+  -DBUILD_SHARED_LIBS=ON \
+  -DABSL_ENABLE_INSTALL=ON \
+  -DCMAKE_INSTALL_PREFIX=/usr/local/abseil/20250127.1
+
+cmake --build . -j --target all
+cmake --install .
+
 rm -rf /tmp/ylgeeker/*
+
+# install protobuff
+wget https://github.com/protocolbuffers/protobuf/releases/download/v30.2/protobuf-30.2.tar.gz --no-check-certificate
+tar -vxf protobuf-30.2.tar.gz
+cd protobuf-30.2/
+mkdir build
+cd build
+cmake .. \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr/local/protobuf-30.2 \
+  -Dprotobuf_BUILD_TESTS=OFF \
+  -Dprotobuf_BUILD_EXAMPLES=OFF \
+  -Dprotobuf_BUILD_SHARED_LIBS=ON
+
+cmake --build . -j
+cmake --install .
+
+rm -rf /tmp/ylgeeker/*
+
+# install grpc
+cd /tmp/ylgeeker
+git clone --single-branch --depth 1 -b v1.71.0 https://github.com/grpc/grpc
+cd grpc
+git submodule update --init
+
+mkdir -p cmake/build
+cd cmake/build
+cmake ../.. \
+    -DCMAKE_INSTALL_PREFIX=/usr/local/grpc-1.71.0 \
+    -DgRPC_PROTOBUF_PROVIDER=package \
+    -DgRPC_SSL_PROVIDER=package \
+    -DgRPC_ABSL_PROVIDER=package \
+    -DgRPC_INSTALL=ON \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_CXX_STANDARD=17 \
+    -DgRPC_BUILD_TESTS=OFF
+
+cmake --build . -j$(nproc)
+cmake --install .
+
+rm -rf /tmp/ylgeeker/*
+
+# install cpprestsdk(do not support boost-1.87, skip it)
+apt install libcpprest-dev
+# wget https://github.com/microsoft/cpprestsdk/archive/refs/tags/v2.10.19.tar.gz --no-check-certificate
+# tar -zvxf v2.10.19.tar.gz
+# cd cpprestsdk-2.10.19
+# mkdir build
+# cd build
+# cmake .. \
+#    -DCMAKE_BUILD_TYPE=Release \
+#    -DBUILD_SHARED_LIBS=OFF \
+#    -DBUILD_TESTS=OFF \
+#    -DCMAKE_CXX_FLAGS="-Wno-error" \
+#    -DCPPREST_EXCLUDE_WEBSOCKETS=ON \
+#    -DCMAKE_INSTALL_PREFIX=/usr/local/cpprest-2.10.19
+
+# cmake --build . -j$(nproc)
+# cmake --install .
 
 # install etcd-cpp-apiv3
 cd /tmp/ylgeeker
 git clone https://github.com/etcd-cpp-apiv3/etcd-cpp-apiv3.git
 cd etcd-cpp-apiv3
 mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/etcd-cppapiv3 -DBUILD_SHARED_LIBS=OFF
-make -j$(nproc) && make install
+
+cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr/local/etcd-cppapiv3 \
+    -DBUILD_ETCD_CORE_ONLY=OFF \
+    -DBUILD_SHARED_LIBS=OFF
+
+cmake --build . -j$(nproc)
+cmake --install .
 
 rm -rf /tmp/ylgeeker/*
 

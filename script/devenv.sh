@@ -2,6 +2,10 @@ export GPG_TTY=$(tty)
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin
 
 export PATH=/usr/local/openssl-3.2.1/bin/:$PATH
+
+export C_INCLUDE_PATH=/user/include/:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/user/include/:$CPLUS_INCLUDE_PATH
+
 export C_INCLUDE_PATH=/usr/local/openssl-3.2.1/include/:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=/usr/local/openssl-3.2.1/include/:$CPLUS_INCLUDE_PATH
 export LIBRARY_PATH=/usr/local/openssl-3.2.1/lib64/:$LIBRARY_PATH
@@ -46,12 +50,36 @@ export CPLUS_INCLUDE_PATH=/usr/local/catch2-3.5.3/include/:$CPLUS_INCLUDE_PATH
 export LIBRARY_PATH=/usr/local/catch2-3.5.3/lib/:$LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/local/catch2-3.5.3/lib/:$LD_LIBRARY_PATH
 
-export PATH=/usr/local/grpc-1.62.0/bin/:$PATH
-export C_INCLUDE_PATH=/usr/local/grpc-1.62.0/include/:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=/usr/local/grpc-1.62.0/include/:$CPLUS_INCLUDE_PATH
-export LIBRARY_PATH=/usr/local/grpc-1.62.0/lib/:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/usr/local/grpc-1.62.0/lib/:$LD_LIBRARY_PATH
-export PKG_CONFIG_PATH=/usr/local/grpc-1.62.0/lib/pkgconfig/:$PKG_CONFIG_PATH
+export PATH=/usr/local/cpprest-2.10.19/bin/:$PATH
+export C_INCLUDE_PATH=/usr/local/cpprest-2.10.19/include/:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/cpprest-2.10.19/include/:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=/usr/local/cpprest-2.10.19/lib/:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/cpprest-2.10.19/lib/:$LD_LIBRARY_PATH
+export CMAKE_PREFIX_PATH=/usr/local/cpprest-2.10.19/lib/cmake/protobuf/:$CMAKE_PREFIX_PATH
+export PKG_CONFIG_PATH=/usr/local/cpprest-2.10.19/lib/pkgconfig/:$PKG_CONFIG_PATH
+
+export C_INCLUDE_PATH=/usr/local/abseil/20250127.1/include/:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/abseil/20250127.1/include/:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=/usr/local/abseil/20250127.1/lib/:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/abseil/20250127.1/lib/:$LD_LIBRARY_PATH
+export CMAKE_PREFIX_PATH=/usr/local/abseil/20250127.1/lib/cmake/absl/:$CMAKE_PREFIX_PATH
+export PKG_CONFIG_PATH=/usr/local/abseil/20250127.1/lib/pkgconfig/:$PKG_CONFIG_PATH
+
+export PATH=/usr/local/protobuf-30.2/bin/:$PATH
+export C_INCLUDE_PATH=/usr/local/protobuf-30.2/include/:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/protobuf-30.2/include/:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=/usr/local/protobuf-30.2/lib/:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/protobuf-30.2/lib/:$LD_LIBRARY_PATH
+export CMAKE_PREFIX_PATH=/usr/local/protobuf-30.2/lib/cmake/protobuf/:$CMAKE_PREFIX_PATH
+export PKG_CONFIG_PATH=/usr/local/protobuf-30.2/lib/pkgconfig/:$PKG_CONFIG_PATH
+
+export PATH=/usr/local/grpc-1.71.0/bin/:$PATH
+export C_INCLUDE_PATH=/usr/local/grpc-1.71.0/include/:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/grpc-1.71.0/include/:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=/usr/local/grpc-1.71.0/lib/:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/grpc-1.71.0/lib/:$LD_LIBRARY_PATH
+export CMAKE_PREFIX_PATH=/usr/local/grpc-1.71.0/lib/cmake/grpc/:$CMAKE_PREFIX_PATH
+export PKG_CONFIG_PATH=/usr/local/grpc-1.71.0/lib/pkgconfig/:$PKG_CONFIG_PATH
 
 export C_INCLUDE_PATH=/usr/local/etcd-cppapiv3/include/:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=/usr/local/etcd-cppapiv3/include/:$CPLUS_INCLUDE_PATH

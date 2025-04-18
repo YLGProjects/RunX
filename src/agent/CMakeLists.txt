@@ -12,6 +12,7 @@ list(FILTER SOURCES EXCLUDE REGEX "test")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+find_package(absl REQUIRED COMPONENTS base log)
 find_package(protobuf REQUIRED)
 
 list(APPEND LIBS core)
@@ -20,8 +21,10 @@ list(APPEND LIBS yaml-cpp)
 list(APPEND LIBS event)
 list(APPEND LIBS pthread)
 list(APPEND LIBS event_openssl)
-list(APPEND LIBS cpprest)
 list(APPEND LIBS stdc++fs)
+list(APPEND LIBS cpprest)
+list(APPEND LIBS absl::base)
+list(APPEND LIBS absl::log)
 list(APPEND LIBS protobuf::libprotobuf)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS})
