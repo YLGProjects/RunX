@@ -5,6 +5,7 @@ export PATH=/usr/local/openssl-3.2.1/bin/:$PATH
 
 export C_INCLUDE_PATH=/user/include/:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=/user/include/:$CPLUS_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/usr/include/c++/14/:$CPLUS_INCLUDE_PATH
 
 export C_INCLUDE_PATH=/usr/local/openssl-3.2.1/include/:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=/usr/local/openssl-3.2.1/include/:$CPLUS_INCLUDE_PATH
