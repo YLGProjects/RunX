@@ -25,6 +25,7 @@
 #include "server/controller/configuration.h"
 #include "server/controller/route/agent_session.h"
 
+#include "internal/agent_id.h"
 #include "internal/error.h"
 
 #include "core/net/tcp_connection.h"
@@ -33,7 +34,7 @@ std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn)
 {
     auto session = std::make_shared<AgentSession>();
 
-    session->_agentID    = conn->ID();
+    session->_agentID    = ylg::internal::GenerateNewAgentID();
     session->_connection = conn;
 
     auto value    = session->ToJSON();
@@ -52,7 +53,7 @@ std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn)
 
 AgentSessionPtr Route::FindAgentSession(const std::string& agentID)
 {
-    return nullptr;
+    return _agents.Find(agentID);
 }
 
 std::error_code Route::RemoveLocalSession(ylg::net::TCPConnectionPtr conn)
@@ -63,12 +64,23 @@ std::error_code Route::RemoveLocalSession(ylg::net::TCPConnectionPtr conn)
     }
 
     auto agentID = _connAgentIDs.Find(conn->ID());
+    if (!agentID.empty())
+    {
+        _agents.Delete(agentID);
+    }
 
     return ylg::internal::ErrorCode::SUCCESS;
 }
 
 std::error_code Route::RemoveAgentSession(const std::string& agentID)
 {
+    auto agentSession = _agents.Remove(agentID);
+    if (agentSession == nullptr)
+    {
+        return ylg::error::ErrorCode::SYSTEM_NOT_FOUND;
+    }
+
+    _connAgentIDs.Delete(agentSession->_connection->ID());
     return ylg::internal::ErrorCode::ERROR;
 }
 
@@ -81,5 +93,7 @@ std::error_code Route::Run(std::shared_ptr<Configuration> cfg)
 
 void Route::Close()
 {
+    _connAgentIDs.Clean();
+    _agents.Clean();
 }
 

@@ -1,12 +1,21 @@
 export GPG_TTY=$(tty)
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:$PATH
+export PATH=/usr/local/gcc-14.2.0/bin:/usr/local/gcc-14.2.0/libexec/gcc/x86_64-pc-linux-gnu/14.2.0:$PATH
+
+export C_INCLUDE_PATH=/usr/include:$C_INCLUDE_PATH
+export C_INCLUDE_PATH=/usr/local/gcc-14.2.0/include/c++/14.2.0:$C_INCLUDE_PATH
+export C_INCLUDE_PATH=/usr/local/gcc-14.2.0/include/c++/14.2.0/x86_64-pc-linux-gnu/bits:$C_INCLUDE_PATH
+export LIBRARY_PATH=/usr/local/gcc-14.2.0/lib/gcc/x86_64-pc-linux-gnu/14.2.0:$LIBRARY_PATH
+export LIBRARY_PATH=/usr/local/gcc-14.2.0/lib64:$LIBRARY_PATH
+
+export CPLUS_INCLUDE_PATH=/user/include/:$CPLUS_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/gcc-14.2.0/include/c++/14.2.0:$CPLUS_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/usr/local/gcc-14.2.0/include/c++/14.2.0/x86_64-pc-linux-gnu/bits:$CPLUS_INCLUDE_PATH
+export LD_LIBRARY_PATH=/usr/local/gcc-14.2.0/lib/gcc/x86_64-pc-linux-gnu/14.2.0:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/gcc-14.2.0/lib64:$LD_LIBRARY_PATH
 
 export PATH=/usr/local/openssl-3.2.1/bin/:$PATH
-
-export C_INCLUDE_PATH=/user/include/:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=/user/include/:$CPLUS_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=/usr/include/c++/14/:$CPLUS_INCLUDE_PATH
-
 export C_INCLUDE_PATH=/usr/local/openssl-3.2.1/include/:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=/usr/local/openssl-3.2.1/include/:$CPLUS_INCLUDE_PATH
 export LIBRARY_PATH=/usr/local/openssl-3.2.1/lib64/:$LIBRARY_PATH
