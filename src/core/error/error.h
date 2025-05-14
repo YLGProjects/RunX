@@ -70,6 +70,7 @@ enum class ErrorCode : int32_t
 
     // max code
     MAX = USHRT_MAX,
+    CUSTOM_BEGIN,
 };
 
 class ErrorCodeCategory final : public std::error_category

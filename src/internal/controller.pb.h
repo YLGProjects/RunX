@@ -249,9 +249,26 @@ class UnregisterAgentRespond final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kAgentIDFieldNumber = 1,
+    kErrmsgFieldNumber = 2,
+    kAgentIDFieldNumber = 3,
+    kCodeFieldNumber = 1,
   };
-  // string _agentID = 1;
+  // string _errmsg = 2;
+  void clear__errmsg() ;
+  const std::string& _errmsg() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set__errmsg(Arg_&& arg, Args_... args);
+  std::string* PROTOBUF_NONNULL mutable__errmsg();
+  [[nodiscard]] std::string* PROTOBUF_NULLABLE release__errmsg();
+  void set_allocated__errmsg(std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const std::string& _internal__errmsg() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set__errmsg(const std::string& value);
+  std::string* PROTOBUF_NONNULL _internal_mutable__errmsg();
+
+  public:
+  // string _agentID = 3;
   void clear__agentid() ;
   const std::string& _agentid() const;
   template <typename Arg_ = const std::string&, typename... Args_>
@@ -266,12 +283,22 @@ class UnregisterAgentRespond final : public ::google::protobuf::Message
   std::string* PROTOBUF_NONNULL _internal_mutable__agentid();
 
   public:
+  // int32 _code = 1;
+  void clear__code() ;
+  ::int32_t _code() const;
+  void set__code(::int32_t value);
+
+  private:
+  ::int32_t _internal__code() const;
+  void _internal_set__code(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:ylg.internal.UnregisterAgentRespond)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 1,
-                                   0, 52,
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   0, 59,
                                    2>
       _table_;
 
@@ -292,7 +319,9 @@ class UnregisterAgentRespond final : public ::google::protobuf::Message
         const UnregisterAgentRespond& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr _errmsg_;
     ::google::protobuf::internal::ArenaStringPtr _agentid_;
+    ::int32_t _code_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -849,9 +878,26 @@ class RegisterAgentRespond final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kAgentIDFieldNumber = 1,
+    kErrmsgFieldNumber = 2,
+    kAgentIDFieldNumber = 3,
+    kCodeFieldNumber = 1,
   };
-  // string _agentID = 1;
+  // string _errmsg = 2;
+  void clear__errmsg() ;
+  const std::string& _errmsg() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set__errmsg(Arg_&& arg, Args_... args);
+  std::string* PROTOBUF_NONNULL mutable__errmsg();
+  [[nodiscard]] std::string* PROTOBUF_NULLABLE release__errmsg();
+  void set_allocated__errmsg(std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const std::string& _internal__errmsg() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set__errmsg(const std::string& value);
+  std::string* PROTOBUF_NONNULL _internal_mutable__errmsg();
+
+  public:
+  // string _agentID = 3;
   void clear__agentid() ;
   const std::string& _agentid() const;
   template <typename Arg_ = const std::string&, typename... Args_>
@@ -866,12 +912,22 @@ class RegisterAgentRespond final : public ::google::protobuf::Message
   std::string* PROTOBUF_NONNULL _internal_mutable__agentid();
 
   public:
+  // int32 _code = 1;
+  void clear__code() ;
+  ::int32_t _code() const;
+  void set__code(::int32_t value);
+
+  private:
+  ::int32_t _internal__code() const;
+  void _internal_set__code(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:ylg.internal.RegisterAgentRespond)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 1,
-                                   0, 50,
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   0, 57,
                                    2>
       _table_;
 
@@ -892,7 +948,9 @@ class RegisterAgentRespond final : public ::google::protobuf::Message
         const RegisterAgentRespond& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr _errmsg_;
     ::google::protobuf::internal::ArenaStringPtr _agentid_;
+    ::int32_t _code_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1050,6 +1108,7 @@ class RegisterAgentRequest final : public ::google::protobuf::Message
     kNetDevNameFieldNumber = 3,
     kMachineIDFieldNumber = 4,
     kHostNameFieldNumber = 5,
+    kAgentIDFieldNumber = 6,
   };
   // string _ip = 1;
   void clear__ip() ;
@@ -1126,12 +1185,27 @@ class RegisterAgentRequest final : public ::google::protobuf::Message
   std::string* PROTOBUF_NONNULL _internal_mutable__hostname();
 
   public:
+  // string _agentID = 6;
+  void clear__agentid() ;
+  const std::string& _agentid() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set__agentid(Arg_&& arg, Args_... args);
+  std::string* PROTOBUF_NONNULL mutable__agentid();
+  [[nodiscard]] std::string* PROTOBUF_NULLABLE release__agentid();
+  void set_allocated__agentid(std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const std::string& _internal__agentid() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set__agentid(const std::string& value);
+  std::string* PROTOBUF_NONNULL _internal_mutable__agentid();
+
+  public:
   // @@protoc_insertion_point(class_scope:ylg.internal.RegisterAgentRequest)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 5,
-                                   0, 79,
+  static const ::google::protobuf::internal::TcParseTable<3, 6,
+                                   0, 87,
                                    2>
       _table_;
 
@@ -1157,6 +1231,7 @@ class RegisterAgentRequest final : public ::google::protobuf::Message
     ::google::protobuf::internal::ArenaStringPtr _netdevname_;
     ::google::protobuf::internal::ArenaStringPtr _machineid_;
     ::google::protobuf::internal::ArenaStringPtr _hostname_;
+    ::google::protobuf::internal::ArenaStringPtr _agentid_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1309,10 +1384,27 @@ class Pong final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kAgentIDFieldNumber = 1,
-    kMsgFieldNumber = 2,
+    kErrmsgFieldNumber = 2,
+    kAgentIDFieldNumber = 3,
+    kMsgFieldNumber = 4,
+    kCodeFieldNumber = 1,
   };
-  // string _agentID = 1;
+  // string _errmsg = 2;
+  void clear__errmsg() ;
+  const std::string& _errmsg() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set__errmsg(Arg_&& arg, Args_... args);
+  std::string* PROTOBUF_NONNULL mutable__errmsg();
+  [[nodiscard]] std::string* PROTOBUF_NULLABLE release__errmsg();
+  void set_allocated__errmsg(std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const std::string& _internal__errmsg() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set__errmsg(const std::string& value);
+  std::string* PROTOBUF_NONNULL _internal_mutable__errmsg();
+
+  public:
+  // string _agentID = 3;
   void clear__agentid() ;
   const std::string& _agentid() const;
   template <typename Arg_ = const std::string&, typename... Args_>
@@ -1327,7 +1419,7 @@ class Pong final : public ::google::protobuf::Message
   std::string* PROTOBUF_NONNULL _internal_mutable__agentid();
 
   public:
-  // string _msg = 2;
+  // string _msg = 4;
   void clear__msg() ;
   const std::string& _msg() const;
   template <typename Arg_ = const std::string&, typename... Args_>
@@ -1342,12 +1434,22 @@ class Pong final : public ::google::protobuf::Message
   std::string* PROTOBUF_NONNULL _internal_mutable__msg();
 
   public:
+  // int32 _code = 1;
+  void clear__code() ;
+  ::int32_t _code() const;
+  void set__code(::int32_t value);
+
+  private:
+  ::int32_t _internal__code() const;
+  void _internal_set__code(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:ylg.internal.Pong)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<1, 2,
-                                   0, 38,
+  static const ::google::protobuf::internal::TcParseTable<2, 4,
+                                   0, 45,
                                    2>
       _table_;
 
@@ -1368,8 +1470,10 @@ class Pong final : public ::google::protobuf::Message
         const Pong& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr _errmsg_;
     ::google::protobuf::internal::ArenaStringPtr _agentid_;
     ::google::protobuf::internal::ArenaStringPtr _msg_;
+    ::int32_t _code_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1718,9 +1822,26 @@ class AuthRespond final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kAgentIDFieldNumber = 1,
+    kErrmsgFieldNumber = 2,
+    kAgentIDFieldNumber = 3,
+    kCodeFieldNumber = 1,
   };
-  // string _agentID = 1;
+  // string _errmsg = 2;
+  void clear__errmsg() ;
+  const std::string& _errmsg() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set__errmsg(Arg_&& arg, Args_... args);
+  std::string* PROTOBUF_NONNULL mutable__errmsg();
+  [[nodiscard]] std::string* PROTOBUF_NULLABLE release__errmsg();
+  void set_allocated__errmsg(std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const std::string& _internal__errmsg() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set__errmsg(const std::string& value);
+  std::string* PROTOBUF_NONNULL _internal_mutable__errmsg();
+
+  public:
+  // string _agentID = 3;
   void clear__agentid() ;
   const std::string& _agentid() const;
   template <typename Arg_ = const std::string&, typename... Args_>
@@ -1735,12 +1856,22 @@ class AuthRespond final : public ::google::protobuf::Message
   std::string* PROTOBUF_NONNULL _internal_mutable__agentid();
 
   public:
+  // int32 _code = 1;
+  void clear__code() ;
+  ::int32_t _code() const;
+  void set__code(::int32_t value);
+
+  private:
+  ::int32_t _internal__code() const;
+  void _internal_set__code(::int32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:ylg.internal.AuthRespond)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 1,
-                                   0, 41,
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   0, 48,
                                    2>
       _table_;
 
@@ -1761,7 +1892,9 @@ class AuthRespond final : public ::google::protobuf::Message
         const AuthRespond& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr _errmsg_;
     ::google::protobuf::internal::ArenaStringPtr _agentid_;
+    ::int32_t _code_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -2051,11 +2184,100 @@ inline void Ping::set_allocated__msg(std::string* PROTOBUF_NULLABLE value) {
 
 // Pong
 
-// string _agentID = 1;
+// int32 _code = 1;
+inline void Pong::clear__code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._code_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000008u;
+}
+inline ::int32_t Pong::_code() const {
+  // @@protoc_insertion_point(field_get:ylg.internal.Pong._code)
+  return _internal__code();
+}
+inline void Pong::set__code(::int32_t value) {
+  _internal_set__code(value);
+  _impl_._has_bits_[0] |= 0x00000008u;
+  // @@protoc_insertion_point(field_set:ylg.internal.Pong._code)
+}
+inline ::int32_t Pong::_internal__code() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._code_;
+}
+inline void Pong::_internal_set__code(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._code_ = value;
+}
+
+// string _errmsg = 2;
+inline void Pong::clear__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._errmsg_.ClearToEmpty();
+  _impl_._has_bits_[0] &= ~0x00000001u;
+}
+inline const std::string& Pong::_errmsg() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:ylg.internal.Pong._errmsg)
+  return _internal__errmsg();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void Pong::set__errmsg(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._errmsg_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:ylg.internal.Pong._errmsg)
+}
+inline std::string* PROTOBUF_NONNULL Pong::mutable__errmsg()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable__errmsg();
+  // @@protoc_insertion_point(field_mutable:ylg.internal.Pong._errmsg)
+  return _s;
+}
+inline const std::string& Pong::_internal__errmsg() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._errmsg_.Get();
+}
+inline void Pong::_internal_set__errmsg(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._errmsg_.Set(value, GetArena());
+}
+inline std::string* PROTOBUF_NONNULL Pong::_internal_mutable__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  return _impl_._errmsg_.Mutable( GetArena());
+}
+inline std::string* PROTOBUF_NULLABLE Pong::release__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:ylg.internal.Pong._errmsg)
+  if ((_impl_._has_bits_[0] & 0x00000001u) == 0) {
+    return nullptr;
+  }
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  auto* released = _impl_._errmsg_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_._errmsg_.Set("", GetArena());
+  }
+  return released;
+}
+inline void Pong::set_allocated__errmsg(std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+  _impl_._errmsg_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._errmsg_.IsDefault()) {
+    _impl_._errmsg_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ylg.internal.Pong._errmsg)
+}
+
+// string _agentID = 3;
 inline void Pong::clear__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._agentid_.ClearToEmpty();
-  _impl_._has_bits_[0] &= ~0x00000001u;
+  _impl_._has_bits_[0] &= ~0x00000002u;
 }
 inline const std::string& Pong::_agentid() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -2065,7 +2287,7 @@ inline const std::string& Pong::_agentid() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void Pong::set__agentid(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   _impl_._agentid_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:ylg.internal.Pong._agentID)
 }
@@ -2081,21 +2303,21 @@ inline const std::string& Pong::_internal__agentid() const {
 }
 inline void Pong::_internal_set__agentid(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   _impl_._agentid_.Set(value, GetArena());
 }
 inline std::string* PROTOBUF_NONNULL Pong::_internal_mutable__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   return _impl_._agentid_.Mutable( GetArena());
 }
 inline std::string* PROTOBUF_NULLABLE Pong::release__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:ylg.internal.Pong._agentID)
-  if ((_impl_._has_bits_[0] & 0x00000001u) == 0) {
+  if ((_impl_._has_bits_[0] & 0x00000002u) == 0) {
     return nullptr;
   }
-  _impl_._has_bits_[0] &= ~0x00000001u;
+  _impl_._has_bits_[0] &= ~0x00000002u;
   auto* released = _impl_._agentid_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_._agentid_.Set("", GetArena());
@@ -2105,9 +2327,9 @@ inline std::string* PROTOBUF_NULLABLE Pong::release__agentid() {
 inline void Pong::set_allocated__agentid(std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000001u;
+    _impl_._has_bits_[0] |= 0x00000002u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
+    _impl_._has_bits_[0] &= ~0x00000002u;
   }
   _impl_._agentid_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._agentid_.IsDefault()) {
@@ -2116,11 +2338,11 @@ inline void Pong::set_allocated__agentid(std::string* PROTOBUF_NULLABLE value) {
   // @@protoc_insertion_point(field_set_allocated:ylg.internal.Pong._agentID)
 }
 
-// string _msg = 2;
+// string _msg = 4;
 inline void Pong::clear__msg() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._msg_.ClearToEmpty();
-  _impl_._has_bits_[0] &= ~0x00000002u;
+  _impl_._has_bits_[0] &= ~0x00000004u;
 }
 inline const std::string& Pong::_msg() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -2130,7 +2352,7 @@ inline const std::string& Pong::_msg() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void Pong::set__msg(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000002u;
+  _impl_._has_bits_[0] |= 0x00000004u;
   _impl_._msg_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:ylg.internal.Pong._msg)
 }
@@ -2146,21 +2368,21 @@ inline const std::string& Pong::_internal__msg() const {
 }
 inline void Pong::_internal_set__msg(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000002u;
+  _impl_._has_bits_[0] |= 0x00000004u;
   _impl_._msg_.Set(value, GetArena());
 }
 inline std::string* PROTOBUF_NONNULL Pong::_internal_mutable__msg() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000002u;
+  _impl_._has_bits_[0] |= 0x00000004u;
   return _impl_._msg_.Mutable( GetArena());
 }
 inline std::string* PROTOBUF_NULLABLE Pong::release__msg() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:ylg.internal.Pong._msg)
-  if ((_impl_._has_bits_[0] & 0x00000002u) == 0) {
+  if ((_impl_._has_bits_[0] & 0x00000004u) == 0) {
     return nullptr;
   }
-  _impl_._has_bits_[0] &= ~0x00000002u;
+  _impl_._has_bits_[0] &= ~0x00000004u;
   auto* released = _impl_._msg_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_._msg_.Set("", GetArena());
@@ -2170,9 +2392,9 @@ inline std::string* PROTOBUF_NULLABLE Pong::release__msg() {
 inline void Pong::set_allocated__msg(std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000002u;
+    _impl_._has_bits_[0] |= 0x00000004u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000002u;
+    _impl_._has_bits_[0] &= ~0x00000004u;
   }
   _impl_._msg_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._msg_.IsDefault()) {
@@ -2254,11 +2476,100 @@ inline void AuthRequest::set_allocated__agentid(std::string* PROTOBUF_NULLABLE v
 
 // AuthRespond
 
-// string _agentID = 1;
+// int32 _code = 1;
+inline void AuthRespond::clear__code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._code_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000004u;
+}
+inline ::int32_t AuthRespond::_code() const {
+  // @@protoc_insertion_point(field_get:ylg.internal.AuthRespond._code)
+  return _internal__code();
+}
+inline void AuthRespond::set__code(::int32_t value) {
+  _internal_set__code(value);
+  _impl_._has_bits_[0] |= 0x00000004u;
+  // @@protoc_insertion_point(field_set:ylg.internal.AuthRespond._code)
+}
+inline ::int32_t AuthRespond::_internal__code() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._code_;
+}
+inline void AuthRespond::_internal_set__code(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._code_ = value;
+}
+
+// string _errmsg = 2;
+inline void AuthRespond::clear__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._errmsg_.ClearToEmpty();
+  _impl_._has_bits_[0] &= ~0x00000001u;
+}
+inline const std::string& AuthRespond::_errmsg() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:ylg.internal.AuthRespond._errmsg)
+  return _internal__errmsg();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void AuthRespond::set__errmsg(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._errmsg_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:ylg.internal.AuthRespond._errmsg)
+}
+inline std::string* PROTOBUF_NONNULL AuthRespond::mutable__errmsg()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable__errmsg();
+  // @@protoc_insertion_point(field_mutable:ylg.internal.AuthRespond._errmsg)
+  return _s;
+}
+inline const std::string& AuthRespond::_internal__errmsg() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._errmsg_.Get();
+}
+inline void AuthRespond::_internal_set__errmsg(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._errmsg_.Set(value, GetArena());
+}
+inline std::string* PROTOBUF_NONNULL AuthRespond::_internal_mutable__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  return _impl_._errmsg_.Mutable( GetArena());
+}
+inline std::string* PROTOBUF_NULLABLE AuthRespond::release__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:ylg.internal.AuthRespond._errmsg)
+  if ((_impl_._has_bits_[0] & 0x00000001u) == 0) {
+    return nullptr;
+  }
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  auto* released = _impl_._errmsg_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_._errmsg_.Set("", GetArena());
+  }
+  return released;
+}
+inline void AuthRespond::set_allocated__errmsg(std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+  _impl_._errmsg_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._errmsg_.IsDefault()) {
+    _impl_._errmsg_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ylg.internal.AuthRespond._errmsg)
+}
+
+// string _agentID = 3;
 inline void AuthRespond::clear__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._agentid_.ClearToEmpty();
-  _impl_._has_bits_[0] &= ~0x00000001u;
+  _impl_._has_bits_[0] &= ~0x00000002u;
 }
 inline const std::string& AuthRespond::_agentid() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -2268,7 +2579,7 @@ inline const std::string& AuthRespond::_agentid() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void AuthRespond::set__agentid(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   _impl_._agentid_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:ylg.internal.AuthRespond._agentID)
 }
@@ -2284,21 +2595,21 @@ inline const std::string& AuthRespond::_internal__agentid() const {
 }
 inline void AuthRespond::_internal_set__agentid(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   _impl_._agentid_.Set(value, GetArena());
 }
 inline std::string* PROTOBUF_NONNULL AuthRespond::_internal_mutable__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   return _impl_._agentid_.Mutable( GetArena());
 }
 inline std::string* PROTOBUF_NULLABLE AuthRespond::release__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:ylg.internal.AuthRespond._agentID)
-  if ((_impl_._has_bits_[0] & 0x00000001u) == 0) {
+  if ((_impl_._has_bits_[0] & 0x00000002u) == 0) {
     return nullptr;
   }
-  _impl_._has_bits_[0] &= ~0x00000001u;
+  _impl_._has_bits_[0] &= ~0x00000002u;
   auto* released = _impl_._agentid_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_._agentid_.Set("", GetArena());
@@ -2308,9 +2619,9 @@ inline std::string* PROTOBUF_NULLABLE AuthRespond::release__agentid() {
 inline void AuthRespond::set_allocated__agentid(std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000001u;
+    _impl_._has_bits_[0] |= 0x00000002u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
+    _impl_._has_bits_[0] &= ~0x00000002u;
   }
   _impl_._agentid_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._agentid_.IsDefault()) {
@@ -2648,15 +2959,169 @@ inline void RegisterAgentRequest::set_allocated__hostname(std::string* PROTOBUF_
   // @@protoc_insertion_point(field_set_allocated:ylg.internal.RegisterAgentRequest._hostName)
 }
 
+// string _agentID = 6;
+inline void RegisterAgentRequest::clear__agentid() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._agentid_.ClearToEmpty();
+  _impl_._has_bits_[0] &= ~0x00000020u;
+}
+inline const std::string& RegisterAgentRequest::_agentid() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:ylg.internal.RegisterAgentRequest._agentID)
+  return _internal__agentid();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void RegisterAgentRequest::set__agentid(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000020u;
+  _impl_._agentid_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:ylg.internal.RegisterAgentRequest._agentID)
+}
+inline std::string* PROTOBUF_NONNULL RegisterAgentRequest::mutable__agentid()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable__agentid();
+  // @@protoc_insertion_point(field_mutable:ylg.internal.RegisterAgentRequest._agentID)
+  return _s;
+}
+inline const std::string& RegisterAgentRequest::_internal__agentid() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._agentid_.Get();
+}
+inline void RegisterAgentRequest::_internal_set__agentid(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000020u;
+  _impl_._agentid_.Set(value, GetArena());
+}
+inline std::string* PROTOBUF_NONNULL RegisterAgentRequest::_internal_mutable__agentid() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000020u;
+  return _impl_._agentid_.Mutable( GetArena());
+}
+inline std::string* PROTOBUF_NULLABLE RegisterAgentRequest::release__agentid() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:ylg.internal.RegisterAgentRequest._agentID)
+  if ((_impl_._has_bits_[0] & 0x00000020u) == 0) {
+    return nullptr;
+  }
+  _impl_._has_bits_[0] &= ~0x00000020u;
+  auto* released = _impl_._agentid_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_._agentid_.Set("", GetArena());
+  }
+  return released;
+}
+inline void RegisterAgentRequest::set_allocated__agentid(std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000020u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000020u;
+  }
+  _impl_._agentid_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._agentid_.IsDefault()) {
+    _impl_._agentid_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ylg.internal.RegisterAgentRequest._agentID)
+}
+
 // -------------------------------------------------------------------
 
 // RegisterAgentRespond
 
-// string _agentID = 1;
+// int32 _code = 1;
+inline void RegisterAgentRespond::clear__code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._code_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000004u;
+}
+inline ::int32_t RegisterAgentRespond::_code() const {
+  // @@protoc_insertion_point(field_get:ylg.internal.RegisterAgentRespond._code)
+  return _internal__code();
+}
+inline void RegisterAgentRespond::set__code(::int32_t value) {
+  _internal_set__code(value);
+  _impl_._has_bits_[0] |= 0x00000004u;
+  // @@protoc_insertion_point(field_set:ylg.internal.RegisterAgentRespond._code)
+}
+inline ::int32_t RegisterAgentRespond::_internal__code() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._code_;
+}
+inline void RegisterAgentRespond::_internal_set__code(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._code_ = value;
+}
+
+// string _errmsg = 2;
+inline void RegisterAgentRespond::clear__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._errmsg_.ClearToEmpty();
+  _impl_._has_bits_[0] &= ~0x00000001u;
+}
+inline const std::string& RegisterAgentRespond::_errmsg() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:ylg.internal.RegisterAgentRespond._errmsg)
+  return _internal__errmsg();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void RegisterAgentRespond::set__errmsg(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._errmsg_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:ylg.internal.RegisterAgentRespond._errmsg)
+}
+inline std::string* PROTOBUF_NONNULL RegisterAgentRespond::mutable__errmsg()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable__errmsg();
+  // @@protoc_insertion_point(field_mutable:ylg.internal.RegisterAgentRespond._errmsg)
+  return _s;
+}
+inline const std::string& RegisterAgentRespond::_internal__errmsg() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._errmsg_.Get();
+}
+inline void RegisterAgentRespond::_internal_set__errmsg(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._errmsg_.Set(value, GetArena());
+}
+inline std::string* PROTOBUF_NONNULL RegisterAgentRespond::_internal_mutable__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  return _impl_._errmsg_.Mutable( GetArena());
+}
+inline std::string* PROTOBUF_NULLABLE RegisterAgentRespond::release__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:ylg.internal.RegisterAgentRespond._errmsg)
+  if ((_impl_._has_bits_[0] & 0x00000001u) == 0) {
+    return nullptr;
+  }
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  auto* released = _impl_._errmsg_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_._errmsg_.Set("", GetArena());
+  }
+  return released;
+}
+inline void RegisterAgentRespond::set_allocated__errmsg(std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+  _impl_._errmsg_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._errmsg_.IsDefault()) {
+    _impl_._errmsg_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ylg.internal.RegisterAgentRespond._errmsg)
+}
+
+// string _agentID = 3;
 inline void RegisterAgentRespond::clear__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._agentid_.ClearToEmpty();
-  _impl_._has_bits_[0] &= ~0x00000001u;
+  _impl_._has_bits_[0] &= ~0x00000002u;
 }
 inline const std::string& RegisterAgentRespond::_agentid() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -2666,7 +3131,7 @@ inline const std::string& RegisterAgentRespond::_agentid() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void RegisterAgentRespond::set__agentid(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   _impl_._agentid_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:ylg.internal.RegisterAgentRespond._agentID)
 }
@@ -2682,21 +3147,21 @@ inline const std::string& RegisterAgentRespond::_internal__agentid() const {
 }
 inline void RegisterAgentRespond::_internal_set__agentid(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   _impl_._agentid_.Set(value, GetArena());
 }
 inline std::string* PROTOBUF_NONNULL RegisterAgentRespond::_internal_mutable__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   return _impl_._agentid_.Mutable( GetArena());
 }
 inline std::string* PROTOBUF_NULLABLE RegisterAgentRespond::release__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:ylg.internal.RegisterAgentRespond._agentID)
-  if ((_impl_._has_bits_[0] & 0x00000001u) == 0) {
+  if ((_impl_._has_bits_[0] & 0x00000002u) == 0) {
     return nullptr;
   }
-  _impl_._has_bits_[0] &= ~0x00000001u;
+  _impl_._has_bits_[0] &= ~0x00000002u;
   auto* released = _impl_._agentid_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_._agentid_.Set("", GetArena());
@@ -2706,9 +3171,9 @@ inline std::string* PROTOBUF_NULLABLE RegisterAgentRespond::release__agentid() {
 inline void RegisterAgentRespond::set_allocated__agentid(std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000001u;
+    _impl_._has_bits_[0] |= 0x00000002u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
+    _impl_._has_bits_[0] &= ~0x00000002u;
   }
   _impl_._agentid_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._agentid_.IsDefault()) {
@@ -2790,11 +3255,100 @@ inline void UnregisterAgentRequest::set_allocated__agentid(std::string* PROTOBUF
 
 // UnregisterAgentRespond
 
-// string _agentID = 1;
+// int32 _code = 1;
+inline void UnregisterAgentRespond::clear__code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._code_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000004u;
+}
+inline ::int32_t UnregisterAgentRespond::_code() const {
+  // @@protoc_insertion_point(field_get:ylg.internal.UnregisterAgentRespond._code)
+  return _internal__code();
+}
+inline void UnregisterAgentRespond::set__code(::int32_t value) {
+  _internal_set__code(value);
+  _impl_._has_bits_[0] |= 0x00000004u;
+  // @@protoc_insertion_point(field_set:ylg.internal.UnregisterAgentRespond._code)
+}
+inline ::int32_t UnregisterAgentRespond::_internal__code() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._code_;
+}
+inline void UnregisterAgentRespond::_internal_set__code(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._code_ = value;
+}
+
+// string _errmsg = 2;
+inline void UnregisterAgentRespond::clear__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._errmsg_.ClearToEmpty();
+  _impl_._has_bits_[0] &= ~0x00000001u;
+}
+inline const std::string& UnregisterAgentRespond::_errmsg() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:ylg.internal.UnregisterAgentRespond._errmsg)
+  return _internal__errmsg();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void UnregisterAgentRespond::set__errmsg(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._errmsg_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:ylg.internal.UnregisterAgentRespond._errmsg)
+}
+inline std::string* PROTOBUF_NONNULL UnregisterAgentRespond::mutable__errmsg()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable__errmsg();
+  // @@protoc_insertion_point(field_mutable:ylg.internal.UnregisterAgentRespond._errmsg)
+  return _s;
+}
+inline const std::string& UnregisterAgentRespond::_internal__errmsg() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._errmsg_.Get();
+}
+inline void UnregisterAgentRespond::_internal_set__errmsg(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._errmsg_.Set(value, GetArena());
+}
+inline std::string* PROTOBUF_NONNULL UnregisterAgentRespond::_internal_mutable__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000001u;
+  return _impl_._errmsg_.Mutable( GetArena());
+}
+inline std::string* PROTOBUF_NULLABLE UnregisterAgentRespond::release__errmsg() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:ylg.internal.UnregisterAgentRespond._errmsg)
+  if ((_impl_._has_bits_[0] & 0x00000001u) == 0) {
+    return nullptr;
+  }
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  auto* released = _impl_._errmsg_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_._errmsg_.Set("", GetArena());
+  }
+  return released;
+}
+inline void UnregisterAgentRespond::set_allocated__errmsg(std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+  _impl_._errmsg_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._errmsg_.IsDefault()) {
+    _impl_._errmsg_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ylg.internal.UnregisterAgentRespond._errmsg)
+}
+
+// string _agentID = 3;
 inline void UnregisterAgentRespond::clear__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._agentid_.ClearToEmpty();
-  _impl_._has_bits_[0] &= ~0x00000001u;
+  _impl_._has_bits_[0] &= ~0x00000002u;
 }
 inline const std::string& UnregisterAgentRespond::_agentid() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -2804,7 +3358,7 @@ inline const std::string& UnregisterAgentRespond::_agentid() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void UnregisterAgentRespond::set__agentid(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   _impl_._agentid_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:ylg.internal.UnregisterAgentRespond._agentID)
 }
@@ -2820,21 +3374,21 @@ inline const std::string& UnregisterAgentRespond::_internal__agentid() const {
 }
 inline void UnregisterAgentRespond::_internal_set__agentid(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   _impl_._agentid_.Set(value, GetArena());
 }
 inline std::string* PROTOBUF_NONNULL UnregisterAgentRespond::_internal_mutable__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_._has_bits_[0] |= 0x00000001u;
+  _impl_._has_bits_[0] |= 0x00000002u;
   return _impl_._agentid_.Mutable( GetArena());
 }
 inline std::string* PROTOBUF_NULLABLE UnregisterAgentRespond::release__agentid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:ylg.internal.UnregisterAgentRespond._agentID)
-  if ((_impl_._has_bits_[0] & 0x00000001u) == 0) {
+  if ((_impl_._has_bits_[0] & 0x00000002u) == 0) {
     return nullptr;
   }
-  _impl_._has_bits_[0] &= ~0x00000001u;
+  _impl_._has_bits_[0] &= ~0x00000002u;
   auto* released = _impl_._agentid_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_._agentid_.Set("", GetArena());
@@ -2844,9 +3398,9 @@ inline std::string* PROTOBUF_NULLABLE UnregisterAgentRespond::release__agentid()
 inline void UnregisterAgentRespond::set_allocated__agentid(std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000001u;
+    _impl_._has_bits_[0] |= 0x00000002u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000001u;
+    _impl_._has_bits_[0] &= ~0x00000002u;
   }
   _impl_._agentid_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_._agentid_.IsDefault()) {

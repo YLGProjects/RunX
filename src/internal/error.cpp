@@ -22,6 +22,7 @@
  */
 
 #include "internal/error.h"
+#include "core/error/error.h"
 
 namespace ylg {
 namespace internal {
@@ -39,6 +40,11 @@ const char* ErrorCodeCategory::name() const noexcept
 
 std::string ErrorCodeCategory::message(int code) const
 {
+    if (code < (int32_t)ylg::error::ErrorCode::MAX)
+    {
+        return ylg::error::ErrorCodeCategory::Instance().message(code);
+    }
+
     std::string errMsg;
     switch (static_cast<ErrorCode>(code))
     {

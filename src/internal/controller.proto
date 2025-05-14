@@ -34,8 +34,10 @@ message Ping
 
 message Pong
 {
-    string _agentID = 1;
-    string _msg     = 2;
+    int32  _code    = 1;
+    string _errmsg  = 2;
+    string _agentID = 3;
+    string _msg     = 4;
 }
 
 message AuthRequest
@@ -45,7 +47,9 @@ message AuthRequest
 
 message AuthRespond
 {
-    string _agentID = 1;
+    int32  _code    = 1;
+    string _errmsg  = 2;
+    string _agentID = 3;
 }
 
 message RegisterAgentRequest
@@ -55,11 +59,14 @@ message RegisterAgentRequest
     string _netDevName = 3;
     string _machineID  = 4;
     string _hostName   = 5;
+    string _agentID    = 6;
 }
 
 message RegisterAgentRespond
 {
-    string _agentID = 1;
+    int32    _code  = 1;
+    string _errmsg  = 2;
+    string _agentID = 3;
 }
 
 message UnregisterAgentRequest
@@ -69,7 +76,9 @@ message UnregisterAgentRequest
 
 message UnregisterAgentRespond
 {
-    string _agentID = 1;
+    int32  _code    = 1;
+    string _errmsg  = 2;
+    string _agentID = 3;
 }
 
 message ReportAgentState

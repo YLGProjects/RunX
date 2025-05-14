@@ -25,16 +25,20 @@
 #include "server/controller/configuration.h"
 #include "server/controller/route/agent_session.h"
 
-#include "internal/agent_id.h"
 #include "internal/error.h"
 
 #include "core/net/tcp_connection.h"
 
-std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn)
+void Route::SaveConnection(ylg::net::TCPConnectionPtr conn)
+{
+    _conns.Push(conn->ID(), conn);
+}
+
+std::error_code Route::CreateLocalSession(ylg::net::TCPConnectionPtr conn, const std::string& agentID)
 {
     auto session = std::make_shared<AgentSession>();
 
-    session->_agentID    = ylg::internal::GenerateNewAgentID();
+    session->_agentID    = agentID;
     session->_connection = conn;
 
     auto value    = session->ToJSON();

@@ -30,9 +30,13 @@ namespace internal {
 inline constexpr UnregisterAgentRespond::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
+        _errmsg_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
         _agentid_(
             &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()) {}
+            ::_pbi::ConstantInitialized()),
+        _code_{0} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR UnregisterAgentRespond::UnregisterAgentRespond(::_pbi::ConstantInitialized)
@@ -112,9 +116,13 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 inline constexpr RegisterAgentRespond::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
+        _errmsg_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
         _agentid_(
             &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()) {}
+            ::_pbi::ConstantInitialized()),
+        _code_{0} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR RegisterAgentRespond::RegisterAgentRespond(::_pbi::ConstantInitialized)
@@ -153,6 +161,9 @@ inline constexpr RegisterAgentRequest::Impl_::Impl_(
             ::_pbi::ConstantInitialized()),
         _hostname_(
             &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        _agentid_(
+            &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()) {}
 
 template <typename>
@@ -178,12 +189,16 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 inline constexpr Pong::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
+        _errmsg_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
         _agentid_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         _msg_(
             &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()) {}
+            ::_pbi::ConstantInitialized()),
+        _code_{0} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR Pong::Pong(::_pbi::ConstantInitialized)
@@ -235,9 +250,13 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 inline constexpr AuthRespond::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
+        _errmsg_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
         _agentid_(
             &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()) {}
+            ::_pbi::ConstantInitialized()),
+        _code_{0} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR AuthRespond::AuthRespond(::_pbi::ConstantInitialized)
@@ -312,10 +331,14 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::Pong, _impl_._code_),
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::Pong, _impl_._errmsg_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::Pong, _impl_._agentid_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::Pong, _impl_._msg_),
+        3,
         0,
         1,
+        2,
         PROTOBUF_FIELD_OFFSET(::ylg::internal::AuthRequest, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::AuthRequest, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -334,8 +357,12 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::AuthRespond, _impl_._code_),
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::AuthRespond, _impl_._errmsg_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::AuthRespond, _impl_._agentid_),
+        2,
         0,
+        1,
         PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRequest, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRequest, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -349,11 +376,13 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRequest, _impl_._netdevname_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRequest, _impl_._machineid_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRequest, _impl_._hostname_),
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRequest, _impl_._agentid_),
         0,
         1,
         2,
         3,
         4,
+        5,
         PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRespond, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRespond, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -362,8 +391,12 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRespond, _impl_._code_),
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRespond, _impl_._errmsg_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::RegisterAgentRespond, _impl_._agentid_),
+        2,
         0,
+        1,
         PROTOBUF_FIELD_OFFSET(::ylg::internal::UnregisterAgentRequest, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::UnregisterAgentRequest, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -382,8 +415,12 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::UnregisterAgentRespond, _impl_._code_),
+        PROTOBUF_FIELD_OFFSET(::ylg::internal::UnregisterAgentRespond, _impl_._errmsg_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::UnregisterAgentRespond, _impl_._agentid_),
+        2,
         0,
+        1,
         PROTOBUF_FIELD_OFFSET(::ylg::internal::ReportAgentState, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::ylg::internal::ReportAgentState, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -401,14 +438,14 @@ const ::uint32_t
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, 9, -1, sizeof(::ylg::internal::Ping)},
-        {10, 20, -1, sizeof(::ylg::internal::Pong)},
-        {22, 31, -1, sizeof(::ylg::internal::AuthRequest)},
-        {32, 41, -1, sizeof(::ylg::internal::AuthRespond)},
-        {42, 55, -1, sizeof(::ylg::internal::RegisterAgentRequest)},
-        {60, 69, -1, sizeof(::ylg::internal::RegisterAgentRespond)},
-        {70, 79, -1, sizeof(::ylg::internal::UnregisterAgentRequest)},
-        {80, 89, -1, sizeof(::ylg::internal::UnregisterAgentRespond)},
-        {90, 100, -1, sizeof(::ylg::internal::ReportAgentState)},
+        {10, 22, -1, sizeof(::ylg::internal::Pong)},
+        {26, 35, -1, sizeof(::ylg::internal::AuthRequest)},
+        {36, 47, -1, sizeof(::ylg::internal::AuthRespond)},
+        {50, 64, -1, sizeof(::ylg::internal::RegisterAgentRequest)},
+        {70, 81, -1, sizeof(::ylg::internal::RegisterAgentRespond)},
+        {84, 93, -1, sizeof(::ylg::internal::UnregisterAgentRequest)},
+        {94, 105, -1, sizeof(::ylg::internal::UnregisterAgentRespond)},
+        {108, 118, -1, sizeof(::ylg::internal::ReportAgentState)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::ylg::internal::_Ping_default_instance_._instance,
@@ -424,18 +461,22 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
 const char descriptor_table_protodef_controller_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\020controller.proto\022\014ylg.internal\032\nbase.p"
-    "roto\"\024\n\004Ping\022\014\n\004_msg\030\001 \001(\t\"&\n\004Pong\022\020\n\010_a"
-    "gentID\030\001 \001(\t\022\014\n\004_msg\030\002 \001(\t\"\037\n\013AuthReques"
-    "t\022\020\n\010_agentID\030\001 \001(\t\"\037\n\013AuthRespond\022\020\n\010_a"
-    "gentID\030\001 \001(\t\"m\n\024RegisterAgentRequest\022\013\n\003"
-    "_ip\030\001 \001(\t\022\014\n\004_mac\030\002 \001(\t\022\023\n\013_netDevName\030\003"
-    " \001(\t\022\022\n\n_machineID\030\004 \001(\t\022\021\n\t_hostName\030\005 "
-    "\001(\t\"(\n\024RegisterAgentRespond\022\020\n\010_agentID\030"
-    "\001 \001(\t\"*\n\026UnregisterAgentRequest\022\020\n\010_agen"
-    "tID\030\001 \001(\t\"*\n\026UnregisterAgentRespond\022\020\n\010_"
-    "agentID\030\001 \001(\t\"N\n\020ReportAgentState\022\020\n\010_ag"
-    "entID\030\001 \001(\t\022(\n\006_state\030\002 \001(\0162\030.ylg.intern"
-    "al.AgentStateb\006proto3"
+    "roto\"\024\n\004Ping\022\014\n\004_msg\030\001 \001(\t\"F\n\004Pong\022\r\n\005_c"
+    "ode\030\001 \001(\005\022\017\n\007_errmsg\030\002 \001(\t\022\020\n\010_agentID\030\003"
+    " \001(\t\022\014\n\004_msg\030\004 \001(\t\"\037\n\013AuthRequest\022\020\n\010_ag"
+    "entID\030\001 \001(\t\"\?\n\013AuthRespond\022\r\n\005_code\030\001 \001("
+    "\005\022\017\n\007_errmsg\030\002 \001(\t\022\020\n\010_agentID\030\003 \001(\t\"\177\n\024"
+    "RegisterAgentRequest\022\013\n\003_ip\030\001 \001(\t\022\014\n\004_ma"
+    "c\030\002 \001(\t\022\023\n\013_netDevName\030\003 \001(\t\022\022\n\n_machine"
+    "ID\030\004 \001(\t\022\021\n\t_hostName\030\005 \001(\t\022\020\n\010_agentID\030"
+    "\006 \001(\t\"H\n\024RegisterAgentRespond\022\r\n\005_code\030\001"
+    " \001(\005\022\017\n\007_errmsg\030\002 \001(\t\022\020\n\010_agentID\030\003 \001(\t\""
+    "*\n\026UnregisterAgentRequest\022\020\n\010_agentID\030\001 "
+    "\001(\t\"J\n\026UnregisterAgentRespond\022\r\n\005_code\030\001"
+    " \001(\005\022\017\n\007_errmsg\030\002 \001(\t\022\020\n\010_agentID\030\003 \001(\t\""
+    "N\n\020ReportAgentState\022\020\n\010_agentID\030\001 \001(\t\022(\n"
+    "\006_state\030\002 \001(\0162\030.ylg.internal.AgentStateb"
+    "\006proto3"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_controller_2eproto_deps[1] = {
@@ -445,7 +486,7 @@ static ::absl::once_flag descriptor_table_controller_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_controller_2eproto = {
     false,
     false,
-    501,
+    647,
     descriptor_table_protodef_controller_2eproto,
     "controller.proto",
     &descriptor_table_controller_2eproto_once,
@@ -746,6 +787,7 @@ PROTOBUF_NDEBUG_INLINE Pong::Impl_::Impl_(
     const ::ylg::internal::Pong& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
+        _errmsg_(arena, from._errmsg_),
         _agentid_(arena, from._agentid_),
         _msg_(arena, from._msg_) {}
 
@@ -762,6 +804,7 @@ Pong::Pong(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_._code_ = from._impl_._code_;
 
   // @@protoc_insertion_point(copy_constructor:ylg.internal.Pong)
 }
@@ -769,11 +812,13 @@ PROTOBUF_NDEBUG_INLINE Pong::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
+        _errmsg_(arena),
         _agentid_(arena),
         _msg_(arena) {}
 
 inline void Pong::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_._code_ = {};
 }
 Pong::~Pong() {
   // @@protoc_insertion_point(destructor:ylg.internal.Pong)
@@ -783,6 +828,7 @@ inline void Pong::SharedDtor(MessageLite& self) {
   Pong& this_ = static_cast<Pong&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_._errmsg_.Destroy();
   this_._impl_._agentid_.Destroy();
   this_._impl_._msg_.Destroy();
   this_._impl_.~Impl_();
@@ -830,16 +876,16 @@ const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL Pong::GetClassDa
   return Pong_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 38, 2>
+const ::_pbi::TcParseTable<2, 4, 0, 45, 2>
 Pong::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Pong, _impl_._has_bits_),
     0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     Pong_class_data_.base(),
@@ -849,26 +895,39 @@ Pong::_table_ = {
     ::_pbi::TcParser::GetTable<::ylg::internal::Pong>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string _msg = 2;
+    // string _msg = 4;
     {::_pbi::TcParser::FastUS1,
-     {18, 1, 0, PROTOBUF_FIELD_OFFSET(Pong, _impl_._msg_)}},
-    // string _agentID = 1;
+     {34, 2, 0, PROTOBUF_FIELD_OFFSET(Pong, _impl_._msg_)}},
+    // int32 _code = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Pong, _impl_._code_), 3>(),
+     {8, 3, 0, PROTOBUF_FIELD_OFFSET(Pong, _impl_._code_)}},
+    // string _errmsg = 2;
     {::_pbi::TcParser::FastUS1,
-     {10, 0, 0, PROTOBUF_FIELD_OFFSET(Pong, _impl_._agentid_)}},
+     {18, 0, 0, PROTOBUF_FIELD_OFFSET(Pong, _impl_._errmsg_)}},
+    // string _agentID = 3;
+    {::_pbi::TcParser::FastUS1,
+     {26, 1, 0, PROTOBUF_FIELD_OFFSET(Pong, _impl_._agentid_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string _agentID = 1;
-    {PROTOBUF_FIELD_OFFSET(Pong, _impl_._agentid_), _Internal::kHasBitsOffset + 0, 0,
+    // int32 _code = 1;
+    {PROTOBUF_FIELD_OFFSET(Pong, _impl_._code_), _Internal::kHasBitsOffset + 3, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kInt32)},
+    // string _errmsg = 2;
+    {PROTOBUF_FIELD_OFFSET(Pong, _impl_._errmsg_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string _msg = 2;
-    {PROTOBUF_FIELD_OFFSET(Pong, _impl_._msg_), _Internal::kHasBitsOffset + 1, 0,
+    // string _agentID = 3;
+    {PROTOBUF_FIELD_OFFSET(Pong, _impl_._agentid_), _Internal::kHasBitsOffset + 1, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string _msg = 4;
+    {PROTOBUF_FIELD_OFFSET(Pong, _impl_._msg_), _Internal::kHasBitsOffset + 2, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\21\10\4\0\0\0\0\0"
+    "\21\0\7\10\4\0\0\0"
     "ylg.internal.Pong"
+    "_errmsg"
     "_agentID"
     "_msg"
   }},
@@ -881,14 +940,18 @@ PROTOBUF_NOINLINE void Pong::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000003u) != 0) {
+  if ((cached_has_bits & 0x00000007u) != 0) {
     if ((cached_has_bits & 0x00000001u) != 0) {
-      _impl_._agentid_.ClearNonDefaultToEmpty();
+      _impl_._errmsg_.ClearNonDefaultToEmpty();
     }
     if ((cached_has_bits & 0x00000002u) != 0) {
+      _impl_._agentid_.ClearNonDefaultToEmpty();
+    }
+    if ((cached_has_bits & 0x00000004u) != 0) {
       _impl_._msg_.ClearNonDefaultToEmpty();
     }
   }
+  _impl_._code_ = 0;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -908,23 +971,42 @@ PROTOBUF_NOINLINE void Pong::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // string _agentID = 1;
+  // int32 _code = 1;
+  if ((this_._impl_._has_bits_[0] & 0x00000008u) != 0) {
+    if (this_._internal__code() != 0) {
+      target =
+          ::google::protobuf::internal::WireFormatLite::WriteInt32ToArrayWithField<1>(
+              stream, this_._internal__code(), target);
+    }
+  }
+
+  // string _errmsg = 2;
   if ((this_._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    if (!this_._internal__errmsg().empty()) {
+      const std::string& _s = this_._internal__errmsg();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.Pong._errmsg");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  // string _agentID = 3;
+  if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
     if (!this_._internal__agentid().empty()) {
       const std::string& _s = this_._internal__agentid();
       ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
           _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.Pong._agentID");
-      target = stream->WriteStringMaybeAliased(1, _s, target);
+      target = stream->WriteStringMaybeAliased(3, _s, target);
     }
   }
 
-  // string _msg = 2;
-  if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
+  // string _msg = 4;
+  if ((this_._impl_._has_bits_[0] & 0x00000004u) != 0) {
     if (!this_._internal__msg().empty()) {
       const std::string& _s = this_._internal__msg();
       ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
           _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.Pong._msg");
-      target = stream->WriteStringMaybeAliased(2, _s, target);
+      target = stream->WriteStringMaybeAliased(4, _s, target);
     }
   }
 
@@ -953,19 +1035,33 @@ PROTOBUF_NOINLINE void Pong::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000003u) != 0) {
-    // string _agentID = 1;
+  if ((cached_has_bits & 0x0000000fu) != 0) {
+    // string _errmsg = 2;
     if ((cached_has_bits & 0x00000001u) != 0) {
+      if (!this_._internal__errmsg().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal__errmsg());
+      }
+    }
+    // string _agentID = 3;
+    if ((cached_has_bits & 0x00000002u) != 0) {
       if (!this_._internal__agentid().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal__agentid());
       }
     }
-    // string _msg = 2;
-    if ((cached_has_bits & 0x00000002u) != 0) {
+    // string _msg = 4;
+    if ((cached_has_bits & 0x00000004u) != 0) {
       if (!this_._internal__msg().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal__msg());
+      }
+    }
+    // int32 _code = 1;
+    if ((cached_has_bits & 0x00000008u) != 0) {
+      if (this_._internal__code() != 0) {
+        total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+            this_._internal__code());
       }
     }
   }
@@ -982,8 +1078,17 @@ void Pong::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::pr
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000003u) != 0) {
+  if ((cached_has_bits & 0x0000000fu) != 0) {
     if ((cached_has_bits & 0x00000001u) != 0) {
+      if (!from._internal__errmsg().empty()) {
+        _this->_internal_set__errmsg(from._internal__errmsg());
+      } else {
+        if (_this->_impl_._errmsg_.IsDefault()) {
+          _this->_internal_set__errmsg("");
+        }
+      }
+    }
+    if ((cached_has_bits & 0x00000002u) != 0) {
       if (!from._internal__agentid().empty()) {
         _this->_internal_set__agentid(from._internal__agentid());
       } else {
@@ -992,13 +1097,18 @@ void Pong::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::pr
         }
       }
     }
-    if ((cached_has_bits & 0x00000002u) != 0) {
+    if ((cached_has_bits & 0x00000004u) != 0) {
       if (!from._internal__msg().empty()) {
         _this->_internal_set__msg(from._internal__msg());
       } else {
         if (_this->_impl_._msg_.IsDefault()) {
           _this->_internal_set__msg("");
         }
+      }
+    }
+    if ((cached_has_bits & 0x00000008u) != 0) {
+      if (from._internal__code() != 0) {
+        _this->_impl_._code_ = from._impl_._code_;
       }
     }
   }
@@ -1020,8 +1130,10 @@ void Pong::InternalSwap(Pong* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._errmsg_, &other->_impl_._errmsg_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._agentid_, &other->_impl_._agentid_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._msg_, &other->_impl_._msg_, arena);
+  swap(_impl_._code_, other->_impl_._code_);
 }
 
 ::google::protobuf::Metadata Pong::GetMetadata() const {
@@ -1313,6 +1425,7 @@ PROTOBUF_NDEBUG_INLINE AuthRespond::Impl_::Impl_(
     const ::ylg::internal::AuthRespond& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
+        _errmsg_(arena, from._errmsg_),
         _agentid_(arena, from._agentid_) {}
 
 AuthRespond::AuthRespond(
@@ -1328,6 +1441,7 @@ AuthRespond::AuthRespond(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_._code_ = from._impl_._code_;
 
   // @@protoc_insertion_point(copy_constructor:ylg.internal.AuthRespond)
 }
@@ -1335,10 +1449,12 @@ PROTOBUF_NDEBUG_INLINE AuthRespond::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
+        _errmsg_(arena),
         _agentid_(arena) {}
 
 inline void AuthRespond::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_._code_ = {};
 }
 AuthRespond::~AuthRespond() {
   // @@protoc_insertion_point(destructor:ylg.internal.AuthRespond)
@@ -1348,6 +1464,7 @@ inline void AuthRespond::SharedDtor(MessageLite& self) {
   AuthRespond& this_ = static_cast<AuthRespond&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_._errmsg_.Destroy();
   this_._impl_._agentid_.Destroy();
   this_._impl_.~Impl_();
 }
@@ -1394,16 +1511,16 @@ const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL AuthRespond::Get
   return AuthRespond_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 41, 2>
+const ::_pbi::TcParseTable<2, 3, 0, 48, 2>
 AuthRespond::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._has_bits_),
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    3, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    3,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     AuthRespond_class_data_.base(),
@@ -1413,20 +1530,34 @@ AuthRespond::_table_ = {
     ::_pbi::TcParser::GetTable<::ylg::internal::AuthRespond>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string _agentID = 1;
+    {::_pbi::TcParser::MiniParse, {}},
+    // int32 _code = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(AuthRespond, _impl_._code_), 2>(),
+     {8, 2, 0, PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._code_)}},
+    // string _errmsg = 2;
     {::_pbi::TcParser::FastUS1,
-     {10, 0, 0, PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._agentid_)}},
+     {18, 0, 0, PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._errmsg_)}},
+    // string _agentID = 3;
+    {::_pbi::TcParser::FastUS1,
+     {26, 1, 0, PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._agentid_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string _agentID = 1;
-    {PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._agentid_), _Internal::kHasBitsOffset + 0, 0,
+    // int32 _code = 1;
+    {PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._code_), _Internal::kHasBitsOffset + 2, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kInt32)},
+    // string _errmsg = 2;
+    {PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._errmsg_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string _agentID = 3;
+    {PROTOBUF_FIELD_OFFSET(AuthRespond, _impl_._agentid_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\30\10\0\0\0\0\0\0"
+    "\30\0\7\10\0\0\0\0"
     "ylg.internal.AuthRespond"
+    "_errmsg"
     "_agentID"
   }},
 };
@@ -1438,9 +1569,15 @@ PROTOBUF_NOINLINE void AuthRespond::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000001u) != 0) {
-    _impl_._agentid_.ClearNonDefaultToEmpty();
+  if ((cached_has_bits & 0x00000003u) != 0) {
+    if ((cached_has_bits & 0x00000001u) != 0) {
+      _impl_._errmsg_.ClearNonDefaultToEmpty();
+    }
+    if ((cached_has_bits & 0x00000002u) != 0) {
+      _impl_._agentid_.ClearNonDefaultToEmpty();
+    }
   }
+  _impl_._code_ = 0;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -1460,13 +1597,32 @@ PROTOBUF_NOINLINE void AuthRespond::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // string _agentID = 1;
+  // int32 _code = 1;
+  if ((this_._impl_._has_bits_[0] & 0x00000004u) != 0) {
+    if (this_._internal__code() != 0) {
+      target =
+          ::google::protobuf::internal::WireFormatLite::WriteInt32ToArrayWithField<1>(
+              stream, this_._internal__code(), target);
+    }
+  }
+
+  // string _errmsg = 2;
   if ((this_._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    if (!this_._internal__errmsg().empty()) {
+      const std::string& _s = this_._internal__errmsg();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.AuthRespond._errmsg");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  // string _agentID = 3;
+  if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
     if (!this_._internal__agentid().empty()) {
       const std::string& _s = this_._internal__agentid();
       ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
           _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.AuthRespond._agentID");
-      target = stream->WriteStringMaybeAliased(1, _s, target);
+      target = stream->WriteStringMaybeAliased(3, _s, target);
     }
   }
 
@@ -1493,13 +1649,28 @@ PROTOBUF_NOINLINE void AuthRespond::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void)cached_has_bits;
 
-   {
-    // string _agentID = 1;
-    cached_has_bits = this_._impl_._has_bits_[0];
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if ((cached_has_bits & 0x00000007u) != 0) {
+    // string _errmsg = 2;
     if ((cached_has_bits & 0x00000001u) != 0) {
+      if (!this_._internal__errmsg().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal__errmsg());
+      }
+    }
+    // string _agentID = 3;
+    if ((cached_has_bits & 0x00000002u) != 0) {
       if (!this_._internal__agentid().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal__agentid());
+      }
+    }
+    // int32 _code = 1;
+    if ((cached_has_bits & 0x00000004u) != 0) {
+      if (this_._internal__code() != 0) {
+        total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+            this_._internal__code());
       }
     }
   }
@@ -1516,12 +1687,28 @@ void AuthRespond::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000001u) != 0) {
-    if (!from._internal__agentid().empty()) {
-      _this->_internal_set__agentid(from._internal__agentid());
-    } else {
-      if (_this->_impl_._agentid_.IsDefault()) {
-        _this->_internal_set__agentid("");
+  if ((cached_has_bits & 0x00000007u) != 0) {
+    if ((cached_has_bits & 0x00000001u) != 0) {
+      if (!from._internal__errmsg().empty()) {
+        _this->_internal_set__errmsg(from._internal__errmsg());
+      } else {
+        if (_this->_impl_._errmsg_.IsDefault()) {
+          _this->_internal_set__errmsg("");
+        }
+      }
+    }
+    if ((cached_has_bits & 0x00000002u) != 0) {
+      if (!from._internal__agentid().empty()) {
+        _this->_internal_set__agentid(from._internal__agentid());
+      } else {
+        if (_this->_impl_._agentid_.IsDefault()) {
+          _this->_internal_set__agentid("");
+        }
+      }
+    }
+    if ((cached_has_bits & 0x00000004u) != 0) {
+      if (from._internal__code() != 0) {
+        _this->_impl_._code_ = from._impl_._code_;
       }
     }
   }
@@ -1543,7 +1730,9 @@ void AuthRespond::InternalSwap(AuthRespond* PROTOBUF_RESTRICT PROTOBUF_NONNULL o
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._errmsg_, &other->_impl_._errmsg_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._agentid_, &other->_impl_._agentid_, arena);
+  swap(_impl_._code_, other->_impl_._code_);
 }
 
 ::google::protobuf::Metadata AuthRespond::GetMetadata() const {
@@ -1578,7 +1767,8 @@ PROTOBUF_NDEBUG_INLINE RegisterAgentRequest::Impl_::Impl_(
         _mac_(arena, from._mac_),
         _netdevname_(arena, from._netdevname_),
         _machineid_(arena, from._machineid_),
-        _hostname_(arena, from._hostname_) {}
+        _hostname_(arena, from._hostname_),
+        _agentid_(arena, from._agentid_) {}
 
 RegisterAgentRequest::RegisterAgentRequest(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -1604,7 +1794,8 @@ PROTOBUF_NDEBUG_INLINE RegisterAgentRequest::Impl_::Impl_(
         _mac_(arena),
         _netdevname_(arena),
         _machineid_(arena),
-        _hostname_(arena) {}
+        _hostname_(arena),
+        _agentid_(arena) {}
 
 inline void RegisterAgentRequest::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
@@ -1622,6 +1813,7 @@ inline void RegisterAgentRequest::SharedDtor(MessageLite& self) {
   this_._impl_._netdevname_.Destroy();
   this_._impl_._machineid_.Destroy();
   this_._impl_._hostname_.Destroy();
+  this_._impl_._agentid_.Destroy();
   this_._impl_.~Impl_();
 }
 
@@ -1667,16 +1859,16 @@ const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL RegisterAgentReq
   return RegisterAgentRequest_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 5, 0, 79, 2>
+const ::_pbi::TcParseTable<3, 6, 0, 87, 2>
 RegisterAgentRequest::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(RegisterAgentRequest, _impl_._has_bits_),
     0, // no _extensions_
-    5, 56,  // max_field_number, fast_idx_mask
+    6, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967264,  // skipmap
+    4294967232,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    5,  // num_field_entries
+    6,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     RegisterAgentRequest_class_data_.base(),
@@ -1702,7 +1894,9 @@ RegisterAgentRequest::_table_ = {
     // string _hostName = 5;
     {::_pbi::TcParser::FastUS1,
      {42, 4, 0, PROTOBUF_FIELD_OFFSET(RegisterAgentRequest, _impl_._hostname_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // string _agentID = 6;
+    {::_pbi::TcParser::FastUS1,
+     {50, 5, 0, PROTOBUF_FIELD_OFFSET(RegisterAgentRequest, _impl_._agentid_)}},
     {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
@@ -1722,16 +1916,20 @@ RegisterAgentRequest::_table_ = {
     // string _hostName = 5;
     {PROTOBUF_FIELD_OFFSET(RegisterAgentRequest, _impl_._hostname_), _Internal::kHasBitsOffset + 4, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string _agentID = 6;
+    {PROTOBUF_FIELD_OFFSET(RegisterAgentRequest, _impl_._agentid_), _Internal::kHasBitsOffset + 5, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\41\3\4\13\12\11\0\0"
+    "\41\3\4\13\12\11\10\0"
     "ylg.internal.RegisterAgentRequest"
     "_ip"
     "_mac"
     "_netDevName"
     "_machineID"
     "_hostName"
+    "_agentID"
   }},
 };
 PROTOBUF_NOINLINE void RegisterAgentRequest::Clear() {
@@ -1742,7 +1940,7 @@ PROTOBUF_NOINLINE void RegisterAgentRequest::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if ((cached_has_bits & 0x0000001fu) != 0) {
+  if ((cached_has_bits & 0x0000003fu) != 0) {
     if ((cached_has_bits & 0x00000001u) != 0) {
       _impl_._ip_.ClearNonDefaultToEmpty();
     }
@@ -1757,6 +1955,9 @@ PROTOBUF_NOINLINE void RegisterAgentRequest::Clear() {
     }
     if ((cached_has_bits & 0x00000010u) != 0) {
       _impl_._hostname_.ClearNonDefaultToEmpty();
+    }
+    if ((cached_has_bits & 0x00000020u) != 0) {
+      _impl_._agentid_.ClearNonDefaultToEmpty();
     }
   }
   _impl_._has_bits_.Clear();
@@ -1828,6 +2029,16 @@ PROTOBUF_NOINLINE void RegisterAgentRequest::Clear() {
     }
   }
 
+  // string _agentID = 6;
+  if ((this_._impl_._has_bits_[0] & 0x00000020u) != 0) {
+    if (!this_._internal__agentid().empty()) {
+      const std::string& _s = this_._internal__agentid();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.RegisterAgentRequest._agentID");
+      target = stream->WriteStringMaybeAliased(6, _s, target);
+    }
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -1853,7 +2064,7 @@ PROTOBUF_NOINLINE void RegisterAgentRequest::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x0000001fu) != 0) {
+  if ((cached_has_bits & 0x0000003fu) != 0) {
     // string _ip = 1;
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!this_._internal__ip().empty()) {
@@ -1889,6 +2100,13 @@ PROTOBUF_NOINLINE void RegisterAgentRequest::Clear() {
                                         this_._internal__hostname());
       }
     }
+    // string _agentID = 6;
+    if ((cached_has_bits & 0x00000020u) != 0) {
+      if (!this_._internal__agentid().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal__agentid());
+      }
+    }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
                                              &this_._impl_._cached_size_);
@@ -1903,7 +2121,7 @@ void RegisterAgentRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, co
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x0000001fu) != 0) {
+  if ((cached_has_bits & 0x0000003fu) != 0) {
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!from._internal__ip().empty()) {
         _this->_internal_set__ip(from._internal__ip());
@@ -1949,6 +2167,15 @@ void RegisterAgentRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, co
         }
       }
     }
+    if ((cached_has_bits & 0x00000020u) != 0) {
+      if (!from._internal__agentid().empty()) {
+        _this->_internal_set__agentid(from._internal__agentid());
+      } else {
+        if (_this->_impl_._agentid_.IsDefault()) {
+          _this->_internal_set__agentid("");
+        }
+      }
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
@@ -1973,6 +2200,7 @@ void RegisterAgentRequest::InternalSwap(RegisterAgentRequest* PROTOBUF_RESTRICT 
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._netdevname_, &other->_impl_._netdevname_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._machineid_, &other->_impl_._machineid_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._hostname_, &other->_impl_._hostname_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._agentid_, &other->_impl_._agentid_, arena);
 }
 
 ::google::protobuf::Metadata RegisterAgentRequest::GetMetadata() const {
@@ -2003,6 +2231,7 @@ PROTOBUF_NDEBUG_INLINE RegisterAgentRespond::Impl_::Impl_(
     const ::ylg::internal::RegisterAgentRespond& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
+        _errmsg_(arena, from._errmsg_),
         _agentid_(arena, from._agentid_) {}
 
 RegisterAgentRespond::RegisterAgentRespond(
@@ -2018,6 +2247,7 @@ RegisterAgentRespond::RegisterAgentRespond(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_._code_ = from._impl_._code_;
 
   // @@protoc_insertion_point(copy_constructor:ylg.internal.RegisterAgentRespond)
 }
@@ -2025,10 +2255,12 @@ PROTOBUF_NDEBUG_INLINE RegisterAgentRespond::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
+        _errmsg_(arena),
         _agentid_(arena) {}
 
 inline void RegisterAgentRespond::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_._code_ = {};
 }
 RegisterAgentRespond::~RegisterAgentRespond() {
   // @@protoc_insertion_point(destructor:ylg.internal.RegisterAgentRespond)
@@ -2038,6 +2270,7 @@ inline void RegisterAgentRespond::SharedDtor(MessageLite& self) {
   RegisterAgentRespond& this_ = static_cast<RegisterAgentRespond&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_._errmsg_.Destroy();
   this_._impl_._agentid_.Destroy();
   this_._impl_.~Impl_();
 }
@@ -2084,16 +2317,16 @@ const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL RegisterAgentRes
   return RegisterAgentRespond_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 50, 2>
+const ::_pbi::TcParseTable<2, 3, 0, 57, 2>
 RegisterAgentRespond::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._has_bits_),
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    3, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    3,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     RegisterAgentRespond_class_data_.base(),
@@ -2103,20 +2336,34 @@ RegisterAgentRespond::_table_ = {
     ::_pbi::TcParser::GetTable<::ylg::internal::RegisterAgentRespond>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string _agentID = 1;
+    {::_pbi::TcParser::MiniParse, {}},
+    // int32 _code = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(RegisterAgentRespond, _impl_._code_), 2>(),
+     {8, 2, 0, PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._code_)}},
+    // string _errmsg = 2;
     {::_pbi::TcParser::FastUS1,
-     {10, 0, 0, PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._agentid_)}},
+     {18, 0, 0, PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._errmsg_)}},
+    // string _agentID = 3;
+    {::_pbi::TcParser::FastUS1,
+     {26, 1, 0, PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._agentid_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string _agentID = 1;
-    {PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._agentid_), _Internal::kHasBitsOffset + 0, 0,
+    // int32 _code = 1;
+    {PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._code_), _Internal::kHasBitsOffset + 2, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kInt32)},
+    // string _errmsg = 2;
+    {PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._errmsg_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string _agentID = 3;
+    {PROTOBUF_FIELD_OFFSET(RegisterAgentRespond, _impl_._agentid_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\41\10\0\0\0\0\0\0"
+    "\41\0\7\10\0\0\0\0"
     "ylg.internal.RegisterAgentRespond"
+    "_errmsg"
     "_agentID"
   }},
 };
@@ -2128,9 +2375,15 @@ PROTOBUF_NOINLINE void RegisterAgentRespond::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000001u) != 0) {
-    _impl_._agentid_.ClearNonDefaultToEmpty();
+  if ((cached_has_bits & 0x00000003u) != 0) {
+    if ((cached_has_bits & 0x00000001u) != 0) {
+      _impl_._errmsg_.ClearNonDefaultToEmpty();
+    }
+    if ((cached_has_bits & 0x00000002u) != 0) {
+      _impl_._agentid_.ClearNonDefaultToEmpty();
+    }
   }
+  _impl_._code_ = 0;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -2150,13 +2403,32 @@ PROTOBUF_NOINLINE void RegisterAgentRespond::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // string _agentID = 1;
+  // int32 _code = 1;
+  if ((this_._impl_._has_bits_[0] & 0x00000004u) != 0) {
+    if (this_._internal__code() != 0) {
+      target =
+          ::google::protobuf::internal::WireFormatLite::WriteInt32ToArrayWithField<1>(
+              stream, this_._internal__code(), target);
+    }
+  }
+
+  // string _errmsg = 2;
   if ((this_._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    if (!this_._internal__errmsg().empty()) {
+      const std::string& _s = this_._internal__errmsg();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.RegisterAgentRespond._errmsg");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  // string _agentID = 3;
+  if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
     if (!this_._internal__agentid().empty()) {
       const std::string& _s = this_._internal__agentid();
       ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
           _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.RegisterAgentRespond._agentID");
-      target = stream->WriteStringMaybeAliased(1, _s, target);
+      target = stream->WriteStringMaybeAliased(3, _s, target);
     }
   }
 
@@ -2183,13 +2455,28 @@ PROTOBUF_NOINLINE void RegisterAgentRespond::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void)cached_has_bits;
 
-   {
-    // string _agentID = 1;
-    cached_has_bits = this_._impl_._has_bits_[0];
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if ((cached_has_bits & 0x00000007u) != 0) {
+    // string _errmsg = 2;
     if ((cached_has_bits & 0x00000001u) != 0) {
+      if (!this_._internal__errmsg().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal__errmsg());
+      }
+    }
+    // string _agentID = 3;
+    if ((cached_has_bits & 0x00000002u) != 0) {
       if (!this_._internal__agentid().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal__agentid());
+      }
+    }
+    // int32 _code = 1;
+    if ((cached_has_bits & 0x00000004u) != 0) {
+      if (this_._internal__code() != 0) {
+        total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+            this_._internal__code());
       }
     }
   }
@@ -2206,12 +2493,28 @@ void RegisterAgentRespond::MergeImpl(::google::protobuf::MessageLite& to_msg, co
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000001u) != 0) {
-    if (!from._internal__agentid().empty()) {
-      _this->_internal_set__agentid(from._internal__agentid());
-    } else {
-      if (_this->_impl_._agentid_.IsDefault()) {
-        _this->_internal_set__agentid("");
+  if ((cached_has_bits & 0x00000007u) != 0) {
+    if ((cached_has_bits & 0x00000001u) != 0) {
+      if (!from._internal__errmsg().empty()) {
+        _this->_internal_set__errmsg(from._internal__errmsg());
+      } else {
+        if (_this->_impl_._errmsg_.IsDefault()) {
+          _this->_internal_set__errmsg("");
+        }
+      }
+    }
+    if ((cached_has_bits & 0x00000002u) != 0) {
+      if (!from._internal__agentid().empty()) {
+        _this->_internal_set__agentid(from._internal__agentid());
+      } else {
+        if (_this->_impl_._agentid_.IsDefault()) {
+          _this->_internal_set__agentid("");
+        }
+      }
+    }
+    if ((cached_has_bits & 0x00000004u) != 0) {
+      if (from._internal__code() != 0) {
+        _this->_impl_._code_ = from._impl_._code_;
       }
     }
   }
@@ -2233,7 +2536,9 @@ void RegisterAgentRespond::InternalSwap(RegisterAgentRespond* PROTOBUF_RESTRICT 
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._errmsg_, &other->_impl_._errmsg_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._agentid_, &other->_impl_._agentid_, arena);
+  swap(_impl_._code_, other->_impl_._code_);
 }
 
 ::google::protobuf::Metadata RegisterAgentRespond::GetMetadata() const {
@@ -2525,6 +2830,7 @@ PROTOBUF_NDEBUG_INLINE UnregisterAgentRespond::Impl_::Impl_(
     const ::ylg::internal::UnregisterAgentRespond& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
+        _errmsg_(arena, from._errmsg_),
         _agentid_(arena, from._agentid_) {}
 
 UnregisterAgentRespond::UnregisterAgentRespond(
@@ -2540,6 +2846,7 @@ UnregisterAgentRespond::UnregisterAgentRespond(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_._code_ = from._impl_._code_;
 
   // @@protoc_insertion_point(copy_constructor:ylg.internal.UnregisterAgentRespond)
 }
@@ -2547,10 +2854,12 @@ PROTOBUF_NDEBUG_INLINE UnregisterAgentRespond::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
+        _errmsg_(arena),
         _agentid_(arena) {}
 
 inline void UnregisterAgentRespond::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_._code_ = {};
 }
 UnregisterAgentRespond::~UnregisterAgentRespond() {
   // @@protoc_insertion_point(destructor:ylg.internal.UnregisterAgentRespond)
@@ -2560,6 +2869,7 @@ inline void UnregisterAgentRespond::SharedDtor(MessageLite& self) {
   UnregisterAgentRespond& this_ = static_cast<UnregisterAgentRespond&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_._errmsg_.Destroy();
   this_._impl_._agentid_.Destroy();
   this_._impl_.~Impl_();
 }
@@ -2606,16 +2916,16 @@ const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL UnregisterAgentR
   return UnregisterAgentRespond_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 52, 2>
+const ::_pbi::TcParseTable<2, 3, 0, 59, 2>
 UnregisterAgentRespond::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._has_bits_),
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    3, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    3,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     UnregisterAgentRespond_class_data_.base(),
@@ -2625,20 +2935,34 @@ UnregisterAgentRespond::_table_ = {
     ::_pbi::TcParser::GetTable<::ylg::internal::UnregisterAgentRespond>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string _agentID = 1;
+    {::_pbi::TcParser::MiniParse, {}},
+    // int32 _code = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(UnregisterAgentRespond, _impl_._code_), 2>(),
+     {8, 2, 0, PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._code_)}},
+    // string _errmsg = 2;
     {::_pbi::TcParser::FastUS1,
-     {10, 0, 0, PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._agentid_)}},
+     {18, 0, 0, PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._errmsg_)}},
+    // string _agentID = 3;
+    {::_pbi::TcParser::FastUS1,
+     {26, 1, 0, PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._agentid_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string _agentID = 1;
-    {PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._agentid_), _Internal::kHasBitsOffset + 0, 0,
+    // int32 _code = 1;
+    {PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._code_), _Internal::kHasBitsOffset + 2, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kInt32)},
+    // string _errmsg = 2;
+    {PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._errmsg_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string _agentID = 3;
+    {PROTOBUF_FIELD_OFFSET(UnregisterAgentRespond, _impl_._agentid_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\43\10\0\0\0\0\0\0"
+    "\43\0\7\10\0\0\0\0"
     "ylg.internal.UnregisterAgentRespond"
+    "_errmsg"
     "_agentID"
   }},
 };
@@ -2650,9 +2974,15 @@ PROTOBUF_NOINLINE void UnregisterAgentRespond::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000001u) != 0) {
-    _impl_._agentid_.ClearNonDefaultToEmpty();
+  if ((cached_has_bits & 0x00000003u) != 0) {
+    if ((cached_has_bits & 0x00000001u) != 0) {
+      _impl_._errmsg_.ClearNonDefaultToEmpty();
+    }
+    if ((cached_has_bits & 0x00000002u) != 0) {
+      _impl_._agentid_.ClearNonDefaultToEmpty();
+    }
   }
+  _impl_._code_ = 0;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -2672,13 +3002,32 @@ PROTOBUF_NOINLINE void UnregisterAgentRespond::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // string _agentID = 1;
+  // int32 _code = 1;
+  if ((this_._impl_._has_bits_[0] & 0x00000004u) != 0) {
+    if (this_._internal__code() != 0) {
+      target =
+          ::google::protobuf::internal::WireFormatLite::WriteInt32ToArrayWithField<1>(
+              stream, this_._internal__code(), target);
+    }
+  }
+
+  // string _errmsg = 2;
   if ((this_._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    if (!this_._internal__errmsg().empty()) {
+      const std::string& _s = this_._internal__errmsg();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.UnregisterAgentRespond._errmsg");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  // string _agentID = 3;
+  if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
     if (!this_._internal__agentid().empty()) {
       const std::string& _s = this_._internal__agentid();
       ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
           _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "ylg.internal.UnregisterAgentRespond._agentID");
-      target = stream->WriteStringMaybeAliased(1, _s, target);
+      target = stream->WriteStringMaybeAliased(3, _s, target);
     }
   }
 
@@ -2705,13 +3054,28 @@ PROTOBUF_NOINLINE void UnregisterAgentRespond::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void)cached_has_bits;
 
-   {
-    // string _agentID = 1;
-    cached_has_bits = this_._impl_._has_bits_[0];
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if ((cached_has_bits & 0x00000007u) != 0) {
+    // string _errmsg = 2;
     if ((cached_has_bits & 0x00000001u) != 0) {
+      if (!this_._internal__errmsg().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal__errmsg());
+      }
+    }
+    // string _agentID = 3;
+    if ((cached_has_bits & 0x00000002u) != 0) {
       if (!this_._internal__agentid().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal__agentid());
+      }
+    }
+    // int32 _code = 1;
+    if ((cached_has_bits & 0x00000004u) != 0) {
+      if (this_._internal__code() != 0) {
+        total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+            this_._internal__code());
       }
     }
   }
@@ -2728,12 +3092,28 @@ void UnregisterAgentRespond::MergeImpl(::google::protobuf::MessageLite& to_msg, 
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000001u) != 0) {
-    if (!from._internal__agentid().empty()) {
-      _this->_internal_set__agentid(from._internal__agentid());
-    } else {
-      if (_this->_impl_._agentid_.IsDefault()) {
-        _this->_internal_set__agentid("");
+  if ((cached_has_bits & 0x00000007u) != 0) {
+    if ((cached_has_bits & 0x00000001u) != 0) {
+      if (!from._internal__errmsg().empty()) {
+        _this->_internal_set__errmsg(from._internal__errmsg());
+      } else {
+        if (_this->_impl_._errmsg_.IsDefault()) {
+          _this->_internal_set__errmsg("");
+        }
+      }
+    }
+    if ((cached_has_bits & 0x00000002u) != 0) {
+      if (!from._internal__agentid().empty()) {
+        _this->_internal_set__agentid(from._internal__agentid());
+      } else {
+        if (_this->_impl_._agentid_.IsDefault()) {
+          _this->_internal_set__agentid("");
+        }
+      }
+    }
+    if ((cached_has_bits & 0x00000004u) != 0) {
+      if (from._internal__code() != 0) {
+        _this->_impl_._code_ = from._impl_._code_;
       }
     }
   }
@@ -2755,7 +3135,9 @@ void UnregisterAgentRespond::InternalSwap(UnregisterAgentRespond* PROTOBUF_RESTR
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._errmsg_, &other->_impl_._errmsg_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._agentid_, &other->_impl_._agentid_, arena);
+  swap(_impl_._code_, other->_impl_._code_);
 }
 
 ::google::protobuf::Metadata UnregisterAgentRespond::GetMetadata() const {

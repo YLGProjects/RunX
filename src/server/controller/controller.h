@@ -63,7 +63,8 @@ public:
     std::error_code PostToAgent(const std::vector<std::string>& agentIDs, ylg::internal::MessageType msgType, const char* data, uint32_t size);
 
 private:
-    void RegisterProcessor();
+    ylg::net::MessagePtr RegisterAgent(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg);
+    void                 RegisterProcessor();
 
 private:
     std::future<void>                                     _asyncRun;

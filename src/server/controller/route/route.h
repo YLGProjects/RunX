@@ -37,7 +37,8 @@ public:
     ~Route() = default;
 
 public:
-    std::error_code CreateLocalSession(ylg::net::TCPConnectionPtr conn);
+    void            SaveConnection(ylg::net::TCPConnectionPtr conn);
+    std::error_code CreateLocalSession(ylg::net::TCPConnectionPtr conn, const std::string& agentID);
     AgentSessionPtr FindAgentSession(const std::string& agentID);
     std::error_code RemoveLocalSession(ylg::net::TCPConnectionPtr conn);
     std::error_code RemoveAgentSession(const std::string& agentID);
@@ -47,6 +48,9 @@ public:
 private:
     std::string                    _routeRootKey;
     std::shared_ptr<Configuration> _localConfig;
+
+    // Key: connection ID, Value: connection
+    ylg::container::SafeMap<std::string, ylg::net::TCPConnectionPtr> _conns;
 
     // Key: Connection ID, Value: Agent ID
     ylg::container::SafeMap<std::string, std::string> _connAgentIDs;
