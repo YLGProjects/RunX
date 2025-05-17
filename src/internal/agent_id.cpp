@@ -21,61 +21,17 @@
  * SOFTWARE.
  */
 
-#include "internal/error.h"
-#include "core/error/error.h"
+#include "internal/agent_id.h"
+
+#include "core/assist/math.h"
 
 namespace ylg {
 namespace internal {
 
-ErrorCodeCategory& ErrorCodeCategory::Instance()
+std::string GenerateNewAgentID()
 {
-    static ErrorCodeCategory instance;
-    return instance;
-}
-
-const char* ErrorCodeCategory::name() const noexcept
-{
-    return "ylg-internal-error";
-}
-
-std::string ErrorCodeCategory::message(int code) const
-{
-    if (code < (int32_t)ylg::error::ErrorCode::MAX)
-    {
-        return ylg::error::ErrorCodeCategory::Instance().message(code);
-    }
-
-    std::string errMsg;
-    switch (static_cast<ErrorCode>(code))
-    {
-    default:
-        errMsg = std::to_string(code) + ": unknown error code";
-    }
-    return errMsg;
-}
-
-std::error_code make_error_code(ErrorCode e)
-{
-    return {static_cast<int>(e), ErrorCodeCategory::Instance()};
-}
-
-bool IsSuccess(const std::error_code& ec)
-{
-    if (ec.value() == (int)ErrorCode::SUCCESS)
-    {
-        return true;
-    }
-
-    return false;
-}
-
-std::string ToString(int ec)
-{
-    return std::system_category().message(ec);
+    return assist::UUID();
 }
 
 } // namespace internal
 } // namespace ylg
-
-namespace std {
-} // namespace std

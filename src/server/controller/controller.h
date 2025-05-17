@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 #ifndef _YLG_SERVER_CONTROLLER_H_
 #define _YLG_SERVER_CONTROLLER_H_
 
@@ -44,6 +45,7 @@
 
 // clang-format on
 
+struct Configuration;
 class Controller final : public ylg::net::TCPHandlerCallback, public std::enable_shared_from_this<Controller>
 {
 public:
@@ -56,20 +58,20 @@ public:
     virtual void HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg) override;
 
 public:
-    void            Run(const std::string& listenIP, uint16_t listenPort);
+    void            Run(std::shared_ptr<Configuration> cfg);
     void            Close();
     std::error_code PostToAgent(const std::vector<std::string>& agentIDs, ylg::internal::MessageType msgType, const char* data, uint32_t size);
 
 private:
-    void RegisterProcessor();
+    ylg::net::MessagePtr RegisterAgent(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg);
+    void                 RegisterProcessor();
 
 private:
     std::future<void>                                     _asyncRun;
-    std::string                                           _listenIP;
-    uint16_t                                              _listenPort = 0;
-    ylg::assist::ExecutionMultiQueuePtr                   _tasks      = nullptr;
-    ylg::net::TCPServerPtr                                _server     = nullptr;
-    RoutePtr                                              _route      = nullptr;
+    std::shared_ptr<Configuration>                        _localConfig;
+    ylg::assist::ExecutionMultiQueuePtr                   _tasks  = nullptr;
+    ylg::net::TCPServerPtr                                _server = nullptr;
+    RoutePtr                                              _route  = nullptr;
     std::map<ylg::internal::MessageType, MsgProcessorPtr> _processors;
 };
 

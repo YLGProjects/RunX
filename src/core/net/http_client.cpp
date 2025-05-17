@@ -152,14 +152,14 @@ std::error_code HTTPClient::Execute(int& status, std::string& response)
     if (CURLE_OK != code)
     {
         curl_slist_free_all(curlList);
-        return error::ErrorCode::HTTP_RESPOND_FAILED;
+        return error::ErrorCode::NET_HTTP_RESPOND_FAILED;
     }
 
     code = curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &status);
     if (CURLE_OK != code)
     {
         curl_slist_free_all(curlList);
-        return error::ErrorCode::HTTP_RESPOND_FAILED;
+        return error::ErrorCode::NET_HTTP_RESPOND_FAILED;
     }
 
     curl_slist_free_all(curlList);

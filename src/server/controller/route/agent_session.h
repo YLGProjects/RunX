@@ -40,6 +40,9 @@ struct AgentSession final
     uint64_t                   _syncedTimestamp  = 0;
     ServiceSessionPtr          _serviceSession   = nullptr;
     ylg::net::TCPConnectionPtr _connection       = nullptr;
+
+    std::string ToJSON();
+    bool        LoadJSON(const std::string& json, std::string& errMsg);
 };
 
 using AgentSessionPtr = std::shared_ptr<AgentSession>;

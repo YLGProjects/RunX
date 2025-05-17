@@ -48,7 +48,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         auto iter = _getURIHandlers.find(uri);
         if (iter != _getURIHandlers.end())
         {
-            return error::ErrorCode::REPEATED_HTTP_URI;
+            return error::ErrorCode::NET_HTTP_REPEATED_URI;
         }
 
         auto registeredHandler      = std::make_shared<RegisteredHandler>();
@@ -65,7 +65,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         auto iter = _postURIHandlers.find(uri);
         if (iter != _postURIHandlers.end())
         {
-            return error::ErrorCode::REPEATED_HTTP_URI;
+            return error::ErrorCode::NET_HTTP_REPEATED_URI;
         }
 
         auto registeredHandler      = std::make_shared<RegisteredHandler>();
@@ -82,7 +82,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         auto iter = _deleteURIHandlers.find(uri);
         if (iter != _deleteURIHandlers.end())
         {
-            return error::ErrorCode::REPEATED_HTTP_URI;
+            return error::ErrorCode::NET_HTTP_REPEATED_URI;
         }
 
         auto registeredHandler      = std::make_shared<RegisteredHandler>();
@@ -99,7 +99,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         auto iter = _putURIHandlers.find(uri);
         if (iter != _putURIHandlers.end())
         {
-            return error::ErrorCode::REPEATED_HTTP_URI;
+            return error::ErrorCode::NET_HTTP_REPEATED_URI;
         }
 
         auto registeredHandler      = std::make_shared<RegisteredHandler>();
@@ -111,7 +111,7 @@ std::error_code HTTPServer::RegisterHandler(HTTPMethod method, const HTTPURI& ur
         return error::ErrorCode::SUCCESS;
     }
 
-    return error::ErrorCode::INVALID_HTTP_METHOD;
+    return error::ErrorCode::NET_HTTP_INVALID_METHOD;
 }
 
 void HTTPServer::Run(const std::string& listenIP, uint16_t listenPort)
@@ -144,7 +144,7 @@ void HTTPServer::Run(const std::string& listenIP, uint16_t listenPort)
 
         auto errmsg = assist::FormatString("can not run http server at the address. %s:%d",
                                            _listenIP.c_str(), _listenPort);
-        throw std::system_error(error::ErrorCode::NET_EXCEPTION, errmsg);
+        throw std::system_error(error::ErrorCode::SYSTEM_LIB_EXCEPTION, errmsg);
     }
 
     evhttp_set_gencb(_httpServer, &HTTPServer::RequestHandler, this);

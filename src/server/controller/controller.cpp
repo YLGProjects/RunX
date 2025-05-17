@@ -22,8 +22,11 @@
  */
 
 #include "server/controller/controller.h"
+#include "server/controller/configuration.h"
 
+#include "internal/agent_id.h"
 #include "internal/controller.h"
+#include "internal/controller.pb.h"
 #include "internal/error.h"
 
 #include "core/error/error.h"
@@ -42,14 +45,8 @@ Controller::Controller()
 
 void Controller::OnConnection(ylg::net::TCPConnectionPtr conn)
 {
-    LOG_DEBUG("new connection:{}", conn->ID());
-    auto errcode = _route->CreateLocalSession(conn);
-    if (!ylg::internal::IsSuccess(errcode))
-    {
-        LOG_WARN("failed to create local session for the connection:{}", conn->ID());
-    }
-
-    LOG_DEBUG("created local session for the connection:{}", conn->ID());
+    _route->SaveConnection(conn);
+    LOG_DEBUG("saved the connection:{}", conn->ID());
 }
 
 void Controller::OnDisconnection(ylg::net::TCPConnectionPtr conn)
@@ -72,6 +69,19 @@ void Controller::HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::Mes
         const auto& header = msg->GetHeader();
         auto        type   = (ylg::internal::MessageType)header._msgType;
 
+        if (type == ylg::internal::MessageType::REGISTER_AGENT_REQUEST)
+        {
+            auto rsp     = RegisterAgent(conn, msg);
+            auto errcode = conn->Send(rsp);
+            if (!ylg::internal::IsSuccess(errcode))
+            {
+                LOG_ERROR("can not send send to remote server. errcode:{}", errcode.value());
+                return;
+            }
+
+            return;
+        }
+
         auto iter = _processors.find(type);
         if (iter != _processors.end())
         {
@@ -89,7 +99,7 @@ void Controller::HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::Mes
         }
 
         errcode = conn->Send(rsp);
-        if (!ylg::error::IsSuccess(errcode))
+        if (!ylg::internal::IsSuccess(errcode))
         {
             LOG_ERROR("can not send send to remote server. errcode:{}", errcode.value());
             return;
@@ -97,19 +107,25 @@ void Controller::HandleData(ylg::net::TCPConnectionPtr conn, const ylg::net::Mes
     };
 
     auto errcode = _tasks->Enqueue(task);
-    if (!ylg::error::IsSuccess(errcode))
+    if (!ylg::internal::IsSuccess(errcode))
     {
         LOG_WARN("can not enqueue controllor task queue. errmsg:{}", errcode.message());
     }
 }
 
-void Controller::Run(const std::string& listenIP, uint16_t listenPort)
+void Controller::Run(std::shared_ptr<Configuration> cfg)
 {
-    _listenIP   = listenIP;
-    _listenPort = listenPort;
+    _localConfig = cfg;
+    RegisterProcessor();
+
+    auto ec = _route->Run(_localConfig);
+    if (!ylg::internal::IsSuccess(ec))
+    {
+        LOG_FATAL("can not start route manager. errmsg:{}", ec.message());
+    }
 
     auto runFunctor = [&]() {
-        _server = std::make_shared<ylg::net::TCPServer>(_listenIP, _listenPort);
+        _server = std::make_shared<ylg::net::TCPServer>(_localConfig->_endpointIP, _localConfig->_endpointPort);
         _server->SetCallback(shared_from_this());
         auto errcode = _server->Run();
         if (!ylg::error::IsSuccess(errcode))
@@ -141,7 +157,6 @@ std::error_code Controller::PostToAgent(const std::vector<std::string>& agentIDs
     header._msgType  = (uint32_t)msgType;
 
     ylg::net::Hton(header);
-
     ylg::net::Message msg(header, data, size);
 
     auto errcode = agentSession->_connection->Send(msg);
@@ -151,6 +166,39 @@ std::error_code Controller::PostToAgent(const std::vector<std::string>& agentIDs
     }
 
     return ylg::internal::ErrorCode::SUCCESS;
+}
+
+ylg::net::MessagePtr Controller::RegisterAgent(ylg::net::TCPConnectionPtr conn, const ylg::net::MessagePtr msg)
+{
+    ylg::internal::RegisterAgentRequest request;
+    if (!request.ParseFromArray(msg->GetPayload(), msg->GetPayloadSize()))
+    {
+        LOG_DEBUG("failed to parse ping request, message:{}", request.DebugString());
+        return nullptr;
+    }
+
+    auto agentID = request._agentid();
+    if (agentID.empty())
+    {
+        agentID = ylg::internal::GenerateNewAgentID();
+    }
+
+    auto errcode = _route->CreateLocalSession(conn, agentID);
+    if (!ylg::internal::IsSuccess(errcode))
+    {
+    }
+
+    ylg::internal::RegisterAgentRespond respond;
+    respond.set__agentid(agentID);
+    auto payload = respond.SerializeAsString();
+
+    ylg::net::Header header;
+    header._dataSize = payload.size();
+    header._msgType  = (uint32_t)ylg::internal::MessageType::REGISTER_AGENT_RESPONSE;
+
+    ylg::net::Hton(header);
+
+    return std::make_shared<ylg::net::Message>(header, payload.data(), payload.size());
 }
 
 void Controller::RegisterProcessor()

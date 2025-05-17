@@ -24,8 +24,6 @@
 #ifndef _YLG_SERVER_CONTROLLER_APP_H_
 #define _YLG_SERVER_CONTROLLER_APP_H_
 
-#include "core/application/service_discovery.h"
-#include "core/application/service_registry.h"
 #include "server/controller/api/http/server.h"
 #include "server/controller/configuration.h"
 #include "server/controller/controller.h"
@@ -54,7 +52,6 @@ public:
 
 private:
     ylg::internal::ErrorCode GuardLoop();
-    void                     DumpConfiguration();
     ylg::internal::ErrorCode InitFlags();
     ylg::internal::ErrorCode InitLogs();
     ylg::internal::ErrorCode InitDiscovery();

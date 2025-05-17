@@ -61,7 +61,7 @@ std::error_code ExecutionQueue::Enqueue(const TaskFunctor& task, std::size_t max
 {
     if (_tasks.size_approx() > _maxTaskCount)
     {
-        return error::ErrorCode::OVERFLOW;
+        return error::ErrorCode::QUEUE_OVERFLOW;
     }
 
     if (!_tasks.enqueue(task))

@@ -196,7 +196,7 @@ std::error_code SetFileUser(const std::string& fileName, const std::string& user
 
     if (userName.empty())
     {
-        return error::ErrorCode::INVALID_USER;
+        return error::ErrorCode::SYSTEM_INVALID_USER;
     }
 
     int uid = 0;

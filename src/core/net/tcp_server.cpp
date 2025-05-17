@@ -67,7 +67,7 @@ std::error_code TCPServer::Run()
     if (!_base)
     {
         LOG_ERROR("failed to create event base");
-        return error::ErrorCode::NET_EXCEPTION;
+        return error::ErrorCode::SYSTEM_LIB_EXCEPTION;
     }
 
     evutil_addrinfo hints;
@@ -84,7 +84,7 @@ std::error_code TCPServer::Run()
         LOG_ERROR("failed to get the service info. listen address:{}, listen port:{}", _listenAddress, port);
         event_base_free(_base);
         _base = nullptr;
-        return error::ErrorCode::NET_EXCEPTION;
+        return error::ErrorCode::SYSTEM_LIB_EXCEPTION;
     }
 
     evutil_addrinfo* p = nullptr;
@@ -107,7 +107,7 @@ std::error_code TCPServer::Run()
         event_base_free(_base);
         _base = nullptr;
         freeaddrinfo(serviceInfo);
-        return error::ErrorCode::NET_EXCEPTION;
+        return error::ErrorCode::SYSTEM_LIB_EXCEPTION;
     }
 
     // start the event loop
